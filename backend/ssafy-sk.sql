@@ -94,4 +94,8 @@ alter table comment change parentid parent int;
 alter table post add nickname varchar(100) default null;
 alter table posttmp add nickname varchar(100) default null;
 
+--200803 modify sql
+-- post add hits
+alter table post add hits int default 0;
+
 
