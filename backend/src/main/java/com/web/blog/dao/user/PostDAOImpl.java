@@ -68,4 +68,9 @@ public class PostDAOImpl implements PostDAO {
     public List<Post> getPostedList(int userId) {
         return sqlSession.selectList("postMapper.getPostedList", userId);
     }
+
+    @Override
+    public void upHit(int postId) {
+        sqlSession.update("postMapper.upHit",postId);
+    }
 }

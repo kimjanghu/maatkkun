@@ -274,6 +274,7 @@ public class PostController {
     })
     public ResponseEntity<Object> showArticle(@RequestParam(required = true) final int postId){
         Post post = service.showArticle(postId);
+        service.upHit(postId);
 
         Document doc = Jsoup.parseBodyFragment(post.getContent());
         Element body = doc.body();
