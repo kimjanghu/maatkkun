@@ -38,6 +38,7 @@
       <div v-for="(post, index) in userPostList" :key="`post_${post.postId}`">
         <br>
         <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+        <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
         <br>
         
         <!-- {{ post.hashtag.split(',') }} -->
@@ -56,7 +57,7 @@
       <div v-for="(post, index) in userPostLikedList" :key="`post_${post.postId}`">
         <br>
         <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
-        <p class="user-post-name">작성자: {{ post.nickname }}</p>
+        <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
         <br>
         <div class="heart">
           <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
@@ -92,7 +93,6 @@ export default {
       userPostList: null,
       userPostLikedList: null,
       userInfo: null,
-      hashList: [],
       isArticleList: false,
       isLikeList: true
     }
@@ -122,11 +122,6 @@ export default {
       axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userPostList}`, { 'uid': +this.clickUserId }, config)
         .then(res => {
           this.userPostList = res.data
-          for (const idx in res.data) {
-            const hash = res.data[idx].hashtag.split(',')
-            this.hashList.push(hash)
-            console.log(this.hashList)
-          }
         })
         .catch(err => {
           console.log(err)
@@ -236,7 +231,7 @@ export default {
 .user-like.active {
   width: 50%;
   border: none;
-  opacity: 0.3;
+  opacity: 0.2;
   box-shadow: none;
   /* transition: transform 0.3s ease-in; */
 }
@@ -285,7 +280,7 @@ export default {
 }
 
 .user-post-hover:hover {
-  color: var(--primary-color);
+  color: var(--fourth-color);
 }
 
 .user-post-name {
