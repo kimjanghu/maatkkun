@@ -52,8 +52,10 @@
                 class="introduce" 
                 id="introduce" />
             </div>
-
-            <input @click.prevent="emitEditUser" type="submit" />
+            
+            
+            <input @click.prevent="emitEditUser" type="submit" value="수정" />
+            <input @click.prevent="dropUser" class="drop-btn" type="submit" value="회원 탈퇴">
           </form>
         </div>
       </div>
@@ -64,6 +66,7 @@
 <script>
 import '../../assets/css/formControl.css'
 import axios from 'axios'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'EditUserForm',
@@ -84,6 +87,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['logout']),
     // Show error message
     showError(value, message) {
       const control = document.getElementById(value)
@@ -157,7 +161,20 @@ export default {
       ) {
         this.$emit('edit-user-data', this.changeData)
       }
+    },
+    dropUser(){
+      const isexit = confirm("회원탈퇴를 정말 하시겠습니까?")
+      if(isexit){
+          this.islogin=false
+          axios.delete(`${this.SERVER_URL}/accounts/dropUser?uid=${this.$cookies.get('auth-token')}`)
+            .then(() => {
+              alert("회원탈퇴가 완료되었습니다.")
+              this.logout()
+            })
+            .catch(err => console.log(err))
+      }
     }
+
   },
 }
 </script>
@@ -237,5 +254,9 @@ textarea {
   position: absolute;
   right: -2px;
   top: 21px;
+}
+
+.drop-btn {
+  margin-top: 15px;
 }
 </style>
