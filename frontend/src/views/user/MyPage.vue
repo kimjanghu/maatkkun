@@ -27,10 +27,10 @@
     
     <div class="user-list">
       <div class="user-article" :class="{ active: isArticleList }" @click="changeArticleList">
-        <p class="user-article-title">User Article List</p>
+        <p class="user-article-title">{{ userInfo.nickname }}'s Article List</p>
       </div>
       <div class="user-like" :class="{ active: isLikeList }" @click="changeLikeList">
-        <p class="user-like-title">User Like List</p>
+        <p class="user-like-title">{{ userInfo.nickname }}'s Like List</p>
       </div>
     </div>
 
