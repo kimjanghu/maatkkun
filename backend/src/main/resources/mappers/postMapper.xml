@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="postMapper">
+
+
+    <!-- private int postId;
+    private int userid;
+    private String title;
+    private String lat;
+    private String lon;
+    private String content;
+    private String hashtag;
+    private String address;
+    private int likes;
+    private String createDate;  -->
+	
+	<select id="getPost" parameterType="int" resultType="com.web.blog.model.user.Post">
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname 
+		from post where postid=#{postid}
+	</select>
+
+	<select id="getList" resultType="com.web.blog.model.user.Post">
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname  from post order by create_data desc
+	</select>
+	
+	<insert id="register"  parameterType="com.web.blog.model.user.Post">
+		insert into post values
+		(
+			default,
+			#{userid},
+			#{title},
+			#{lat},
+			#{lon},
+			#{content},
+			#{hashtag},
+			#{address},
+			#{likes},
+			default,
+			#{nickname}
+		)
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		delete from post where postId = #{postId}
+	</delete>
+
+	<select id="selectOne" parameterType="int" resultType="com.web.blog.model.user.Post">
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname
+		from post where postid=#{postid}
+	</select>
+
+	<update id="updateLikes" parameterType="hashmap">
+		<!-- update post set likes = likes + 1 where postId = #{postId} -->
+		update post set 
+		<if test="status == 1"> <!-- 좋아요 -->
+			likes = likes + 1
+		</if>
+		<if test="status == -1"> <!-- 좋아요 취소 -->
+			likes = likes - 1
+		</if>
+		where postId = #{postId}
+	</update>
+
+	<update id="modifyPost" parameterType="com.web.blog.model.user.Post">
+		update post set 
+			title = #{title},
+			lat = #{lat},
+			lon = #{lon},
+			content = #{content},
+			hashtag = #{hashtag},
+			address = #{address},
+			likes = #{likes},
+			nickname = #{nickname},
+			create_data = default
+		 where postId = #{postId}
+	</update>
+
+	<select id="getTopNum" resultType="int">
+		SELECT AUTO_INCREMENT
+		FROM information_schema.tables
+		WHERE table_name = 'post'
+		AND table_schema = DATABASE( ) ;
+	</select>
+
+	<select id="searchArticle" resultType="com.web.blog.model.user.Post">
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname from post
+		where content like #{keyword} or
+		title like #{keyword} or
+		hashtag like #{keyword}
+		order by createDate desc
+	</select>
+
+	<select id="getPostedList" parameterType="int" resultType="com.web.blog.model.user.Post">
+		select * from post where userid = #{userid}
+	</select>
+</mapper>

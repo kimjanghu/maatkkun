@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper">
+	<!--사용자 관련 mapper -->
+	
+	
+	<select id="userlogin" resultType="com.web.blog.model.user.User">
+		select *
+		from user
+		where email = #{email} and password = #{passwd}
+	</select>
+
+	<select id="deatilUser" resultType="com.web.blog.model.user.User">
+		select *
+		from user
+		where uid = #{uid}
+	</select>
+
+
+
+
+	<select id="findAlluser" resultType="com.web.blog.model.user.User">
+		select *
+		from user
+	</select>
+
+	<insert id="userjoin" parameterType="com.web.blog.model.user.User">
+		insert into user values(default,#{email},#{password},#{nickname},default,default,default,default)
+	</insert>
+
+	<delete id="deleteUser">
+		delete from user where uid = #{uid};
+	</delete>
+
+	<update id="updateUser" parameterType="com.web.blog.model.user.User">
+		update user
+		set 
+		email = #{email},
+		password = #{password},
+		nickname = #{nickname},
+		content = #{content},
+		likedpost = #{likedpost}
+		WHERE
+		uid = #{uid};
+	</update>
+
+	
+
+
+	
+	<!-- <insert id="userjoin" parameterType="com.ssafy.dto.MemberInfo">
+		insert into userinfo (id, passwd, name, address, phone)
+		values(#{id},#{passwd},#{name},#{address},#{phone})
+	</insert>
+	
+	<update id="userupdate" parameterType="com.ssafy.dto.MemberInfo">
+		update userinfo
+		set passwd = #{passwd},address = #{address},phone = #{phone}
+		where id = #{id}
+	</update>
+	
+	<delete id="userdelete" parameterType="hashmap">
+		delete from userinfo
+		where id = #{userid} and passwd = #{userpwd}
+	</delete>
+	
+	<select id="userfindpwd" resultType="string" parameterType="hashmap">
+		select passwd
+		from userinfo
+		where id = #{userid} and address = #{address}
+	</select> -->
+
+</mapper>
