@@ -18,6 +18,7 @@ import List from '@/views/post/List.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
+import Recommend from '@/views/post/Recommend.vue'
 
 // 에러
 import Errorpage from '@/components/Error.vue'
@@ -79,6 +80,11 @@ const routes = [
     path: '/post/temporary',
     name: constants.URL_TYPE.POST.TEMPORARY,
     component: Temporary
+  },
+  {
+    path: '/post/recommend',
+    name: constants.URL_TYPE.POST.RECOMMEND,
+    component: Recommend
   },
   // My page
   {

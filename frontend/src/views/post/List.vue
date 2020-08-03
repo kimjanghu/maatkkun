@@ -2,6 +2,10 @@
 
   <div class="post">
     <div class="wrapB">
+    <button class="create_button">
+      추천 받아보실래요?
+    </button>
+    <br><br>
 
       <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>

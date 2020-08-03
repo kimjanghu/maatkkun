@@ -23,6 +23,7 @@ export default {
       CREATE : "create",
       DETAIL : "detail",
       TEMPORARY : "temporary",
+      RECOMMEND : "recommend",
     },
   },
 }
