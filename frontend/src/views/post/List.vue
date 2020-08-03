@@ -5,7 +5,21 @@
 
       <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>
-      <h3>Recent</h3>
+      <div class="post-list-link">
+        <router-link
+          class="main-link" 
+          :class="{ active: isRecentList }" 
+          :to="{ name: constants.URL_TYPE.POST.MAIN }" 
+          @click.prevent="changeMainRecentList"
+        ><i class="far fa-clock fa-lg" style="margin-right: 5px;"></i>최신순</router-link>
+        <router-link
+          class="main-link" 
+          :class="{ active: isLikeList }" 
+          :to="{ name: constants.URL_TYPE.POST.MAIN }" 
+          @click.prevent="changeMainLikeList"
+        ><i class="far fa-heart fa-lg" style="margin-right: 5px;"></i>좋아요</router-link>
+      </div>
+      
       <br><br>
       <!-- <div class="search-input">
         <input v-model="searchKeyword" type="text" />
@@ -26,20 +40,29 @@
               <div class="contents">
                 <h3>{{article.title}}</h3>
                 <br>
-                <span class="date">작성자 : {{article.nickname}}</span><br>
-                <span class="date">작성일 : {{article.createDate}}</span><br>
-                
-                <span class="comment"> 댓글 {{articles.comment[index]}}</span>
-                <span>{{article.hashtag}} </span>
+                <span class="date"><i class="far fa-user"></i> {{article.nickname}}</span>
+                <br>
+                <span class="date"><i class="far fa-clock"></i> {{article.createDate}}</span>
+                <br>
+                <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
+                  <span class="tag-btn"># {{ tag }}</span>
+                </div>
+                <!-- <span>{{article.hashtag}} </span> -->
               </div>
             </a>
 
             <div class="writer-wrap">
-              <div v-if="isLoggedIn">
-              <i  v-bind:ref="article.postId" @click="change(article); checkLike(article);" v-if="includes(article)" class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
-              <i v-bind:ref="article.postId" @click="change(article); checkLike(article);" v-if="!includes(article)" class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
+              <div class="comment-like-wrap">
+                <i class="far fa-comment-alt fa-lg"></i><p style="margin: 0 5px;">{{ articles.comment[index] }}</p>
               </div>
-              <span class="article_likes">♥ {{article.likes}}</span>
+              <div v-if="isLoggedIn" class="comment-like-wrap">
+                <i :ref="article.postId" @click="change(article); checkLike(article);" v-if="includes(article)" class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
+                <i :ref="article.postId" @click="change(article); checkLike(article);" v-if="!includes(article)" class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
+              </div>
+              <div v-else class="comment-like-wrap">
+                <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
+              </div>
+              
               <!-- <div>
                 <i v-bind:ref="article.postId" @click="change(article); checkLike(article);"  class="far fa-heart fa-lg animated infinite bounce delay-1s" style="color: gray;"></i>
                 <span class="article_likes">{{article.likes}}</span>
@@ -143,28 +166,30 @@ export default {
     },
     detailPage(articleId){
       this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: articleId }})
+    },
+    changeMainRecentList() {
+      this.isRecentList = false,
+      this.isLikeList = true
+    },
+    changeMainLikeList() {
+      this.isRecentList = true,
+      this.isLikeList = false
     }
   },
   data(){
     return {
+      constants,
       SERVER_URL: process.env.VUE_APP_API_URL,
       articleData: {},
       likedposts:[],
       searchKeyword:"",
-
+      isRecentList: false,
+      isLikeList: true
     };
   }
 };
 </script>
 
 <style scoped>
-/* @media(max-width: 947px) {
-  .post-list {
-    grid-template-columns: repeat(2, 2fr);
-  }
 
-  .post-card {
-    width: 500px;
-  }
-} */
 </style>
