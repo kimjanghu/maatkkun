@@ -316,6 +316,7 @@ export default {
 
 .last-hr {
   border: 2px solid var(--secondary-color);
+  margin-top: 2rem;
   margin-bottom: 5rem;
 }
 </style>
