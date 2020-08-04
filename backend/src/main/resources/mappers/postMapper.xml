@@ -23,6 +23,16 @@
 		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits
 		from post order by create_data desc
 	</select>
+
+	<select id="getPostedListByLikes" resultType="com.web.blog.model.user.Post">
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits
+		from post order by likes desc
+	</select>
+
+	<select id="getPostedListByHits" resultType="com.web.blog.model.user.Post">
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits
+		from post order by hits desc
+	</select>
 	
 	<insert id="register"  parameterType="com.web.blog.model.user.Post">
 		insert into post values

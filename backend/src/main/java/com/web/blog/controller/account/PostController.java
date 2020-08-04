@@ -464,7 +464,7 @@ public class PostController {
         }
     }
 
-    @ApiOperation(value = "작성 게시물 리스트", notes = "작성 게시물 리스트 API")
+    @ApiOperation(value = "작성 게시물 리스트 최신순", notes = "작성 게시물 리스트 API")
     @PostMapping(value="/articles/postedList")
     @ApiImplicitParams({
         // @ApiImplicitParam(name = "uid", value = "식별자", required = true, dataType = "string" ),
@@ -481,6 +481,136 @@ public class PostController {
         } else { // 비어있지 않을때 
             return new ResponseEntity<>(postedList, HttpStatus.OK);
         }
+    }
+
+    @ApiOperation(value = "작성 게시물 리스트 좋아요순", notes = "작성 게시물 리스트 API")
+    @GetMapping(value="/articles/postedListByLikes")
+    @ApiImplicitParams({
+        // @ApiImplicitParam(name = "uid", value = "식별자", required = true, dataType = "string" ),
+        // @ApiImplicitParam(name = "password", value = "비밀번호", dataType = "string"),
+        // @ApiImplicitParam(name = "email", value = "이메일" , dataType = "string"),
+        // @ApiImplicitParam(name = "nickname", value = "별칭", dataType = "string"),
+        // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
+        // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
+    })
+    public ResponseEntity<Object> getPostedListByLikes(){
+        HashMap<String,Object> hm = new HashMap<>();
+        
+        List<Post> postList = service.getPostedListByLikes();
+        List<Integer> commentList = new ArrayList<>();
+        
+        for(Post post : postList){
+            commentList.add(commentservice.countComment(post.getPostId()));
+
+
+            Document doc = Jsoup.parseBodyFragment(post.getContent());
+            Element body = doc.body();
+            Elements dd = doc.select("img");
+            
+
+            if(dd.size() > 0){
+                Element element = dd.get(0);
+                String id = element.attr("id");
+                
+                File imagePath = new File(path+id+".jpg");
+                FileInputStream fis = null;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                int len = 0;
+                byte[] buf = new byte[1024];
+
+                try{
+                    fis = new FileInputStream(imagePath);
+
+                    while((len = fis.read(buf)) != -1){
+                        baos.write(buf,0,len);
+                    }
+
+                    byte[] fileArray = baos.toByteArray();
+                    byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+                    post.setContent("data:image/jpeg;base64, "+new String(baseIncodingBytes));
+
+                    baos.close();
+                    fis.close();
+                }
+                catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+            else{
+                post.setContent(null);
+            }
+        }
+        
+        hm.put("comment", commentList);
+        hm.put("list", postList);
+
+        return new ResponseEntity<>(hm,HttpStatus.OK) ;
+    }
+
+    @ApiOperation(value = "작성 게시물 리스트 조회순", notes = "작성 게시물 리스트 API")
+    @GetMapping(value="/articles/postedListByHits")
+    @ApiImplicitParams({
+        // @ApiImplicitParam(name = "uid", value = "식별자", required = true, dataType = "string" ),
+        // @ApiImplicitParam(name = "password", value = "비밀번호", dataType = "string"),
+        // @ApiImplicitParam(name = "email", value = "이메일" , dataType = "string"),
+        // @ApiImplicitParam(name = "nickname", value = "별칭", dataType = "string"),
+        // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
+        // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
+    })
+    public ResponseEntity<Object> getPostedListByHits(){
+        HashMap<String,Object> hm = new HashMap<>();
+        
+        List<Post> postList = service.getPostedListByLikes();
+        List<Integer> commentList = new ArrayList<>();
+        
+        for(Post post : postList){
+            commentList.add(commentservice.countComment(post.getPostId()));
+
+
+            Document doc = Jsoup.parseBodyFragment(post.getContent());
+            Element body = doc.body();
+            Elements dd = doc.select("img");
+            
+
+            if(dd.size() > 0){
+                Element element = dd.get(0);
+                String id = element.attr("id");
+                
+                File imagePath = new File(path+id+".jpg");
+                FileInputStream fis = null;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                int len = 0;
+                byte[] buf = new byte[1024];
+
+                try{
+                    fis = new FileInputStream(imagePath);
+
+                    while((len = fis.read(buf)) != -1){
+                        baos.write(buf,0,len);
+                    }
+
+                    byte[] fileArray = baos.toByteArray();
+                    byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+                    post.setContent("data:image/jpeg;base64, "+new String(baseIncodingBytes));
+
+                    baos.close();
+                    fis.close();
+                }
+                catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+            else{
+                post.setContent(null);
+            }
+        }
+        
+        hm.put("comment", commentList);
+        hm.put("list", postList);
+
+        return new ResponseEntity<>(hm,HttpStatus.OK) ;
     }
 
     @ApiOperation(value = "기본 검색", notes = "기본 검색 API")

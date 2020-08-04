@@ -65,7 +65,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPostedListByLikes() {
+        return postdao.getPostedListByLikes();
+    }
+
+    @Override
+    public List<Post> getPostedListByHits() {
+        return postdao.getPostedListByHits();
+    }
+
+    @Override
     public void upHit(int postId) {
         postdao.upHit(postId);
     }
+
+    
 }
