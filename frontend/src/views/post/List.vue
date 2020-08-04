@@ -2,7 +2,7 @@
 
   <div class="post">
     <div class="wrapB">
-    <button class="create_button">
+    <button class="create_button" @click="goRecommend">
       추천 받아보실래요?
     </button>
     <br><br>
@@ -97,6 +97,10 @@ export default {
   
   methods: {
     ...mapActions(['getArticles', 'searchResult']),
+    goRecommend(){
+      this.$router.push('/post/recommend')
+
+    },
     includes(one){
       
       if(this.likedposts.includes(one.postId )){
