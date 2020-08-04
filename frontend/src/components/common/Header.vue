@@ -39,7 +39,10 @@ export default {
   },
   watch: {},
   created() {
-    console.log(this.loginId)
+    console.log(JSON.parse(window.localStorage.getItem('userInfo')))
+  },
+  updated() {
+    // console.log(JSON.parse(window.localStorage.getItem('userInfo')).uid)
   },
   methods: {},
   data: function() {
