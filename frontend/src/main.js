@@ -8,8 +8,10 @@ import VueCookies from 'vue-cookies'
 import PrettyCheckbox from 'pretty-checkbox-vue'
 import cors from 'cors'
 import VueMq from 'vue-mq'
+import ajax from 'vuejs-ajax'
 
 Vue.use(VueCookies)
+Vue.use(ajax)
 Vue.use(cors)
 Vue.use(VueDaumPostCode)
 Vue.use(PrettyCheckbox)
