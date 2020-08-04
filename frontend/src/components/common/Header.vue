@@ -38,7 +38,9 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   watch: {},
-  created() {},
+  created() {
+    console.log(this.loginId)
+  },
   methods: {},
   data: function() {
     return {

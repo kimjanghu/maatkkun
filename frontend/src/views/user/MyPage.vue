@@ -26,23 +26,27 @@
     </div>
     
     <div class="user-list">
-      <div class="user-article" :class="{ active: isArticleList }" @click.stop.prevent="changeList">
-        <p class="user-article-title">User Article List</p>
+      <div class="user-article" :class="{ active: isArticleList }" @click="changeArticleList">
+        <p class="user-article-title">{{ userInfo.nickname }}'s Article List</p>
       </div>
-      <div class="user-like" :class="{ active: isLikeList }" @click.stop.prevent="changeList">
-        <p class="user-like-title">User Like List</p>
+      <div class="user-like" :class="{ active: isLikeList }" @click="changeLikeList">
+        <p class="user-like-title">{{ userInfo.nickname }}'s Like List</p>
       </div>
     </div>
 
     <div v-show="!isArticleList" class="user-post-list">
       <div v-for="(post, index) in userPostList" :key="`post_${post.postId}`">
         <br>
-        {{ post }}
-        <p class="user-post"><router-link :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+        <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+        <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
         <br>
-        {{ post.hashtag.split(',') }}
-        {{ hashList[index] }}
+        
+        <!-- {{ post.hashtag.split(',') }} -->
+        <!-- {{ hashList[index] }} -->
         <div class="heart">
+          <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
+            <p class="tag-btn">#{{ tag }}</p>
+          </div>
           <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ post.likes }}</p>
         </div>
         <hr v-if="index+1 < userPostList.length" style="border: 1px solid var(--third-color)">
@@ -52,10 +56,13 @@
     <div v-show="!isLikeList" class="user-post-list">
       <div v-for="(post, index) in userPostLikedList" :key="`post_${post.postId}`">
         <br>
-        {{ post }}
-        <p class="user-post"><router-link :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+        <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+        <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
         <br>
         <div class="heart">
+          <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
+            <p class="tag-btn">#{{ tag }}</p>
+          </div>
           <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ post.likes }}</p>
         </div>
         <hr v-if="index+1 < userPostList.length" style="border: 1px solid var(--third-color)">
@@ -86,7 +93,6 @@ export default {
       userPostList: null,
       userPostLikedList: null,
       userInfo: null,
-      hashList: [],
       isArticleList: false,
       isLikeList: true
     }
@@ -116,11 +122,6 @@ export default {
       axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userPostList}`, { 'uid': +this.clickUserId }, config)
         .then(res => {
           this.userPostList = res.data
-          for (const idx in res.data) {
-            const hash = res.data[idx].hashtag.split(',')
-            this.hashList.push(hash)
-            console.log(this.hashList)
-          }
         })
         .catch(err => {
           console.log(err)
@@ -140,10 +141,14 @@ export default {
           console.log(err)
         })
     },
-    changeList() {
-      this.isArticleList = !this.isArticleList
-      this.isLikeList = !this.isLikeList
+    changeArticleList() {
+      this.isArticleList = false
+      this.isLikeList = true
     },
+    changeLikeList() {
+      this.isArticleList = true
+      this.isLikeList = false
+    }
   },
   mounted() {
   },
@@ -213,11 +218,6 @@ export default {
   border-bottom: 2px solid var(--secondary-color);
 }
 
-.user-post-list {
-  width: 95%;
-  margin: 0 auto;
-}
-
 .user-article,
 .user-like {
   width: 50%;
@@ -231,11 +231,10 @@ export default {
 .user-like.active {
   width: 50%;
   border: none;
-  opacity: 0.3;
+  opacity: 0.2;
   box-shadow: none;
   /* transition: transform 0.3s ease-in; */
 }
-
 
 .user-article-title,
 .user-like-title {
@@ -243,8 +242,6 @@ export default {
   font-weight: bold;
   color: var(--secondary-color);
 }
-
-
 
 .email-title-area,
 .introduction-area {
@@ -271,36 +268,25 @@ export default {
   margin: 5px 0;
 }
 
-/* .like-list-container {
-  box-sizing: border-box;
-  position: relative;
-} */
-
-/* .like-list {
-  position: absolute;
-  margin-top: 1rem;
-  background-color: #fff;
-  border: 1px solid;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  max-width: 100%;
-  width: 500px;
-  height: 200px;
-  overflow: auto;
-} */
+.user-post-list {
+  width: 95%;
+  margin: 0 auto;
+}
 
 .user-post {
   text-align: left;
   font-size: 30px;
   margin: 1rem 0 0 2rem;
-  /* margin-left: 2rem; */
 }
 
+.user-post-hover:hover {
+  color: var(--fourth-color);
+}
 
-.last-hr {
-  border: 2px solid var(--secondary-color);
-  margin-bottom: 5rem;
+.user-post-name {
+  font-size: 13px;
+  text-align: left;
+  margin: 1rem 0 0 2rem;
 }
 
 .heart {
@@ -308,7 +294,24 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin: 0 2rem 1rem 0;
-  /* margin-bottom: 1rem; 
-  margin-right: 2rem; */
+}
+
+.tag {
+  display: flex;
+}
+
+.tag-btn {
+  width: 65px;
+  margin-right: 10px;
+  background-color: var(--fifth-color);
+  text-align: center;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.last-hr {
+  border: 2px solid var(--secondary-color);
+  margin-top: 2rem;
+  margin-bottom: 5rem;
 }
 </style>
