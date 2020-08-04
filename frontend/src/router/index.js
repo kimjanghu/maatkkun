@@ -80,12 +80,6 @@ const routes = [
     name: constants.URL_TYPE.POST.TEMPORARY,
     component: Temporary
   },
-  // My page
-  {
-    path: '/user/mypage',
-    name: constants.URL_TYPE.USER.MYPAGE,
-    component: Mypage
-  },
   // Error
   {
     path: '/error',
@@ -95,7 +89,7 @@ const routes = [
   // Test page
   {
     path: '/user/test',
-    name: constants.URL_TYPE.USER.MYPAGE,
+    name: constants.URL_TYPE.TEST,
     component: testPage
   },
   // Page not found
