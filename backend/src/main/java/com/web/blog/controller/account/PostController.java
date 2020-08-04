@@ -110,38 +110,14 @@ public class PostController {
 
 
             Document doc = Jsoup.parseBodyFragment(post.getContent());
-            Element body = doc.body();
             Elements dd = doc.select("img");
             
 
             if(dd.size() > 0){
                 Element element = dd.get(0);
                 String id = element.attr("id");
+                post.setContent(idParseImage(id));
                 
-                File imagePath = new File(path+id+".jpg");
-                FileInputStream fis = null;
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int len = 0;
-                byte[] buf = new byte[1024];
-
-                try{
-                    fis = new FileInputStream(imagePath);
-
-                    while((len = fis.read(buf)) != -1){
-                        baos.write(buf,0,len);
-                    }
-
-                    byte[] fileArray = baos.toByteArray();
-                    byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
-                    post.setContent("data:image/jpeg;base64, "+new String(baseIncodingBytes));
-
-                    baos.close();
-                    fis.close();
-                }
-                catch(Exception e){
-                    System.out.println(e.getMessage());
-                }
             }
             else{
                 post.setContent(null);
@@ -511,31 +487,7 @@ public class PostController {
             if(dd.size() > 0){
                 Element element = dd.get(0);
                 String id = element.attr("id");
-                
-                File imagePath = new File(path+id+".jpg");
-                FileInputStream fis = null;
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int len = 0;
-                byte[] buf = new byte[1024];
-
-                try{
-                    fis = new FileInputStream(imagePath);
-
-                    while((len = fis.read(buf)) != -1){
-                        baos.write(buf,0,len);
-                    }
-
-                    byte[] fileArray = baos.toByteArray();
-                    byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
-                    post.setContent("data:image/jpeg;base64, "+new String(baseIncodingBytes));
-
-                    baos.close();
-                    fis.close();
-                }
-                catch(Exception e){
-                    System.out.println(e.getMessage());
-                }
+                post.setContent(idParseImage(id));
             }
             else{
                 post.setContent(null);
@@ -577,30 +529,8 @@ public class PostController {
                 Element element = dd.get(0);
                 String id = element.attr("id");
                 
-                File imagePath = new File(path+id+".jpg");
-                FileInputStream fis = null;
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int len = 0;
-                byte[] buf = new byte[1024];
-
-                try{
-                    fis = new FileInputStream(imagePath);
-
-                    while((len = fis.read(buf)) != -1){
-                        baos.write(buf,0,len);
-                    }
-
-                    byte[] fileArray = baos.toByteArray();
-                    byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
-                    post.setContent("data:image/jpeg;base64, "+new String(baseIncodingBytes));
-
-                    baos.close();
-                    fis.close();
-                }
-                catch(Exception e){
-                    System.out.println(e.getMessage());
-                }
+                
+                post.setContent(idParseImage(id));
             }
             else{
                 post.setContent(null);
@@ -620,7 +550,6 @@ public class PostController {
     public ResponseEntity<Object> searchArticle(@PathVariable String keyword){
         
         HashMap<String,Object> hm = new HashMap<>();
-        
         List<Integer> commentList = new ArrayList<>();
 
         List<Post> list = service.searchArticle(keyword);        
@@ -630,38 +559,12 @@ public class PostController {
                 commentList.add(commentservice.countComment(post.getPostId()));
 
                 Document doc = Jsoup.parseBodyFragment(post.getContent());
-                Element body = doc.body();
                 Elements dd = doc.select("img");
                 
-
                 if(dd.size() > 0){
                     Element element = dd.get(0);
                     String id = element.attr("id");
-                    
-                    File imagePath = new File(path+id+".jpg");
-                    FileInputStream fis = null;
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                    int len = 0;
-                    byte[] buf = new byte[1024];
-
-                    try{
-                        fis = new FileInputStream(imagePath);
-
-                        while((len = fis.read(buf)) != -1){
-                            baos.write(buf,0,len);
-                        }
-
-                        byte[] fileArray = baos.toByteArray();
-                        byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
-                        post.setContent("data:image/jpeg;base64, "+new String(baseIncodingBytes));
-
-                        baos.close();
-                        fis.close();
-                    }
-                    catch(Exception e){
-                        System.out.println(e.getMessage());
-                    }
+                    post.setContent(idParseImage(id));
                 }
             }
             hm.put("comment", commentList);
@@ -671,7 +574,38 @@ public class PostController {
         else{
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
+    }
+
+    public String idParseImage(String id){
         
+        File imagePath = new File(path+id+".jpg");
+        FileInputStream fis = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        int len = 0;
+        byte[] buf = new byte[1024];
+
+        try{
+            fis = new FileInputStream(imagePath);
+
+            while((len = fis.read(buf)) != -1){
+                baos.write(buf,0,len);
+            }
+
+            byte[] fileArray = baos.toByteArray();
+            byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+            
+
+            baos.close();
+            fis.close();
+
+            return "data:image/jpeg;base64, "+new String(baseIncodingBytes);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
 
