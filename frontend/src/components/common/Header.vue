@@ -38,7 +38,12 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   watch: {},
-  created() {},
+  created() {
+    console.log(JSON.parse(window.localStorage.getItem('userInfo')))
+  },
+  updated() {
+    // console.log(JSON.parse(window.localStorage.getItem('userInfo')).uid)
+  },
   methods: {},
   data: function() {
     return {

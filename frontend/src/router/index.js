@@ -101,7 +101,7 @@ const routes = [
   // Test page
   {
     path: '/user/test',
-    name: constants.URL_TYPE.USER.MYPAGE,
+    name: constants.URL_TYPE.TEST,
     component: testPage
   },
   // Page not found

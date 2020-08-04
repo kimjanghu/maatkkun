@@ -25,6 +25,7 @@ export default {
       TEMPORARY : "temporary",
       RECOMMEND : "recommend",
     },
+    TEST: "test"
   },
 }
 
