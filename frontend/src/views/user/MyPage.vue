@@ -83,7 +83,6 @@
 import axios from 'axios'
 import SERVER from '@/api/drf'
 import constants from '@/lib/constants'
-// import { mapActions } from 'vuex'
 
 export default {
   name: 'Mypage',
@@ -139,7 +138,7 @@ export default {
           Authorization: `Token ${this.$cookies.get(`auth-token`)}`
         }
       }
-      axios.post(`${this.SERVER_URL}/articles/likedList`, { 'uid': this.clickUserId }, config)
+      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userLikeList}`, { 'uid': this.clickUserId }, config)
         .then(res => {
           this.userPostLikedList = res.data
         })
