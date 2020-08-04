@@ -4,7 +4,6 @@ import Vuex from 'vuex'
 import cookies from 'vue-cookies'
 import router from '@/router'
 import axios from 'axios'
-import constants from '@/lib/constants'
 import SERVER from '@/api/drf'
 
 Vue.use(Vuex)
@@ -24,10 +23,6 @@ export default new Vuex.Store({
     })
   },
   mutations: {
-    // SET_TOKEN(state, token) {
-    //   state.authToken = token
-    //   cookies.set('auth-token', token)
-    // },
     SET_TOKEN(state, token) {
       state.authToken = token
       cookies.set('auth-token', token)
@@ -37,11 +32,11 @@ export default new Vuex.Store({
     },
     SET_POSTINFO(state, post) {
       state.post = post
+    },
+    SET_USERINFO(state, userInfo) {
+      state.userInfo = userInfo
+      window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
     }
-    //   SET_USERINFO(state, userInfo) {
-    //     state.userInfo = userInfo
-    //     window.localStorage.setItem('userInfo', userInfo);
-    //   }
   },
   actions: {
     // postAuthData({ commit }, info) {
@@ -94,6 +89,7 @@ export default new Vuex.Store({
       // dispatch('postAuthData', info)
       axios.post(process.env.VUE_APP_API_URL + SERVER.ROUTES.login, loginData)
         .then(res => {
+          commit('SET_USERINFO', { uid: res.data.uid, nickname: res.data.nickname })
           commit('SET_TOKEN', res.data.uid)
           router.push('/')
         })
@@ -102,6 +98,7 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit('SET_TOKEN', null)
       cookies.remove('auth-token')
+      window.localStorage.removeItem('userInfo')
       router.push('/')
     },
     // logout({ getters, commit }) {
@@ -126,7 +123,6 @@ export default new Vuex.Store({
     getArticles({ commit }) {
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.list)
         .then(res => {
-          console.log(res);
           commit('SET_ARTICLES', res.data)
         })
         .catch(err => console.log(err))
@@ -138,14 +134,6 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err))
     },
-    detailPage({ commit }, postId) {
-      axios.get(process.env.VUE_APP_API_URL + `${SERVER.ROUTES.detail}?postId=${postId}`)
-        .then((res)=>{
-          commit('SET_POSTINFO', res.data)
-          router.push({ name: constants.URL_TYPE.POST.DETAIL,params:{ articleData: res.data }})
-        })
-        .catch(err=>console.log(err))
-    }
   },
   modules: {},
 })
