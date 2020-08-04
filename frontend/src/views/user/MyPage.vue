@@ -35,37 +35,44 @@
     </div>
 
     <div v-show="!isArticleList" class="user-post-list">
-      <div v-for="(post, index) in userPostList" :key="`post_${post.postId}`">
-        <br>
-        <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
-        <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
-        <br>
-        
-        <!-- {{ post.hashtag.split(',') }} -->
-        <!-- {{ hashList[index] }} -->
-        <div class="heart">
-          <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
-            <p class="tag-btn">#{{ tag }}</p>
+      <div v-if="userPostList">
+        <div v-for="(post, index) in userPostList" :key="`post_${post.postId}`">
+          <br>
+          <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+          <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
+          <br>
+          <div class="heart">
+            <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
+              <p class="tag-btn">#{{ tag }}</p>
+            </div>
+            <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ post.likes }}</p>
           </div>
-          <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ post.likes }}</p>
+          <hr v-if="index+1 < userPostList.length" style="border: 1px solid var(--third-color)">
         </div>
-        <hr v-if="index+1 < userPostList.length" style="border: 1px solid var(--third-color)">
+      </div>
+      <div v-else>
+        <p class="empty-text">게시글이 없습니다.</p>
       </div>
     </div>
 
     <div v-show="!isLikeList" class="user-post-list">
-      <div v-for="(post, index) in userPostLikedList" :key="`post_${post.postId}`">
-        <br>
-        <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
-        <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
-        <br>
-        <div class="heart">
-          <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
-            <p class="tag-btn">#{{ tag }}</p>
+      <div v-if="userPostLikedList">
+        <div v-for="(post, index) in userPostLikedList" :key="`post_${post.postId}`">
+          <br>
+          <p class="user-post"><router-link class="user-post-hover" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: post.postId }}">{{ post.title }}</router-link></p>
+          <p class="user-post-name"><i class="far fa-user fa-lg" style="margin-right: 5px;"></i>{{ post.nickname }}</p>
+          <br>
+          <div class="heart">
+            <div class="tag" v-for="(tag, index) in post.hashtag.split(',')" :key="`hash_${index}`">
+              <p class="tag-btn">#{{ tag }}</p>
+            </div>
+            <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ post.likes }}</p>
           </div>
-          <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ post.likes }}</p>
+          <hr v-if="index+1 < userPostLikedList.length" style="border: 1px solid var(--third-color)">
         </div>
-        <hr v-if="index+1 < userPostList.length" style="border: 1px solid var(--third-color)">
+      </div>
+      <div v-else>
+        <p class="empty-text">게시글이 없습니다.</p>
       </div>
     </div>
     <hr class="last-hr">
@@ -76,7 +83,7 @@
 import axios from 'axios'
 import SERVER from '@/api/drf'
 import constants from '@/lib/constants'
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 
 export default {
   name: 'Mypage',
@@ -88,7 +95,7 @@ export default {
       SERVER_URL: process.env.VUE_APP_API_URL,
       clickUserId: this.$route.params.id,
       userId: {
-        uid: this.$cookies.get(`auth-token`)
+        uid: JSON.parse(window.localStorage.getItem('userInfo')).uid
       },
       userPostList: null,
       userPostLikedList: null,
@@ -98,7 +105,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['detailPage']),
     getUserInfo() {
       const config = {
         headers: {
@@ -313,5 +319,9 @@ export default {
   border: 2px solid var(--secondary-color);
   margin-top: 2rem;
   margin-bottom: 5rem;
+}
+
+.empty-text {
+  margin-top: 2rem;
 }
 </style>
