@@ -98,4 +98,8 @@ alter table posttmp add nickname varchar(100) default null;
 -- post add hits
 alter table post add hits int default 0;
 
+--200805
+alter table post add url varchar(200) default null;
+alter table post add starpoint varchar(10) default null;
+
 

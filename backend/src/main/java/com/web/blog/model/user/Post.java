@@ -24,4 +24,5 @@ public class Post {
     private String nickname;
     private int hits;
     private String url;
+    private String starpoint;
 }

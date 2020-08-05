@@ -151,7 +151,7 @@ public class PostController {
         })
     public ResponseEntity<Object> register(@Valid @RequestBody Post post){
 
-        crawling(post.getUrl());
+        post.setStarpoint(crawling(post.getUrl()));
 
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
@@ -706,7 +706,7 @@ public class PostController {
         }
     }
 
-    public void crawling(String url){
+    public String crawling(String url){
         final String WEB_DRIVER_ID = "webdriver.chrome.driver";
         final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
         // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
@@ -720,18 +720,16 @@ public class PostController {
         options.addArguments("--disable-extensions");
 
         WebDriver driver = new ChromeDriver(options);
-
+        double star = 0.0;
         
 
         
         try{
             driver.get(url);
-            Thread.sleep(500);
+            Thread.sleep(300);
             Document doc = Jsoup.parse(driver.getPageSource());
             Elements el = doc.body().getElementsByClass("link_evaluation");
-            double star = Double.parseDouble(el.text().split(" ")[1].substring(0,3));
-            System.out.println(star);
-            // return star;
+            star = Double.parseDouble(el.text().split(" ")[1].substring(0,3));
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -739,5 +737,7 @@ public class PostController {
         finally{
             driver.close();
         }
+        System.out.println(star);
+        return star+"";
     }
 }
