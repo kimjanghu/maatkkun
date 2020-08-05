@@ -623,50 +623,65 @@ public class PostController {
     @ApiOperation(value = "추천 음식점", notes = "추천 음식점 API")
     @GetMapping(value="/articles/getRecommentList")
     public List<Post> getRecommentList(){
+
+        final Double std_lat = 37.5006744185994;
+        final Double std_lon = 127.03646946847;
         
-        final double hitScore = 25.0;   // 조회수 계수
-        final double likeScore = 25.0;  // 좋아요 계수 
-        final double starScore = 25.0;  // 별점 계수
-        final double tagScore = 25.0;   // 태그 계수 
+        
+        final double hitScore = 20.0;   // 조회수 계수
+        final double likeScore = 20.0;  // 좋아요 계수 
+        final double starScore = 20.0;  // 별점 계수
+        final double tagScore = 20.0;   // 태그 계수 
+        final double disScore = 20.0;   // 거리 계수
 
         Map<Integer,Double> hm = new HashMap<Integer,Double>();
 
         //전체 리스트 받아오기
         List<Post> list =  service.getList();
-        System.out.println("pid\thits\tlikes");
+        System.out.println("pid\thits\tlikes\tstarpoint");
 
         Double hitsAvg = 0.0;
         Double likesAvg = 0.0;
+        Double starAvg = 0.0;
         for(Post p : list){
             hitsAvg += p.getHits();
             likesAvg += p.getLikes();
-            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes());
-            hm.put(p.getPostId(), 0.0);
-            System.out.println(hm.get(p.getPostId()));
+            starAvg += Double.parseDouble(p.getStarpoint());
+            
+            // 미터(Meter) 단위
+            double distanceMeter = distance(37.504198, 127.047967, 37.501025, 127.037701, "meter");
+
+            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint());
         }
 
         hitsAvg /= list.size();
         likesAvg /= list.size();
+        starAvg /= list.size();
 
         final double hitUnit = (hitScore/2)/hitsAvg;
         final double likeUnit = (likeScore/2)/likesAvg;
+        final double starUnit = (starScore/2)/starAvg;
 
         System.out.println("hitsAvg : "+hitsAvg);
         System.out.println("likesAvg : "+likesAvg);
+        System.out.println("starAvg : "+starAvg);
+
+        System.out.println();
 
         System.out.println("hitUnit : "+hitUnit);
         System.out.println("likeUnit : "+likeUnit);
+        System.out.println("starUnit : "+starUnit);
 
 
         List<KeyValue> li = new ArrayList<KeyValue>();
         for(Post p : list){
-            hm.put(p.getPostId(), p.getHits() * hitUnit);
-            hm.put(p.getPostId(), hm.get(p.getPostId()) + p.getLikes() * likeUnit);
-
+            Double score =  p.getHits() * hitUnit +
+                            p.getLikes() * likeUnit +
+                            Double.parseDouble(p.getStarpoint()) * starUnit;
+            hm.put(p.getPostId(), score);
             
             
             li.add(new KeyValue(p.getPostId(), hm.get(p.getPostId())));
-            System.out.println(p.getPostId()+"\t"+hm.get(p.getPostId()));
         }
 
         System.out.println("================================");
@@ -674,8 +689,7 @@ public class PostController {
         for(KeyValue kv : li){
             System.out.println(kv);
         }
-        // Double x = 127.03646946847;
-        // Double y = 37.5006744185994;
+        
         // System.out.println(x);
         // System.out.println(y);
         System.out.println("==========================================");
@@ -740,4 +754,32 @@ public class PostController {
         System.out.println(star);
         return star+"";
     }
+
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+         
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+         
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+         
+        if(unit == "meter"){
+            dist = dist * 1609.344;
+        }
+ 
+        return (dist);
+    }
+     
+ 
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+     
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
+
+
 }

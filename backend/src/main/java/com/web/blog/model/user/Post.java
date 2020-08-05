@@ -25,4 +25,5 @@ public class Post {
     private int hits;
     private String url;
     private String starpoint;
+    private String placename;
 }
