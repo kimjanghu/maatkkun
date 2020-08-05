@@ -178,7 +178,7 @@
           lat: '',
           lon: '',
           userid: this.$cookies.get('auth-token'),
-          placeurl:'',
+          url:'',
 
 
 
@@ -362,7 +362,7 @@
                 abc.articleData.lat = y;
                 abc.articleData.lon = x;
                 abc.articleData.address = address;
-                abc.articleData.placeurl = placeurl;
+                abc.articleData.url = placeurl;
                 abc.isModal = !abc.isModal;
               }
             });
@@ -382,7 +382,7 @@
                 abc.articleData.lat = y;
                 abc.articleData.lon = x;
                 abc.articleData.address = address;
-                abc.articleData.placeurl = placeurl;
+                abc.articleData.url = placeurl;
                 abc.isModal = !abc.isModal;
               }
             }
@@ -586,7 +586,7 @@
         this.articleData.lon = this.preArticleData.lon
         this.articleData.likes = this.preArticleData.likes
         this.articleData.userid = this.preArticleData.userid
-        this.articleData.placeurl = this.preArticleData.placeurl
+        this.articleData.url = this.preArticleData.url
       }
     },
 
