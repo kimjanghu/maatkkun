@@ -34,11 +34,14 @@
                     endX: "126.997589",
                     endY: "37.570594",
                     passList: "126.987319,37.565778_126.983072,37.573028",
+                    reqCoordType : "WGS84GEO",
+						resCoordType : "EPSG3857",
 
                     startName: "출발지",
                     endName: "도착지",
 
-                }
+                },
+                polyline_: '',
 
 
             }
@@ -82,8 +85,11 @@
 
                 var querystring = Object.entries(this.mapdata).map(e => e.join('=')).join('&')
 
-                axios.post(`https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&${querystring}`)
+                axios.post(
+                        `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&${querystring}`
+                        )
                     .then((res) => {
+                        console.log(res.data.features)
 
 
                         var resultData = res.data.features;
@@ -99,10 +105,11 @@
 
                         jQuery("#result").text(tDistance + tTime);
                         //기존 그려진 라인 & 마커가 있다면 초기화
+
                         if (this.resultdrawArr.length > 0) {
                             for (var i in this.resultdrawArr) {
                                 this.resultdrawArr[i]
-                                .setMap(null);
+                                    .setMap(null);
                             }
                             this.resultdrawArr = [];
                         }
@@ -112,9 +119,6 @@
                         for (var k in resultData) {
                             var geometry = resultData[k].geometry;
                             var properties = resultData[k].properties;
-                            
-
-
 
                             if (geometry.type == "LineString") {
                                 for (var j in geometry.coordinates) {
@@ -131,6 +135,8 @@
                                         convertPoint._lng);
                                     // 배열에 담기
                                     this.drawInfoArr.push(convertChange);
+                                    console.log(this.drawInfoArr)
+                                    
 
                                 }
                             } else {
@@ -168,9 +174,10 @@
                                     lat: convertPoint2._lat,
                                     pointType: pType
                                 };
+                                console.log(routeInfoObj)
 
                                 // Marker 추가
-                                var marker_p = new Tmapv2.Marker({
+                                new Tmapv2.Marker({
                                     position: new Tmapv2.LatLng(
                                         routeInfoObj.lat,
                                         routeInfoObj.lng),
@@ -178,33 +185,36 @@
                                     iconSize: size,
                                     map: this.map
                                 });
-                                console.log(marker_p)
-                               
+                                // console.log(marker_p)
+
                             }
                         } //for문 [E]
+
                         this.drawLine(this.drawInfoArr);
 
                     })
                     .catch(err => console.log(err))
-                
-                    },
+
+            },
 
 
-            
+
             addComma(num) {
                 var regexp = /\B(?=(\d{3})+(?!\d))/g;
                 return num.toString().replace(regexp, ',');
             },
             drawLine(arrPoint) {
-                var polyline_;
 
-                polyline_ = new Tmapv2.Polyline({
+                var polyline_ = new Tmapv2.Polyline({
                     path: arrPoint,
                     strokeColor: "#DD0000",
                     strokeWeight: 6,
                     map: this.map
                 });
+                
                 this.resultdrawArr.push(polyline_);
+
+
             }
         }
 
