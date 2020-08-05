@@ -12,9 +12,14 @@ import java.util.ArrayList;
 
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
@@ -50,7 +55,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
-import org.jsoup.Jsoup; 
+import org.jsoup.Jsoup;
+import org.jsoup.Connection.KeyVal;
 import org.jsoup.nodes.Document; 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -609,4 +615,96 @@ public class PostController {
     }
 
 
+    @ApiOperation(value = "추천 음식점", notes = "추천 음식점 API")
+    @GetMapping(value="/articles/getRecommentList")
+    public List<Post> getRecommentList(){
+        
+        final double hitScore = 25.0;   // 조회수 계수
+        final double likeScore = 25.0;  // 좋아요 계수 
+        final double starScore = 25.0;  // 별점 계수
+        final double tagScore = 25.0;   // 태그 계수 
+
+        Map<Integer,Double> hm = new HashMap<Integer,Double>();
+
+        //전체 리스트 받아오기
+        List<Post> list =  service.getList();
+        System.out.println("pit\thits\tlikes");
+
+        Double hitsAvg = 0.0;
+        Double likesAvg = 0.0;
+        for(Post p : list){
+            hitsAvg += p.getHits();
+            likesAvg += p.getLikes();
+            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes());
+            hm.put(p.getPostId(), 0.0);
+            System.out.println(hm.get(p.getPostId()));
+        }
+
+        hitsAvg /= list.size();
+        likesAvg /= list.size();
+
+        final double hitUnit = (hitScore/2)/hitsAvg;
+        final double likeUnit = (likeScore/2)/likesAvg;
+
+        System.out.println("hitsAvg : "+hitsAvg);
+        System.out.println("likesAvg : "+likesAvg);
+
+        System.out.println("hitUnit : "+hitUnit);
+        System.out.println("likeUnit : "+likeUnit);
+
+
+        List<KeyValue> li = new ArrayList<KeyValue>();
+        for(Post p : list){
+            hm.put(p.getPostId(), p.getHits() * hitUnit);
+            hm.put(p.getPostId(), hm.get(p.getPostId()) + p.getLikes() * likeUnit);
+
+            
+            
+            li.add(new KeyValue(p.getPostId(), hm.get(p.getPostId())));
+            System.out.println(p.getPostId()+"\t"+hm.get(p.getPostId()));
+        }
+
+        System.out.println("================================");
+        Collections.sort(li,Collections.reverseOrder());
+        for(KeyValue kv : li){
+            System.out.println(kv);
+        }
+
+        
+		
+
+
+
+
+        // Double x = 127.03646946847;
+        // Double y = 37.5006744185994;
+        // System.out.println(x);
+        // System.out.println(y);
+        System.out.println("==========================================");
+        return null;
+    }
+
+    public class KeyValue implements Comparable<KeyValue>{
+        int postid;
+        double score;
+
+        KeyValue(){
+
+        }
+
+        KeyValue(int postid,double score){
+            this.postid = postid;
+            this.score = score;
+        }
+
+        @Override
+        public String toString(){
+            return this.postid+"\t"+this.score;
+        }
+
+        @Override
+        public int compareTo(KeyValue o) {
+            return (int)(this.score - o.score);
+        }
+    }
 }
