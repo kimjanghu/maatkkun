@@ -109,8 +109,6 @@ public class PostController {
     @GetMapping(value="/articles/list")
     public ResponseEntity<Object> getList(){
 
-        crawling();
-
         HashMap<String,Object> hm = new HashMap<>();
         
         List<Post> postList = service.getList();
@@ -152,6 +150,8 @@ public class PostController {
                 // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
         })
     public ResponseEntity<Object> register(@Valid @RequestBody Post post){
+
+        crawling(post.getUrl());
 
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
@@ -633,7 +633,7 @@ public class PostController {
 
         //전체 리스트 받아오기
         List<Post> list =  service.getList();
-        System.out.println("pit\thits\tlikes");
+        System.out.println("pid\thits\tlikes");
 
         Double hitsAvg = 0.0;
         Double likesAvg = 0.0;
@@ -674,13 +674,6 @@ public class PostController {
         for(KeyValue kv : li){
             System.out.println(kv);
         }
-
-        
-		
-
-
-
-
         // Double x = 127.03646946847;
         // Double y = 37.5006744185994;
         // System.out.println(x);
@@ -713,7 +706,7 @@ public class PostController {
         }
     }
 
-    public void crawling(){
+    public void crawling(String url){
         final String WEB_DRIVER_ID = "webdriver.chrome.driver";
         final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
         // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
@@ -728,7 +721,7 @@ public class PostController {
 
         WebDriver driver = new ChromeDriver(options);
 
-        String url = "https://place.map.kakao.com/1989327162";
+        
 
         
         try{
