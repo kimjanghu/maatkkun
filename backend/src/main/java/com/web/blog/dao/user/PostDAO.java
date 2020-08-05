@@ -7,6 +7,8 @@ import com.web.blog.model.user.Post;
 public interface PostDAO {
     Post getPost(int postId);
     List<Post> getList();
+    List<Post> getPostedListByLikes();
+    List<Post> getPostedListByHits();
     int register(Post post);
     int modify(Post post);
     int deletePost(int postId);
@@ -15,4 +17,6 @@ public interface PostDAO {
     int updateLikes(int postID, int status);
     List<Post> searchArticle(String keyword);
     List<Post> getPostedList(int userId);
+    
+    void upHit(int postId);
 }
