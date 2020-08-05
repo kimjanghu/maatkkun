@@ -173,11 +173,12 @@
         articleData: {
           title: null,
           content: null,
-          address: "",
+          address: '',
           hashtag: '',
           lat: '',
           lon: '',
           userid: this.$cookies.get('auth-token'),
+          placeurl:'',
 
 
 
@@ -285,6 +286,7 @@
       // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
       placesSearchCB(data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
+          console.log(data)
 
 
           // 정상적으로 검색이 완료됐으면
@@ -330,6 +332,7 @@
             itemEl = this.getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
           var title = places[i].place_name;
           var address = places[i].address_name;
+          var placeurl = places[i].place_url;
 
           var x = places[i].x;
           var y = places[i].y;
@@ -341,7 +344,7 @@
           var map = this.map;
           // console.log(places[i]);
 
-          (function (marker, title, abc, address) {
+          (function (marker, title, abc, address,placeurl) {
             var infowindow = new kakao.maps.InfoWindow({
               content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
               removable: true
@@ -359,6 +362,7 @@
                 abc.articleData.lat = y;
                 abc.articleData.lon = x;
                 abc.articleData.address = address;
+                abc.articleData.placeurl = placeurl;
                 abc.isModal = !abc.isModal;
               }
             });
@@ -378,11 +382,12 @@
                 abc.articleData.lat = y;
                 abc.articleData.lon = x;
                 abc.articleData.address = address;
+                abc.articleData.placeurl = placeurl;
                 abc.isModal = !abc.isModal;
               }
             }
 
-          })(marker, title, this, address);
+          })(marker, title, this, address,placeurl);
 
 
 
@@ -581,6 +586,7 @@
         this.articleData.lon = this.preArticleData.lon
         this.articleData.likes = this.preArticleData.likes
         this.articleData.userid = this.preArticleData.userid
+        this.articleData.placeurl = this.preArticleData.placeurl
       }
     },
 

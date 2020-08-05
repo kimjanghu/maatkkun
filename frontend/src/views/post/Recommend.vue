@@ -1,11 +1,25 @@
 <template>
-    <div>
+    <div class="main-wrapper">
         <div id="map_wrap" class="map_wrap3">
             <div id="map_div"></div>
         </div>
         <div class="map_act_btn_wrap clear_box"></div>
         <p id="result"></p>
         <br />
+       
+        <button class="create_button" style="margin-right:2px;">거리가 너무 멀어요!</button>
+        <button class="create_button" style="margin-right:2px;">평점이 너무 낮아요!</button>
+        <br>
+        <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고 싶어요!</button>
+        <div id="hiddenContent02" class="example01" style="display: none; margin-top:20px;">
+         <ul v-for="direction in directions" :key="direction.id">
+            <li style='text-align:left;'>
+                {{direction}}
+            </li>
+        </ul>
+        </div>
+
+
 
 
     </div>
@@ -15,6 +29,7 @@
 <script>
     import axios from 'axios'
     import jQuery from 'jquery'
+
     export default {
         name: "Recommend",
         data() {
@@ -27,29 +42,36 @@
                 totalMarkerArr: [],
                 drawInfoArr: [],
                 resultdrawArr: [],
+                recommend_list: [],
                 mapdata: {
                     appKey: "l7xx85f17a9a757349b59a2d9eb9d1382cb3",
-                    startX: "126.977022",
-                    startY: "37.569758",
-                    endX: "126.997589",
-                    endY: "37.570594",
-                    passList: "126.987319,37.565778_126.983072,37.573028",
-                    reqCoordType : "WGS84GEO",
-						resCoordType : "EPSG3857",
+                    startX: "127.0260036",
+                    startY: "37.5024399",
+                    endX: "127.0313759",
+                    endY: "37.5004042",
+                    passList: "127.0248098,37.5004038",
+                    reqCoordType: "WGS84GEO",
+                    resCoordType: "EPSG3857",
 
                     startName: "출발지",
                     endName: "도착지",
 
                 },
                 polyline_: '',
+                directions: [],
+                listnumber:0,
 
 
             }
         },
         methods: {
+            fn_spread(id) {
+                var getID = document.getElementById(id);
+                getID.style.display = (getID.style.display == 'block') ? 'none' : 'block';
+            },
             initTmap() {
                 this.map = new Tmapv2.Map('map_div', {
-                    center: new Tmapv2.LatLng(37.570028, 126.986072),
+                    center: new Tmapv2.LatLng(37.49795, 127.0254483),
                     width: '100%',
                     height: '400px',
                     zoom: 15,
@@ -58,19 +80,21 @@
                 });
 
                 this.marker_s = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.569758, 126.977022),
+
+                    position: new Tmapv2.LatLng(37.5024399, 127.0260036),
                     icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
                     iconSize: new Tmapv2.Size(24, 38),
                     map: this.map
                 });
                 this.marker_e = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.570594, 126.997589),
+
+                    position: new Tmapv2.LatLng(37.5004042, 127.0313759),
                     icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
                     iconSize: new Tmapv2.Size(24, 38),
                     map: this.map
                 });
                 this.marker_p1 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.573028, 126.983072),
+                    position: new Tmapv2.LatLng(37.5004038, 127.0248098),
                     icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
                     iconSize: new Tmapv2.Size(24, 38),
                     map: this.map
@@ -87,12 +111,13 @@
 
                 axios.post(
                         `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&${querystring}`
-                        )
+                    )
                     .then((res) => {
-                        console.log(res.data.features)
+
 
 
                         var resultData = res.data.features;
+                        
 
                         //결과 출력
                         var tDistance = "총 거리 : " +
@@ -119,6 +144,10 @@
                         for (var k in resultData) {
                             var geometry = resultData[k].geometry;
                             var properties = resultData[k].properties;
+                            var direction = resultData[k].properties.description;
+                            this.directions.push(parseInt(k)+1+' : '+direction)
+                            console.log(k)
+
 
                             if (geometry.type == "LineString") {
                                 for (var j in geometry.coordinates) {
@@ -135,8 +164,9 @@
                                         convertPoint._lng);
                                     // 배열에 담기
                                     this.drawInfoArr.push(convertChange);
-                                    console.log(this.drawInfoArr)
-                                    
+
+
+
 
                                 }
                             } else {
@@ -174,7 +204,7 @@
                                     lat: convertPoint2._lat,
                                     pointType: pType
                                 };
-                                console.log(routeInfoObj)
+
 
                                 // Marker 추가
                                 new Tmapv2.Marker({
@@ -185,7 +215,7 @@
                                     iconSize: size,
                                     map: this.map
                                 });
-                                // console.log(marker_p)
+
 
                             }
                         } //for문 [E]
@@ -211,7 +241,7 @@
                     strokeWeight: 6,
                     map: this.map
                 });
-                
+
                 this.resultdrawArr.push(polyline_);
 
 
