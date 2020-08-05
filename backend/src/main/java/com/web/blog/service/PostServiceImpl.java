@@ -63,4 +63,21 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPostedList(int userId) {
         return postdao.getPostedList(userId);
     }
+
+    @Override
+    public List<Post> getPostedListByLikes() {
+        return postdao.getPostedListByLikes();
+    }
+
+    @Override
+    public List<Post> getPostedListByHits() {
+        return postdao.getPostedListByHits();
+    }
+
+    @Override
+    public void upHit(int postId) {
+        postdao.upHit(postId);
+    }
+
+    
 }

@@ -16,4 +16,7 @@ public interface PostService {
     int updateLikes(int postId, int status);
     List<Post> searchArticle(String keyword);
     List<Post> getPostedList(int userId);
+    List<Post> getPostedListByLikes();
+    List<Post> getPostedListByHits();
+    void upHit(int postId);
 }   

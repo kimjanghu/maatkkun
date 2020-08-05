@@ -22,4 +22,5 @@ public class Post {
     private int likes;
     private String createDate; 
     private String nickname;
+    private int hits;
 }
