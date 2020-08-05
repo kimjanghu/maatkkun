@@ -15,22 +15,22 @@
     private String createDate;  -->
 	
 	<select id="getPost" parameterType="int" resultType="com.web.blog.model.user.Post">
-		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint,placename
 		from post where postid=#{postid}
 	</select>
 
 	<select id="getList" resultType="com.web.blog.model.user.Post">
-		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits,url,starpoint
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits,url,starpoint,placename
 		from post order by create_data desc
 	</select>
 
 	<select id="getPostedListByLikes" resultType="com.web.blog.model.user.Post">
-		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits,url,starpoint
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits,url,starpoint,placename
 		from post order by likes desc
 	</select>
 
 	<select id="getPostedListByHits" resultType="com.web.blog.model.user.Post">
-		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits,url,starpoint
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y.%m.%d %H:%i') as createDate,nickname,hits,url,starpoint,placename
 		from post order by hits desc
 	</select>
 	
@@ -50,7 +50,8 @@
 			#{nickname},
 			default,
 			#{url},
-			#{starpoint}
+			#{starpoint},
+			#{placename}
 
 		)
 	</insert>
@@ -60,7 +61,7 @@
 	</delete>
 
 	<select id="selectOne" parameterType="int" resultType="com.web.blog.model.user.Post">
-		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint,placename
 		from post 
 		where postid=#{postid}
 	</select>
@@ -95,7 +96,8 @@
 			nickname = #{nickname},
 			create_data = default,
 			url=#{url},
-			starpoint=#{starpoint}
+			starpoint=#{starpoint},
+			placename=#{placename}
 		 where postId = #{postId}
 	</update>
 
@@ -107,7 +109,7 @@
 	</select>
 
 	<select id="searchArticle" resultType="com.web.blog.model.user.Post">
-		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint,placename
 		from post
 		where content like #{keyword} or
 		title like #{keyword} or
@@ -116,6 +118,7 @@
 	</select>
 
 	<select id="getPostedList" parameterType="int" resultType="com.web.blog.model.user.Post">
-		select * from post where userid = #{userid}
+		select postId,userid,title,lat,lon,content,hashtag,address,likes,date_format(create_data, '%Y-%m-%d %H:%i:%s') as createDate,nickname,hits,url,starpoint,placename
+		 from post where userid = #{userid}
 	</select>
 </mapper>
