@@ -91,6 +91,10 @@
       음식점 주소 <br>
       {{articleData.address}}
     </div>
+    <div id="restaurant_name" class="form-group d-flex mt-3">
+      음식점 이름 <br>
+      {{articleData.placename}}
+    </div>
     <br>
     <br>
 
@@ -179,6 +183,7 @@
           lon: '',
           userid: this.$cookies.get('auth-token'),
           url:'',
+          placename:'',
 
 
 
@@ -363,6 +368,7 @@
                 abc.articleData.lon = x;
                 abc.articleData.address = address;
                 abc.articleData.url = placeurl;
+                abc.articleData.placename = title;
                 abc.isModal = !abc.isModal;
               }
             });
@@ -383,6 +389,7 @@
                 abc.articleData.lon = x;
                 abc.articleData.address = address;
                 abc.articleData.url = placeurl;
+                abc.articleData.placename = title;
                 abc.isModal = !abc.isModal;
               }
             }
@@ -587,6 +594,7 @@
         this.articleData.likes = this.preArticleData.likes
         this.articleData.userid = this.preArticleData.userid
         this.articleData.url = this.preArticleData.url
+        this.articleData.placename = this.preArticleData.placename
       }
     },
 

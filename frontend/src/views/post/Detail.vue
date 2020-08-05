@@ -21,6 +21,7 @@
         <br>
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
+        <p>음식점 이름 : {{article.placename}}</p>
         <button class="create_button" style="margin-right:2px;" @click.prevent="changeModal">공유하기</button>
         <div v-show="isModal" class="modal-container" id="modal">
           <div class="modal">
