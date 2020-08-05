@@ -23,4 +23,5 @@ public class Post {
     private String createDate; 
     private String nickname;
     private int hits;
+    private String url;
 }
