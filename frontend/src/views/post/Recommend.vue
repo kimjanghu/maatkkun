@@ -145,10 +145,15 @@
                             var geometry = resultData[k].geometry;
                             var properties = resultData[k].properties;
                             var direction = resultData[k].properties.description;
-                            this.directions.push(parseInt(k)+1+' : '+direction)
-                            console.log(k)
+                            
+                            
+                            
+                            if(direction[0]!==',' && !direction.includes(',')){
+                                this.listnumber+=1
+                                 this.directions.push(this.listnumber+' : '+direction)
 
-
+                            }
+                           
                             if (geometry.type == "LineString") {
                                 for (var j in geometry.coordinates) {
                                     // 경로들의 결과값(구간)들을 포인트 객체로 변환 
