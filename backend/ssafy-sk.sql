@@ -100,7 +100,7 @@ alter table post add hits int default 0;
 
 --200805
 alter table post add url varchar(200) default null;
-alter table post add starpoint varchar(10) default null;
+alter table post add starpoint varchar(10) default "0.0";
 alter table post add placename varchar(100) default null;
 
 
