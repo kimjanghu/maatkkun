@@ -29,9 +29,6 @@
                 <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
                 <label for="Bunsik">분식</label>
 
-                <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
-                <label for="Soju">술집</label>
-
 
             </div>
         </div>

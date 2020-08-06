@@ -263,7 +263,7 @@
       // 키워드 검색을 요청하는 함수입니다
       searchPlaces() {
 
-        var keyword = document.getElementById('keyword').value;
+        var keyword = "역삼동"+document.getElementById('keyword').value;
 
         if (!keyword.replace(/^\s+|\s+$/g, '')) {
           alert('키워드를 입력해주세요!');
@@ -328,10 +328,10 @@
 
           var lat = places[i].x;
           var lon = places[i].y;
-         
+          // console.log(address.includes("역삼동"))
 
-
-          // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+          if(address.includes("역삼동")){
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
           // LatLngBounds 객체에 좌표를 추가합니다
           bounds.extend(placePosition);
           var map = this.map;
@@ -389,6 +389,12 @@
 
 
           fragment.appendChild(itemEl);
+
+          }
+         
+
+
+          
         }
 
 
