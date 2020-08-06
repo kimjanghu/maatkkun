@@ -125,8 +125,7 @@ public class PostController {
             if(dd.size() > 0){
                 Element element = dd.get(0);
                 String id = element.attr("id");
-                post.setContent(idParseImage(id));
-                
+                post.setContent(idParseImage(id));       
             }
             else{
                 post.setContent(null);
@@ -451,7 +450,7 @@ public class PostController {
         }
     }
 
-    @ApiOperation(value = "작성 게시물 리스트 최신순", notes = "작성 게시물 리스트 API")
+    @ApiOperation(value = "사용자가 작성한 게시물 ", notes = "작성 게시물 리스트 API")
     @PostMapping(value="/articles/postedList")
     @ApiImplicitParams({
         // @ApiImplicitParam(name = "uid", value = "식별자", required = true, dataType = "string" ),
@@ -638,7 +637,7 @@ public class PostController {
 
         //전체 리스트 받아오기
         List<Post> list =  service.getList();
-        System.out.println("pid\thits\tlikes\tstarpoint");
+        System.out.println("pid\thits\tlikes\tstarpoint\tdistance");
 
         Double hitsAvg = 0.0;
         Double likesAvg = 0.0;
@@ -649,9 +648,9 @@ public class PostController {
             starAvg += Double.parseDouble(p.getStarpoint());
             
             // 미터(Meter) 단위
-            double distanceMeter = distance(37.504198, 127.047967, 37.501025, 127.037701, "meter");
+            double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
 
-            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint());
+            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint()+"\t"+distanceMeter);
         }
 
         hitsAvg /= list.size();
@@ -767,7 +766,6 @@ public class PostController {
         if(unit == "meter"){
             dist = dist * 1609.344;
         }
- 
         return (dist);
     }
      
@@ -779,7 +777,5 @@ public class PostController {
     private static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
     }
-
-
 
 }
