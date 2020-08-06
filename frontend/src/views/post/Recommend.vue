@@ -46,7 +46,7 @@
         <hr>
         <br>
         <p>피드백을 주세요</p>
-        <button class="create_button" style="margin-right:2px;">거리가 너무 멀어요!</button>
+        
         <button class="create_button" style="margin-right:2px;">평점이 너무 낮아요!</button>
         <br>
         <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고
