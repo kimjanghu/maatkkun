@@ -339,8 +339,9 @@
           var address = places[i].address_name;
           var placeurl = places[i].place_url;
 
-          var x = places[i].x;
-          var y = places[i].y;
+          var lat = places[i].x;
+          var lon = places[i].y;
+         
 
 
           // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -349,7 +350,7 @@
           var map = this.map;
           // console.log(places[i]);
 
-          (function (marker, title, abc, address,placeurl) {
+          (function (marker, title, abc, address,placeurl,lat,lon) {
             var infowindow = new kakao.maps.InfoWindow({
               content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
               removable: true
@@ -364,12 +365,14 @@
               var a = confirm("이 식당이 맞습니까?")
               if (a) {
                 // abc.placeDecision = title
-                abc.articleData.lat = y;
-                abc.articleData.lon = x;
+                abc.articleData.lat = lat;
+                abc.articleData.lon = lon;
                 abc.articleData.address = address;
                 abc.articleData.url = placeurl;
                 abc.articleData.placename = title;
                 abc.isModal = !abc.isModal;
+                console.log(abc.articleData.lat)
+                
               }
             });
 
@@ -384,9 +387,8 @@
               var a = confirm("이 식당이 맞습니까?")
               if (a) {
                 // abc.articleData.address = title
-                console.log(address)
-                abc.articleData.lat = y;
-                abc.articleData.lon = x;
+                abc.articleData.lat = lat;
+                abc.articleData.lon = lon;
                 abc.articleData.address = address;
                 abc.articleData.url = placeurl;
                 abc.articleData.placename = title;
@@ -394,7 +396,7 @@
               }
             }
 
-          })(marker, title, this, address,placeurl);
+          })(marker, title, this, address,placeurl,lat,lon);
 
 
 
