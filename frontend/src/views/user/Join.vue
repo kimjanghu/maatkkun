@@ -64,6 +64,7 @@
               </span>
               <small>Error message</small>
             </div>
+            
           
             <input @click.prevent="signup(signupInfo)" type="submit" class="submit-btn" />
           </form>
@@ -77,6 +78,7 @@
 import '../../assets/css/formControl.css'
 import axios from 'axios'
 import { mapActions } from 'vuex'
+import '@/assets/css/checkbox.css'
 
 export default {
   components: {},
@@ -89,13 +91,16 @@ export default {
           email: '',
           password: '',
           passwordConfirm: '',
+          favor:'',
         },
         checkValidation: {
           checkedEmail: false,
           checkedNickname: false,
           match: false,
         },
+      
       },
+      
       certificationNumber: '',
       checkNumber: '',
       passwordType: 'password',
