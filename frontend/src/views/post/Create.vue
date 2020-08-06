@@ -122,20 +122,7 @@
       <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
       <label for="Soju">술집</label>
 
-      <input type="checkbox" id="Gangnam" value="강남" v-model="hashtags">
-      <label for="Gangnam">강남 </label>
-
-      <input type="checkbox" id="Hong" value="홍대" v-model="hashtags">
-      <label for="Hong">홍대</label>
-
-      <input type="checkbox" id="Taewon" value="이태원" v-model="hashtags">
-      <label for="Taewon">이태원</label>
-
-      <input type="checkbox" id="SeongSu" value="성수" v-model="hashtags">
-      <label for="SeongSu">성수</label>
-
-      <input type="checkbox" id="GaRoad" value="가로수길" v-model="hashtags">
-      <label for="GaRoad">가로수길</label>
+      
     </div>
     <br>
     

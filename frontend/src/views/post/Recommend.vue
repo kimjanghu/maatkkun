@@ -6,17 +6,57 @@
         <div class="map_act_btn_wrap clear_box"></div>
         <p id="result"></p>
         <br />
-       
+        <h2>어떤 종류의 음식점을 추천받고 싶나요?</h2>
+        <button v-if="!isRestaurant" class="create_button" @click.prevent="fn_spread('hiddenContent03'); handClick();"
+            style="margin-right:2px;">식사</button>
+        <button v-if="isRestaurant" class="select_button" @click.prevent="fn_spread('hiddenContent03'); handClick();"
+            style="margin-right:2px;">식사</button>
+        <div id="hiddenContent03" class="example02" style="display: none; margin-top:20px;">
+            <div class="checkbox-container" id="cook">
+
+                <input type="checkbox" id="Korean" value="한식" v-model="hashtags">
+                <label for="Korean">한식</label>
+
+                <input type="checkbox" id="Chinese" value="중식" v-model="hashtags">
+                <label for="Chinese">중식</label>
+
+                <input type="checkbox" id="Western" value="양식" v-model="hashtags">
+                <label for="Western">양식</label>
+
+                <input type="checkbox" id="Japanese" value="일식" v-model="hashtags">
+                <label for="Japanese">일식</label>
+
+                <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
+                <label for="Bunsik">분식</label>
+
+                <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
+                <label for="Soju">술집</label>
+
+
+            </div>
+        </div>
+        <button v-if="!isCafe" class="create_button" @click.prevent="handCafe" style="margin-right:2px;">카페</button>
+        <button v-if="isCafe" class="select_button" @click.prevent="handCafe" style="margin-right:2px;">카페</button>
+        <button v-if="!isDrink" class="create_button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
+        <button v-if="isDrink" class="select_button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
+        <br>
+        <br>
+        <button class="create_button" style="margin-top:2px;" @click="recommendToMe">추천해주세요!</button>
+        <br>
+        <hr>
+        <br>
+        <p>피드백을 주세요</p>
         <button class="create_button" style="margin-right:2px;">거리가 너무 멀어요!</button>
         <button class="create_button" style="margin-right:2px;">평점이 너무 낮아요!</button>
         <br>
-        <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고 싶어요!</button>
+        <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고
+            싶어요!</button>
         <div id="hiddenContent02" class="example01" style="display: none; margin-top:20px;">
-         <ul v-for="direction in directions" :key="direction.id">
-            <li style='text-align:left;'>
-                {{direction}}
-            </li>
-        </ul>
+            <ul v-for="direction in directions" :key="direction.id">
+                <li style='text-align:left;'>
+                    {{direction}}
+                </li>
+            </ul>
         </div>
 
 
@@ -29,6 +69,9 @@
 <script>
     import axios from 'axios'
     import jQuery from 'jquery'
+    import '@/assets/css/checkbox.css'
+
+
 
     export default {
         name: "Recommend",
@@ -59,12 +102,49 @@
                 },
                 polyline_: '',
                 directions: [],
-                listnumber:0,
+                listnumber: 0,
+                hashtags: [],
+                wantRecommend: {
+                    food:'',
+                    isCafe:null,
+                    isDrink:null,
+                    
+                },
+                isRestaurant: false,
+                isCafe: false,
+                isDrink: false,
 
 
             }
         },
         methods: {
+            recommendToMe(){
+                if(this.isRestaurant)
+                {
+                    this.wantRecommend.food = this.hashtags.join(",")
+
+                }
+                if(this.isCafe){
+                    
+                    this.wantRecommend.isCafe = 1
+
+                }
+
+                if(this.isDrink){
+                    this.wantRecommend.isDrink = 1
+
+                }
+
+            },
+            handClick() {
+                this.isRestaurant = !this.isRestaurant
+            },
+            handCafe() {
+                this.isCafe = !this.isCafe
+            },
+            handDrink() {
+                this.isDrink = !this.isDrink
+            },
             fn_spread(id) {
                 var getID = document.getElementById(id);
                 getID.style.display = (getID.style.display == 'block') ? 'none' : 'block';
@@ -117,7 +197,7 @@
 
 
                         var resultData = res.data.features;
-                        
+
 
                         //결과 출력
                         var tDistance = "총 거리 : " +
@@ -145,15 +225,15 @@
                             var geometry = resultData[k].geometry;
                             var properties = resultData[k].properties;
                             var direction = resultData[k].properties.description;
-                            
-                            
-                            
-                            if(direction[0]!==',' && !direction.includes(',')){
-                                this.listnumber+=1
-                                 this.directions.push(this.listnumber+' : '+direction)
+
+
+
+                            if (direction[0] !== ',' && !direction.includes(',')) {
+                                this.listnumber += 1
+                                this.directions.push(this.listnumber + ' : ' + direction)
 
                             }
-                           
+
                             if (geometry.type == "LineString") {
                                 for (var j in geometry.coordinates) {
                                     // 경로들의 결과값(구간)들을 포인트 객체로 변환 
@@ -276,6 +356,16 @@
     }
 </script>
 
-<style>
+<style scoped>
+    .select_button {
+        background-color: #FFB182;
 
+        border: none;
+        font-size: 1em;
+        font-weight: 400;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        color: #000000;
+    }
 </style>
