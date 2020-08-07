@@ -19,6 +19,14 @@
           </p>
         </div>
         <br>
+        <div v-if="isLoggedIn" class="comment-like-wrap">
+                <i :ref="article.postId" @click="change(article); checkLike(article);" v-if="includes(article)" class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
+                <i :ref="article.postId" @click="change(article); checkLike(article);" v-if="!includes(article)" class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
+              </div>
+              <div v-else class="comment-like-wrap">
+                <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
+              </div>
+        <br>
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
         <p>음식점 이름 : {{article.placename}}</p>
@@ -76,6 +84,7 @@
         marker: '',
         geocoder: '',
         isModal: false,
+        likedposts:'',
       }
     },
     methods: {
@@ -115,6 +124,48 @@
           }
         });
       },
+       includes(one){
+      
+      if(this.likedposts.includes(one.postId )){
+        // console.log(one.postId)
+        return true
+      }
+      else{
+        return false
+      }
+      
+    },
+       change(post){
+      
+      var cl = this.$refs[post.postId][0]["className"];
+      console.log(cl)
+      
+      if(cl === "fas fa-heart fa-lg animated delay-1s" || cl ==="fas fa-heart fa-lg animated delay-1s redheart"){
+          this.$refs[post.postId][0]["className"] = "far fa-heart fa-lg animated infinite bounce delay-1s";
+          this.$refs[post.postId][0]["style"]["color"] = "gray";
+          post.likes-=1
+          
+      }
+      else{
+          this.$refs[post.postId][0]["className"] = "fas fa-heart fa-lg animated delay-1s";
+          this.$refs[post.postId][0]["style"]["color"] = "red";
+          post.likes+=1
+      }
+
+
+    },
+    checkLike(one){
+      one.userid=this.$cookies.get('auth-token')
+      // console.log(one.userid)
+      axios.post(`${this.SERVER_URL}/articles/like`,one)
+      .then(()=>{
+        // console.log(res)
+        axios.post(`${this.SERVER_URL}/accounts/userDetail`,{"uid":this.$cookies.get('auth-token')})
+        .then((res)=>{
+          console.log(res)
+        })
+      })
+    },
 
       CopyUrlToClipboard()
 
@@ -201,6 +252,15 @@
         const modal = document.getElementById("modal");
         e.target === modal ? (this.isModal = false) : false;
       });
+       if(this.$cookies.get('auth-token')){
+      axios.post(`${this.SERVER_URL}/accounts/userDetail`,{"uid":this.$cookies.get('auth-token')})
+        .then((res)=>{
+          var liked_list = res.data.likedpost.split(',').map(i=>parseInt(i))
+          var result = liked_list.slice(0,-1)
+          this.likedposts = result
+          }
+        )
+    }
       
     }
   }
