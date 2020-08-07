@@ -526,7 +526,7 @@ public class PostController {
     public ResponseEntity<Object> getPostedListByHits(){
         final HashMap<String,Object> hm = new HashMap<>();
         
-        final List<Post> postList = service.getPostedListByLikes();
+        final List<Post> postList = service.getPostedListByHits();
         final List<Integer> commentList = new ArrayList<>();
         
         for(final Post post : postList){
