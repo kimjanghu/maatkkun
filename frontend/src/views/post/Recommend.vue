@@ -74,6 +74,7 @@
         name: "Recommend",
         data() {
             return {
+                SERVER_URL: process.env.VUE_APP_API_URL,
                 map: '',
                 marker_s: '',
                 marker_e: '',
@@ -131,6 +132,7 @@
                     this.wantRecommend.isDrink = 1
 
                 }
+                axios.get()
 
             },
             handClick() {
