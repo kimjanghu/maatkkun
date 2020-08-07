@@ -625,8 +625,10 @@ public class PostController {
     @ApiOperation(value = "추천 음식점", notes = "추천 음식점 API")
     @PostMapping(value="/articles/getRecommentList/")
     public ResponseEntity<Object> getRecommentList(@RequestBody String wantRecommend){
-
+        System.out.println("====");
         System.out.println(wantRecommend);
+        System.out.println("====");
+        
         boolean isdrink = false;
         boolean iscafe = false;
         boolean isfood = false;
@@ -685,9 +687,9 @@ public class PostController {
             starAvg += Double.parseDouble(p.getStarpoint());
             
             // 미터(Meter) 단위
-            final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
+            // final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
 
-            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint()+"\t"+distanceMeter);
+            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint());
         }
 
         hitsAvg /= list.size();
