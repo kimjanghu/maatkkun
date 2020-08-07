@@ -142,7 +142,6 @@ export default {
     // },
 
     change(post){
-      
       var cl = this.$refs[post.postId][0]["className"];
       console.log(cl)
       
