@@ -7,6 +7,8 @@ export default{
     userPostList: '/articles/postedList',
     userLikeList: '/articles/likedList',
     list: '/articles/list',
+    likeList: '/articles/postedListByLikes',
+    hitList: '/articles/postedListByHits',
     detail: '/articles/showArticle',
     delete: '/articles/dropArticle',
     update: '/articles/modify',
