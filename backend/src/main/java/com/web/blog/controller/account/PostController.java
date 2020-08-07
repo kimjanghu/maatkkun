@@ -56,7 +56,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.KeyVal;
 import org.jsoup.nodes.Document; 
@@ -626,6 +627,39 @@ public class PostController {
     public ResponseEntity<Object> getRecommentList(@RequestBody String wantRecommend){
 
         System.out.println(wantRecommend);
+        boolean isdrink = false;
+        boolean iscafe = false;
+        boolean isfood = false;
+
+
+        try{
+            JSONParser jp = new JSONParser(); 
+            JSONObject jo = (JSONObject)jp.parse(wantRecommend);
+            JSONObject joo = (JSONObject)jp.parse(jo.get("wantRecommend").toString());
+            // System.out.println(joo.get("isDrink").toString());
+            // System.out.println(joo.get("isCafe").toString());
+            // System.out.println(joo.get("food").toString());
+
+            if(joo.get("food") != null){
+                isfood = true;
+            }
+            if(joo.get("isCafe") != null){
+                iscafe = true;
+            }
+            if(joo.get("isDrink") != null){
+                isdrink = true;
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(isfood);
+        System.out.println(iscafe);
+        System.out.println(isdrink);
+        
+
+
 
         final Double std_lat = 37.5006744185994;
         final Double std_lon = 127.03646946847;
@@ -634,7 +668,7 @@ public class PostController {
         final double hitScore = 20.0;   // 조회수 계수
         final double likeScore = 20.0;  // 좋아요 계수 
         final double starScore = 20.0;  // 별점 계수
-        final double disScore = 20.0;   // 거리 계수
+        // final double disScore = 20.0;   // 거리 계수
 
         final Map<Integer,Double> hm = new HashMap<Integer,Double>();
 
