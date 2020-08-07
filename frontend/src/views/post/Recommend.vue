@@ -67,6 +67,7 @@
     import axios from 'axios'
     import jQuery from 'jquery'
     import '@/assets/css/checkbox.css'
+    
 
 
 
@@ -115,6 +116,7 @@
 
             }
         },
+        
         methods: {
             recommendToMe(){
                 if(this.isRestaurant)
