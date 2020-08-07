@@ -21,6 +21,7 @@ import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
 import Recommend from '@/views/post/Recommend.vue'
+import Kind from '@/views/post/Kind.vue'
 
 // 에러
 import Errorpage from '@/components/Error.vue'
@@ -94,6 +95,11 @@ const routes = [
     path: '/post/temporary',
     name: constants.URL_TYPE.POST.TEMPORARY,
     component: Temporary
+  },
+  {
+    path: '/post/kind',
+    name: constants.URL_TYPE.POST.KIND,
+    component: Kind
   },
   {
     path: '/post/recommend',

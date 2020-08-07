@@ -42,7 +42,7 @@ export default {
   methods: {
     ...mapActions(['searchResult', 'changeMain']),
     goRecommend(){
-      this.$router.push('/post/recommend')
+      this.$router.push('/post/kind')
     },
     changeMainRecentList() {
       this.isRecentList = false,

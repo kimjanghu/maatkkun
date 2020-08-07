@@ -26,6 +26,7 @@ export default {
       DETAIL: 'detail',
       TEMPORARY: 'temporary',
       RECOMMEND: 'recommend',
+      KIND : 'kind',
     },
     TEST: 'test'
   },
