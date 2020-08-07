@@ -132,7 +132,9 @@
                     this.wantRecommend.isDrink = 1
 
                 }
-                axios.get(`${this.SERVER_URL}/articles/getRecommendList/${this.wantRecommend}`)
+                axios.post(`${this.SERVER_URL}/articles/getRecommentList/`,{
+                   "wantRecommend" :  this.wantRecommend
+                })
                 .then((res)=>{
                     console.log(res)
                 })
