@@ -48,9 +48,8 @@
 <script>
   import 'codemirror/lib/codemirror.css'
   import '@toast-ui/editor/dist/toastui-editor.css'
-  import {
-    Viewer
-  } from '@toast-ui/vue-editor'
+  import { Viewer } from '@toast-ui/vue-editor'
+  import { mapActions } from 'vuex'
   import constants from '@/lib/constants'
   import axios from 'axios'
   import SERVER from '@/api/drf'
@@ -78,6 +77,7 @@
       }
     },
     methods: {
+      ...mapActions(['changeMain']),
       initMap() {
         var container = document.getElementById('map')
         var options = {
@@ -194,6 +194,7 @@
     },
     created() {
       this.detailPage()
+      this.changeMain(false)
     },
     mounted() {
       window.addEventListener("click", e => {

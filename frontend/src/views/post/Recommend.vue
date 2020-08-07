@@ -15,6 +15,7 @@
 <script>
     import axios from 'axios'
     import jQuery from 'jquery'
+    import { mapActions } from 'vuex'
     export default {
         name: "Recommend",
         data() {
@@ -47,6 +48,7 @@
             }
         },
         methods: {
+            ...mapActions(['changeMain']),
             initTmap() {
                 this.map = new Tmapv2.Map('map_div', {
                     center: new Tmapv2.LatLng(37.570028, 126.986072),
@@ -219,6 +221,9 @@
         }
 
         ,
+        created() {
+            this.changeMain(false)
+        },
         mounted() {
             if (window.Tmapv2 && window.Tmapv2.Map) {
                 this.initTmap();

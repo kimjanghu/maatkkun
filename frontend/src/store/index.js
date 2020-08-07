@@ -12,7 +12,10 @@ export default new Vuex.Store({
   state: {
     authToken: cookies.get('auth-token'),
     articles: [],
-    postInfo: null
+    likeArticles: [],
+    hitArticles: [],
+    postInfo: null,
+    isMain: true
   },
   getters: {
     isLoggedIn: state => !!state.authToken,
@@ -27,26 +30,29 @@ export default new Vuex.Store({
       state.authToken = token
       cookies.set('auth-token', token)
     },
+    SET_USERINFO(state, userInfo) {
+      state.userInfo = userInfo
+      window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
+    },
+
     SET_ARTICLES(state, articles) {
       state.articles = articles
+    },
+    SET_LIKE_ARTICLES(state, likeArticles) {
+      state.likeArticles = likeArticles
+    },
+    SET_HIT_ARTICLES(state, hitArticles) {
+      state.hitArticles = hitArticles
     },
     SET_POSTINFO(state, post) {
       state.post = post
     },
-    SET_USERINFO(state, userInfo) {
-      state.userInfo = userInfo
-      window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
+    SET_MAIN(state, main) {
+      state.isMain = main
     }
   },
   actions: {
-    // postAuthData({ commit }, info) {
-    //   axios.post(SERVER.URL + info.location, info.data)
-    //     .then(res => {
-    //       commit('SET_TOKEN', res.data.key)
-    //       router.push({ name: 'Home' })
-    //     })
-    //     .catch(err => alert(err.response))
-    // },
+    // User
     signup({ commit }, signupInfo) {
       if (!signupInfo.signupData.nickname.trim()) {
         alert('닉네임은 필수 입력 항목입니다.');
@@ -72,21 +78,7 @@ export default new Vuex.Store({
           .catch(err => alert(err));
       }
     },
-    // signup({ dispatch }, signupData) {
-    //   const info = {
-    //     data: signupData,
-    //     location: SERVER.ROUTES.signup
-    //   }
-    //   dispatch('postAuthData', info)
-    // },
     login({ commit }, loginData) {
-      // console.log(loginData)
-      // const info = {
-      //   data: loginData,
-      //   location: SERVER.ROUTES.login
-      // }
-      // commit('SET_USERINFO', loginData)
-      // dispatch('postAuthData', info)
       axios.post(process.env.VUE_APP_API_URL + SERVER.ROUTES.login, loginData)
         .then(res => {
           commit('SET_USERINFO', { uid: res.data.uid, nickname: res.data.nickname })
@@ -101,17 +93,7 @@ export default new Vuex.Store({
       window.localStorage.removeItem('userInfo')
       router.push('/')
     },
-    // logout({ getters, commit }) {
-    //   axios.post(SERVER.URL + SERVER.ROUTES.logout, null, getters.config)
-    //     .then(() => {
-    //       // console.log(res)
-    //       commit('SET_TOKEN', null)
-    //       cookies.remove('auth-token')
-    //       window.localStorage.removeItem('userInfo');
-    //       router.push({ name: 'Home' })
-    //     })
-    //     .catch(err => console.log(err.response.data))
-    // },
+    // Post
     searchResult({ commit },keyword){
       console.log(keyword)
       axios.get(`${process.env.VUE_APP_API_URL}/articles/searchArticle/${keyword}`)
@@ -127,6 +109,22 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err))
     },
+    getLikeArticles({ commit }) {
+      axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.likeList)
+        .then(res => {
+          commit('SET_LIKE_ARTICLES', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    getHitArticles({ commit }) {
+      axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.hitList)
+        .then(res => {
+          console.log(process.env.VUE_APP_API_URL + SERVER.ROUTES.hitList)
+          console.log(res.data)
+          commit('SET_HIT_ARTICLES', res.data)
+        })
+        .catch(err => console.log(err))
+    },
     getSubarticles({ commit }) {
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.temporaryList)
         .then(res => {
@@ -134,6 +132,9 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err))
     },
+    changeMain({ commit }, main) {
+      commit('SET_MAIN', main)
+    }
   },
   modules: {},
 })

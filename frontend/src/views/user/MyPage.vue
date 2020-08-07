@@ -83,6 +83,7 @@
 import axios from 'axios'
 import SERVER from '@/api/drf'
 import constants from '@/lib/constants'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Mypage',
@@ -104,6 +105,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['changeMain']),
     getUserInfo() {
       const config = {
         headers: {
@@ -161,6 +163,7 @@ export default {
     this.getUserPost()
     this.getUserInfo()
     this.getUserLikedPost()
+    this.changeMain(false)
   },
 }
 </script>

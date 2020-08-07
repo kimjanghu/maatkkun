@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="login-container">
+      <router-link @click.native="changeMain(true)" class="logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAAK KUUN</router-link>
       <div class="login">
         <div class="login-header">
           <h3 style="text-align: center;">login</h3>
@@ -42,7 +43,6 @@ import constants from '@/lib/constants'
 import { mapActions } from 'vuex'
 import '@/assets/css/formControl.css'
 
-
 export default {
   components: {
   },
@@ -55,11 +55,8 @@ export default {
       }
     }
   },
-  mounted() {
-  },
-  created(){
-  },
   methods: {
+    ...mapActions(['login', 'changeMain']),
     showError(value, message) {
       const control = document.getElementById(value);
       control.className = "form-control error";
@@ -78,12 +75,26 @@ export default {
         this.showError("email-control", "Email is not valid");
       }
     },
-    ...mapActions(['login'])
   },
+  created() {
+    this.changeMain(false)
+  },
+  mounted() {
+  },
+  
 }
 </script>
 
 <style scoped>
+.logo {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
 .login-btn {
   cursor: pointer;
 }
