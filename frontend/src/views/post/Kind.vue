@@ -32,7 +32,7 @@
         <button v-if="isDrink" class="select_button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
         <br>
         <br>
-        <button class="create_button" style="margin-top:2px;" @click="recommendToMe">추천해주세요!</button>
+        <button class="create_button" style="margin-top:2px;" @click.prevent="recommendToMe">추천해주세요!</button>
     </div>
 
 </template>
@@ -45,6 +45,7 @@
         name:"Kind",
         data() {
             return {
+                SERVER_URL: process.env.VUE_APP_API_URL,
                 hashtags: [],
                 wantRecommend: {
                     food: '',
