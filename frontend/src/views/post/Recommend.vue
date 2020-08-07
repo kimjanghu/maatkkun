@@ -73,6 +73,7 @@
         name: "Recommend",
         data() {
             return {
+                SERVER_URL: process.env.VUE_APP_API_URL,
                 map: '',
                 marker_s: '',
                 marker_e: '',
@@ -113,6 +114,7 @@
 
             }
         },
+        
         methods: {
             ...mapActions(['changeMain']),
             recommendToMe(){
@@ -121,16 +123,32 @@
                     this.wantRecommend.food = this.hashtags.join(",")
 
                 }
+                else{
+                    this.wantRecommend.food = null;
+                }
                 if(this.isCafe){
                     
                     this.wantRecommend.isCafe = 1
 
+                }
+                else{
+                    this.wantRecommend.isCafe = null;
                 }
 
                 if(this.isDrink){
                     this.wantRecommend.isDrink = 1
 
                 }
+                else{
+                    this.wantRecommend.isDrink = null
+                }
+                axios.post(`${this.SERVER_URL}/articles/getRecommentList/`,{
+                   "wantRecommend" :  this.wantRecommend
+                })
+                .then((res)=>{
+                    console.log(res)
+                })
+                .catch(err=>console.log(err))
 
             },
             handClick() {

@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.Getter;
+import lombok.Setter;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +56,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.KeyVal;
 import org.jsoup.nodes.Document; 
@@ -109,22 +112,22 @@ public class PostController {
     @GetMapping(value="/articles/list")
     public ResponseEntity<Object> getList(){
 
-        HashMap<String,Object> hm = new HashMap<>();
+        final HashMap<String,Object> hm = new HashMap<>();
         
-        List<Post> postList = service.getList();
-        List<Integer> commentList = new ArrayList<>();
+        final List<Post> postList = service.getList();
+        final List<Integer> commentList = new ArrayList<>();
         
-        for(Post post : postList){
+        for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
 
 
-            Document doc = Jsoup.parseBodyFragment(post.getContent());
-            Elements dd = doc.select("img");
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Elements dd = doc.select("img");
             
 
             if(dd.size() > 0){
-                Element element = dd.get(0);
-                String id = element.attr("id");
+                final Element element = dd.get(0);
+                final String id = element.attr("id");
                 post.setContent(idParseImage(id));       
             }
             else{
@@ -148,23 +151,23 @@ public class PostController {
                 // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
                 // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
         })
-    public ResponseEntity<Object> register(@Valid @RequestBody Post post){
+    public ResponseEntity<Object> register(@Valid @RequestBody final Post post){
 
         post.setStarpoint(crawling(post.getUrl()));
 
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
-        ArrayList<String> srcAr = new ArrayList<String>();
+        final ArrayList<String> srcAr = new ArrayList<String>();
 
-        Document doc = Jsoup.parseBodyFragment(post.getContent());
-        Element body = doc.body();
-        int topNum = service.getTopNum();
+        final Document doc = Jsoup.parseBodyFragment(post.getContent());
+        final Element body = doc.body();
+        final int topNum = service.getTopNum();
         
 
-        Elements dd = doc.select("img");
+        final Elements dd = doc.select("img");
         for(int i = 0;i < dd.size() ; i++){
-            Element element = dd.get(i);
-            String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
+            final Element element = dd.get(i);
+            final String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
             srcAr.add(element.attr("src"));
             element.attr("src","");
             element.attr("id",filename);
@@ -175,23 +178,23 @@ public class PostController {
         if(service.register(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
 
-                String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
-                String base64 = srcAr.get(i);
-                String data = base64.split(",")[1];
+                final String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
+                final String base64 = srcAr.get(i);
+                final String data = base64.split(",")[1];
                 
 
-                byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
+                final byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
 
                 try {
                     
                     ImageIO.write(ImageIO.read(new ByteArrayInputStream(imageBytes)), "jpg", new File(path+filename+".jpg"));
                     
-                    Photo photo = new Photo();
+                    final Photo photo = new Photo();
                     photo.setPostid(topNum);
                     photo.setSrc(path+filename+".jpg");
                     photoservice.register(photo);
 
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -212,15 +215,15 @@ public class PostController {
         // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
-    public ResponseEntity<Object> modify(@Valid @RequestBody Post post){
-        int topNum = post.getPostId();
-        ArrayList<String> srcAr = new ArrayList<String>();
-        Document doc = Jsoup.parseBodyFragment(post.getContent());
-        Element body = doc.body();
-        Elements dd = doc.select("img");
+    public ResponseEntity<Object> modify(@Valid @RequestBody final Post post){
+        final int topNum = post.getPostId();
+        final ArrayList<String> srcAr = new ArrayList<String>();
+        final Document doc = Jsoup.parseBodyFragment(post.getContent());
+        final Element body = doc.body();
+        final Elements dd = doc.select("img");
         for(int i = 0;i < dd.size() ; i++){
-            Element element = dd.get(i);
-            String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
+            final Element element = dd.get(i);
+            final String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
             srcAr.add(element.attr("src"));
             element.attr("src","");
             element.attr("id",filename);
@@ -229,20 +232,20 @@ public class PostController {
 
         if(service.modify(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
-                String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
-                String base64 = srcAr.get(i);
-                String data = base64.split(",")[1];
-                byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
+                final String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
+                final String base64 = srcAr.get(i);
+                final String data = base64.split(",")[1];
+                final byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
 
                 try {
                     
                     ImageIO.write(ImageIO.read(new ByteArrayInputStream(imageBytes)), "jpg", new File(path+filename+".jpg"));
 
-                    Photo photo = new Photo();
+                    final Photo photo = new Photo();
                     photo.setPostid(topNum);
                     photo.setSrc(path+filename+".jpg");
                     photoservice.register(photo);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -259,27 +262,27 @@ public class PostController {
     @ApiImplicitParams({
     })
     public ResponseEntity<Object> showArticle(@RequestParam(required = true) final int postId){
-        Post post = service.showArticle(postId);
+        final Post post = service.showArticle(postId);
         service.upHit(postId);
 
-        Document doc = Jsoup.parseBodyFragment(post.getContent());
-        Element body = doc.body();
-        Elements dd = doc.select("img");
+        final Document doc = Jsoup.parseBodyFragment(post.getContent());
+        final Element body = doc.body();
+        final Elements dd = doc.select("img");
         
         for(int i = 0;i < dd.size() ; i++){
-            Element element = dd.get(i);
-            String id = element.attr("id");
+            final Element element = dd.get(i);
+            final String id = element.attr("id");
             
-            File imagePath = new File(path+id+".jpg");
+            final File imagePath = new File(path+id+".jpg");
             
             FileInputStream fis = null;
             
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             
             
 
             int len = 0;
-            byte[] buf = new byte[1024];
+            final byte[] buf = new byte[1024];
 
             try{
                 fis = new FileInputStream(imagePath);
@@ -288,19 +291,19 @@ public class PostController {
                     baos.write(buf,0,len);
                 }
 
-                byte[] fileArray = baos.toByteArray();
-                byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+                final byte[] fileArray = baos.toByteArray();
+                final byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
                 element.attr("src","data:image/jpeg;base64, "+new String(baseIncodingBytes));
 
                 baos.close();
                 fis.close();
             }
-            catch(Exception e){
+            catch(final Exception e){
                 System.out.println(e.getMessage());
             }
         }
         post.setContent(body.html());
-        Optional<Post> optPost = Optional.of(post);
+        final Optional<Post> optPost = Optional.of(post);
 
         if(optPost.isPresent()){
             return new ResponseEntity<>(post,HttpStatus.OK);            
@@ -321,16 +324,16 @@ public class PostController {
                 // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
         })
     public ResponseEntity<Object> dropArticle(@RequestParam(required = true) final int postId){
-        Post post = service.showArticle(postId);
+        final Post post = service.showArticle(postId);
         System.out.println("글 삭제");
-        Document doc = Jsoup.parseBodyFragment(post.getContent());
-        Element body = doc.body();
-        Elements dd = doc.select("img");
+        final Document doc = Jsoup.parseBodyFragment(post.getContent());
+        final Element body = doc.body();
+        final Elements dd = doc.select("img");
         
         for(int i = 0;i < dd.size() ; i++){
-            Element element = dd.get(i);
-            String id = element.attr("id");
-            File imagePath = new File(path+id+".jpg");
+            final Element element = dd.get(i);
+            final String id = element.attr("id");
+            final File imagePath = new File(path+id+".jpg");
             imagePath.setReadable(false);
             System.out.println(imagePath);
             System.out.println(imagePath.canWrite());
@@ -377,14 +380,14 @@ public class PostController {
         // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
-    public ResponseEntity<Object> likeArticle(@Valid @RequestBody Post request){
-        int postId = request.getPostId();
-        int userId = request.getUserid();
-        User user = userService.getUser(userId);
+    public ResponseEntity<Object> likeArticle(@Valid @RequestBody final Post request){
+        final int postId = request.getPostId();
+        final int userId = request.getUserid();
+        final User user = userService.getUser(userId);
         String likedPostList = user.getLikedpost();
         if(likedPostList == null) likedPostList = "";
-        String pid = Integer.toString(postId);
-        int idx = likedPostList.indexOf(pid);
+        final String pid = Integer.toString(postId);
+        final int idx = likedPostList.indexOf(pid);
         if(!likedPostList.contains(Integer.toString(postId))){ // 좋아요
             if(service.updateLikes(postId, 1)>0){
                 likedPostList += pid + ",";
@@ -421,19 +424,19 @@ public class PostController {
         // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
-    public ResponseEntity<Object> getLikedList(@Valid @RequestBody User request){
-        User user = userService.getUser(Integer.parseInt(request.getUid()));
+    public ResponseEntity<Object> getLikedList(@Valid @RequestBody final User request){
+        final User user = userService.getUser(Integer.parseInt(request.getUid()));
         String likedpost = user.getLikedpost();
 
-        String[] idList = likedpost.split(",");
+        final String[] idList = likedpost.split(",");
         
         
-        List<Post> likedPostList = new ArrayList<Post>();
-        for(String s : idList){
-            Post post = service.getPost(Integer.parseInt(s));
+        final List<Post> likedPostList = new ArrayList<Post>();
+        for(final String s : idList){
+            final Post post = service.getPost(Integer.parseInt(s));
             if(post == null){ // deleted post일 경우
                 // user 데이터 업데이트
-                int idx = likedpost.indexOf(s);
+                final int idx = likedpost.indexOf(s);
                 likedpost = likedpost.substring(0, idx)
                             + likedpost.substring(idx + s.length() + 1, likedpost.length());
                 user.setLikedpost(likedpost);
@@ -460,8 +463,8 @@ public class PostController {
         // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
-    public ResponseEntity<Object> getPostedList(@Valid @RequestBody User request){
-        List<Post> postedList = service.getPostedList(Integer.parseInt(request.getUid()));
+    public ResponseEntity<Object> getPostedList(@Valid @RequestBody final User request){
+        final List<Post> postedList = service.getPostedList(Integer.parseInt(request.getUid()));
         if(postedList.isEmpty()) { // 비어있을때
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else { // 비어있지 않을때 
@@ -480,23 +483,23 @@ public class PostController {
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
     public ResponseEntity<Object> getPostedListByLikes(){
-        HashMap<String,Object> hm = new HashMap<>();
+        final HashMap<String,Object> hm = new HashMap<>();
         
-        List<Post> postList = service.getPostedListByLikes();
-        List<Integer> commentList = new ArrayList<>();
+        final List<Post> postList = service.getPostedListByLikes();
+        final List<Integer> commentList = new ArrayList<>();
         
-        for(Post post : postList){
+        for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
 
 
-            Document doc = Jsoup.parseBodyFragment(post.getContent());
-            Element body = doc.body();
-            Elements dd = doc.select("img");
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
             
 
             if(dd.size() > 0){
-                Element element = dd.get(0);
-                String id = element.attr("id");
+                final Element element = dd.get(0);
+                final String id = element.attr("id");
                 post.setContent(idParseImage(id));
             }
             else{
@@ -521,23 +524,23 @@ public class PostController {
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
     public ResponseEntity<Object> getPostedListByHits(){
-        HashMap<String,Object> hm = new HashMap<>();
+        final HashMap<String,Object> hm = new HashMap<>();
         
-        List<Post> postList = service.getPostedListByLikes();
-        List<Integer> commentList = new ArrayList<>();
+        final List<Post> postList = service.getPostedListByHits();
+        final List<Integer> commentList = new ArrayList<>();
         
-        for(Post post : postList){
+        for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
 
 
-            Document doc = Jsoup.parseBodyFragment(post.getContent());
-            Element body = doc.body();
-            Elements dd = doc.select("img");
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
             
 
             if(dd.size() > 0){
-                Element element = dd.get(0);
-                String id = element.attr("id");
+                final Element element = dd.get(0);
+                final String id = element.attr("id");
                 
                 
                 post.setContent(idParseImage(id));
@@ -557,23 +560,23 @@ public class PostController {
     @GetMapping(value="/articles/searchArticle/{keyword}")
     @ApiImplicitParams({
     })
-    public ResponseEntity<Object> searchArticle(@PathVariable String keyword){
+    public ResponseEntity<Object> searchArticle(@PathVariable final String keyword){
         
-        HashMap<String,Object> hm = new HashMap<>();
-        List<Integer> commentList = new ArrayList<>();
+        final HashMap<String,Object> hm = new HashMap<>();
+        final List<Integer> commentList = new ArrayList<>();
 
-        List<Post> list = service.searchArticle(keyword);        
+        final List<Post> list = service.searchArticle(keyword);        
         if(!list.isEmpty()){
-            for(Post post : list){
+            for(final Post post : list){
 
                 commentList.add(commentservice.countComment(post.getPostId()));
 
-                Document doc = Jsoup.parseBodyFragment(post.getContent());
-                Elements dd = doc.select("img");
+                final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                final Elements dd = doc.select("img");
                 
                 if(dd.size() > 0){
-                    Element element = dd.get(0);
-                    String id = element.attr("id");
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
                     post.setContent(idParseImage(id));
                 }
             }
@@ -586,14 +589,14 @@ public class PostController {
         }
     }
 
-    public String idParseImage(String id){
+    public String idParseImage(final String id){
         
-        File imagePath = new File(path+id+".jpg");
+        final File imagePath = new File(path+id+".jpg");
         FileInputStream fis = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         int len = 0;
-        byte[] buf = new byte[1024];
+        final byte[] buf = new byte[1024];
 
         try{
             fis = new FileInputStream(imagePath);
@@ -602,8 +605,8 @@ public class PostController {
                 baos.write(buf,0,len);
             }
 
-            byte[] fileArray = baos.toByteArray();
-            byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+            final byte[] fileArray = baos.toByteArray();
+            final byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
             
 
             baos.close();
@@ -611,7 +614,7 @@ public class PostController {
 
             return "data:image/jpeg;base64, "+new String(baseIncodingBytes);
         }
-        catch(Exception e){
+        catch(final Exception e){
             System.out.println(e.getMessage());
         }
 
@@ -620,8 +623,43 @@ public class PostController {
 
 
     @ApiOperation(value = "추천 음식점", notes = "추천 음식점 API")
-    @GetMapping(value="/articles/getRecommentList")
-    public List<Post> getRecommentList(){
+    @PostMapping(value="/articles/getRecommentList/")
+    public ResponseEntity<Object> getRecommentList(@RequestBody String wantRecommend){
+
+        System.out.println(wantRecommend);
+        boolean isdrink = false;
+        boolean iscafe = false;
+        boolean isfood = false;
+
+
+        try{
+            JSONParser jp = new JSONParser(); 
+            JSONObject jo = (JSONObject)jp.parse(wantRecommend);
+            JSONObject joo = (JSONObject)jp.parse(jo.get("wantRecommend").toString());
+            // System.out.println(joo.get("isDrink").toString());
+            // System.out.println(joo.get("isCafe").toString());
+            // System.out.println(joo.get("food").toString());
+
+            if(joo.get("food") != null){
+                isfood = true;
+            }
+            if(joo.get("isCafe") != null){
+                iscafe = true;
+            }
+            if(joo.get("isDrink") != null){
+                isdrink = true;
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(isfood);
+        System.out.println(iscafe);
+        System.out.println(isdrink);
+        
+
+
 
         final Double std_lat = 37.5006744185994;
         final Double std_lon = 127.03646946847;
@@ -630,25 +668,24 @@ public class PostController {
         final double hitScore = 20.0;   // 조회수 계수
         final double likeScore = 20.0;  // 좋아요 계수 
         final double starScore = 20.0;  // 별점 계수
-        final double tagScore = 20.0;   // 태그 계수 
-        final double disScore = 20.0;   // 거리 계수
+        // final double disScore = 20.0;   // 거리 계수
 
-        Map<Integer,Double> hm = new HashMap<Integer,Double>();
+        final Map<Integer,Double> hm = new HashMap<Integer,Double>();
 
         //전체 리스트 받아오기
-        List<Post> list =  service.getList();
+        final List<Post> list =  service.getList();
         System.out.println("pid\thits\tlikes\tstarpoint\tdistance");
 
         Double hitsAvg = 0.0;
         Double likesAvg = 0.0;
         Double starAvg = 0.0;
-        for(Post p : list){
+        for(final Post p : list){
             hitsAvg += p.getHits();
             likesAvg += p.getLikes();
             starAvg += Double.parseDouble(p.getStarpoint());
             
             // 미터(Meter) 단위
-            double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
+            final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
 
             System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint()+"\t"+distanceMeter);
         }
@@ -672,9 +709,9 @@ public class PostController {
         System.out.println("starUnit : "+starUnit);
 
 
-        List<KeyValue> li = new ArrayList<KeyValue>();
-        for(Post p : list){
-            Double score =  p.getHits() * hitUnit +
+        final List<KeyValue> li = new ArrayList<KeyValue>();
+        for(final Post p : list){
+            final Double score =  p.getHits() * hitUnit +
                             p.getLikes() * likeUnit +
                             Double.parseDouble(p.getStarpoint()) * starUnit;
             hm.put(p.getPostId(), score);
@@ -685,16 +722,22 @@ public class PostController {
 
         System.out.println("================================");
         Collections.sort(li,Collections.reverseOrder());
-        for(KeyValue kv : li){
+        for(final KeyValue kv : li){
             System.out.println(kv);
         }
         
         // System.out.println(x);
         // System.out.println(y);
         System.out.println("==========================================");
-        return null;
-    }
 
+        final HashMap<String,Post> result = new HashMap<>();
+        result.put("음식", service.getPost(li.get(0).getPostid()));
+        result.put("카페", service.getPost(li.get(1).getPostid()));
+        result.put("술집", service.getPost(li.get(2).getPostid()));
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @Getter
+    @Setter
     public class KeyValue implements Comparable<KeyValue>{
         int postid;
         double score;
@@ -703,7 +746,7 @@ public class PostController {
 
         }
 
-        KeyValue(int postid,double score){
+        KeyValue(final int postid,final double score){
             this.postid = postid;
             this.score = score;
         }
@@ -714,25 +757,25 @@ public class PostController {
         }
 
         @Override
-        public int compareTo(KeyValue o) {
+        public int compareTo(final KeyValue o) {
             return (int)(this.score - o.score);
         }
     }
 
-    public String crawling(String url){
+    public String crawling(final String url){
         final String WEB_DRIVER_ID = "webdriver.chrome.driver";
         final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
         // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
 
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
-        ChromeOptions options = new ChromeOptions();
+        final ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("start-maximized");
         options.addArguments("disable-infobars");
         options.addArguments("--disable-extensions");
 
-        WebDriver driver = new ChromeDriver(options);
+        final WebDriver driver = new ChromeDriver(options);
         double star = 0.0;
         
 
@@ -740,11 +783,11 @@ public class PostController {
         try{
             driver.get(url);
             Thread.sleep(300);
-            Document doc = Jsoup.parse(driver.getPageSource());
-            Elements el = doc.body().getElementsByClass("link_evaluation");
+            final Document doc = Jsoup.parse(driver.getPageSource());
+            final Elements el = doc.body().getElementsByClass("link_evaluation");
             star = Double.parseDouble(el.text().split(" ")[1].substring(0,3));
         }
-        catch(Exception e){
+        catch(final Exception e){
             System.out.println(e.getMessage());
         }
         finally{
@@ -754,9 +797,9 @@ public class PostController {
         return star+"";
     }
 
-    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+    private static double distance(final double lat1, final double lon1, final double lat2, final double lon2, final String unit) {
          
-        double theta = lon1 - lon2;
+        final double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
          
         dist = Math.acos(dist);
@@ -770,11 +813,11 @@ public class PostController {
     }
      
  
-    private static double deg2rad(double deg) {
+    private static double deg2rad(final double deg) {
         return (deg * Math.PI / 180.0);
     }
      
-    private static double rad2deg(double rad) {
+    private static double rad2deg(final double rad) {
         return (rad * 180 / Math.PI);
     }
 

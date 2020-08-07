@@ -19,6 +19,18 @@
           </p>
         </div>
         <br>
+        <div v-if="isLoggedIn" class="comment-like-wrap">
+          <i ref="postId" v-if="included" @click="change(); checkLike(article);"
+            class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
+          <i ref="postId" v-if="!included" @click="change(); checkLike(article);"
+            class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
+          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
+        </div>
+        <div v-else class="comment-like-wrap">
+          <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
+          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
+        </div>
+        <br>
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
         <p>음식점 이름 : {{article.placename}}</p>
@@ -56,6 +68,9 @@
   import SERVER from '@/api/drf'
   import Comment from '@/components/common/Comment.vue'
   import '@/assets/css/modal.css'
+  import {
+    mapGetters
+  } from 'vuex';
 
 
   export default {
@@ -75,7 +90,13 @@
         marker: '',
         geocoder: '',
         isModal: false,
+        likedposts: '',
+        included: true,
       }
+    },
+    computed: {
+      ...mapGetters(['isLoggedIn'])
+
     },
     methods: {
       ...mapActions(['changeMain']),
@@ -115,6 +136,44 @@
           }
         });
       },
+      includes() {
+        if (this.articleId in this.likedposts) {
+          this.included = true;
+        } else {
+          this.included = false;
+        }
+      },
+      change() {
+        var cl = this.$refs["postId"].getAttribute('class');
+        console.log(this.$refs["postId"].getAttribute('style'))
+
+        if (cl === "fas fa-heart fa-lg animated delay-1s" || cl === "fas fa-heart fa-lg animated delay-1s redheart") {
+          this.$refs["postId"].setAttribute("class", "far fa-heart fa-lg animated infinite bounce delay-1s");
+          this.$refs["postId"].setAttribute('style', "color:gray");
+          this.article.likes -= 1
+
+        } else {
+           this.$refs["postId"].setAttribute("class", "fas fa-heart fa-lg animated delay-1s");
+           this.$refs["postId"].setAttribute('style',"color:red");
+          this.article.likes += 1
+        }
+
+
+      },
+      checkLike(one) {
+        one.userid = this.$cookies.get('auth-token')
+        // console.log(one.userid)
+        axios.post(`${this.SERVER_URL}/articles/like`, one)
+          .then(() => {
+            // console.log(res)
+            axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
+                "uid": this.$cookies.get('auth-token')
+              })
+              .then((res) => {
+                console.log(res)
+              })
+          })
+      },
 
       CopyUrlToClipboard()
 
@@ -122,17 +181,17 @@
 
         var obShareUrl = document.getElementById("ShareUrl");
 
-        obShareUrl.value = window.document.location.href; 
+        obShareUrl.value = window.document.location.href;
 
 
 
-        obShareUrl.select(); 
+        obShareUrl.select();
 
         document.execCommand("copy");
 
 
 
-        obShareUrl.blur(); 
+        obShareUrl.blur();
 
 
 
@@ -196,13 +255,30 @@
     created() {
       this.detailPage()
       this.changeMain(false)
+      if (this.$cookies.get('auth-token')) {
+        axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
+            "uid": this.$cookies.get('auth-token')
+          })
+          .then((res) => {
+            var liked_list = res.data.likedpost.split(',').map(i => parseInt(i))
+            var result = liked_list.slice(0, -1)
+            this.likedposts = result
+            if (this.likedposts.includes(this.articleId)) {
+              this.included = true;
+            } else {
+              this.included = false;
+            }
+
+          })
+      }
     },
     mounted() {
       window.addEventListener("click", e => {
         const modal = document.getElementById("modal");
         e.target === modal ? (this.isModal = false) : false;
       });
-      
+
+
     }
   }
 </script>
