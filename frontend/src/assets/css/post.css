@@ -11,11 +11,13 @@
   font-size: 1.875em;
 }
 
-.post-list-link {
+/* .post-list-link {
   margin-top: 1rem;
+  display: flex;
 }
 
 .main-link {
+  cursor: pointer;
   margin-top: 1rem;
   padding: 10px;
   border-bottom: 2px solid var(--secondary-color);
@@ -24,7 +26,7 @@
 .main-link.active {
   border: none;
   opacity: 0.2;
-}
+} */
 
 .post .user-box {
   width: 100%;
@@ -385,12 +387,11 @@
   margin-bottom: 15px;
 }
 
-
 .cardContent{
   float: right;
 }
 
-#myInput {
+/* #myInput {
   box-sizing: border-box;
   background-image: url('/css/searchicon.png');
   background-position: 10px 10px;
@@ -400,5 +401,5 @@
   padding: 12px 20px 12px 40px;
   border: 2px solid var(--primary-color);
   margin-bottom: 12px;
-}
+} */
 /*# sourceMappingURL=post.css.map */

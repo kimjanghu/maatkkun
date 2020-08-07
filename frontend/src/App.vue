@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <Header :isHeader="isHeader" />
+    <Navbar :isNavbar="isNavbar" />
+    <Main />
     <router-view />
   </div>
 </template>
 
 <script>
 import './assets/css/style.css';
-import Header from './components/common/Header.vue';
+import Navbar from './components/common/Navbar.vue';
+import Main from './components/common/Main.vue'
 import constants from './lib/constants';
 
 export default {
   name: 'App',
   components: {
-    Header
+    Navbar,
+    Main
   },
   created() {
     let url = this.$route.name;
@@ -30,16 +33,16 @@ export default {
     checkUrl(url) {
       let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
 
-      let isHeader = true;
+      let isNavbar = true;
       array.map(path => {
-        if (url === path) isHeader = false;
+        if (url === path) isNavbar = false;
       });
-      this.isHeader = isHeader;
+      this.isNavbar = isNavbar;
     }
   },
   data: function() {
     return {
-      isHeader: true,
+      isNavbar: true,
       constants
     };
   }

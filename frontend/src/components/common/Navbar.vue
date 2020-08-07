@@ -1,7 +1,7 @@
 <template>
-  <div id="header" v-if="isHeader">
+  <div id="navbar" v-if="isNavbar">
     <h1>
-      <router-link :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link>
+      <router-link @click.native="changeMain(true)" :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link>
     </h1>
     <div class="right">
       <div v-if="!isLoggedIn">
@@ -17,20 +17,16 @@
 </template>   
 
 <script>
-// import axios from 'axios'
 import constants from '@/lib/constants'
-import '@/assets/css/header.css'
-// import Login from '@/views/user/Login.vue'
-import { mapGetters } from 'vuex'
-
-// const SERVER_URL = "http://localhost:8080"
+import '@/assets/css/navbar.css'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'Header',
+  name: 'Navbar',
   mounted() {},
   components: {},
   props: {
-    isHeader: {
+    isNavbar: {
       type: Boolean
     }
   },
@@ -38,20 +34,21 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   watch: {},
+  methods: {
+    ...mapActions(['changeMain']),
+  },
+  data: function() {
+    return {
+      constants,
+      loginId: this.$cookies.get('auth-token'),
+    };
+  },
   created() {
     console.log(JSON.parse(window.localStorage.getItem('userInfo')))
   },
   updated() {
     // console.log(JSON.parse(window.localStorage.getItem('userInfo')).uid)
   },
-  methods: {},
-  data: function() {
-    return {
-      constants,
-      loginId: this.$cookies.get('auth-token'),
-      keyword: '',
-    };
-  }
 };
 </script>
 

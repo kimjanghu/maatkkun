@@ -66,10 +66,9 @@
 <script>
     import axios from 'axios'
     import jQuery from 'jquery'
+    import { mapActions } from 'vuex'
     import '@/assets/css/checkbox.css'
-
-
-
+    
     export default {
         name: "Recommend",
         data() {
@@ -115,6 +114,7 @@
             }
         },
         methods: {
+            ...mapActions(['changeMain']),
             recommendToMe(){
                 if(this.isRestaurant)
                 {
@@ -331,6 +331,9 @@
         }
 
         ,
+        created() {
+            this.changeMain(false)
+        },
         mounted() {
             if (window.Tmapv2 && window.Tmapv2.Map) {
                 this.initTmap();

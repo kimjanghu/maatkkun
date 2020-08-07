@@ -15,6 +15,8 @@ import testPage from '@/views/user/Test.vue'
 
 // 포스트
 import List from '@/views/post/List.vue'
+import Like from '@/views/post/Like.vue'
+import Views from '@/views/post/Views.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
@@ -62,6 +64,18 @@ const routes = [
     path: '/user/mypage/:id',
     name: constants.URL_TYPE.USER.MYPAGE,
     component: Mypage
+  },
+  // Like sorted post
+  {
+    path: '/likes',
+    name: constants.URL_TYPE.POST.LIKE,
+    component: Like
+  },
+  // View sorted post
+  {
+    path: '/views',
+    name: constants.URL_TYPE.POST.VIEWS,
+    component: Views
   },
   // Create post
   {

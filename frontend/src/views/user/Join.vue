@@ -1,6 +1,7 @@
 <template>
   <div id="join">
     <div class="join-container">
+      <router-link @click.native="changeMain(true)" class="logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAAK KUUN</router-link>
       <div class="join">
         <div class="join-header">
           <h3 style="text-align: center;">회원가입</h3>
@@ -77,6 +78,7 @@
 <script>
 import '../../assets/css/formControl.css'
 import axios from 'axios'
+import constants from '@/lib/constants'
 import { mapActions } from 'vuex'
 import '@/assets/css/checkbox.css'
 
@@ -84,6 +86,7 @@ export default {
   components: {},
   data: () => {
     return {
+      constants,
       SERVER_URL: process.env.VUE_APP_API_URL,
       signupInfo: {
         signupData: {
@@ -107,10 +110,9 @@ export default {
       passwordConfirmType: 'password'
     };
   },
-  created() {},
   methods: {
     // bring signup method in store
-    ...mapActions(['signup']),
+    ...mapActions(['signup', 'changeMain']),
     // Show error message
     showError(value, message) {
       const control = document.getElementById(value);
@@ -205,10 +207,22 @@ export default {
         .catch(err => console.log(err));
     }
   },
+  created() {
+    this.changeMain(false)
+  },
 };
 </script>
 
 <style scope>
+.logo {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
 .join-btn {
   cursor: pointer;
 }

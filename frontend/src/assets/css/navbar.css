@@ -1,4 +1,4 @@
-#header {
+#navbar {
   position:sticky;
   width: 65%;
   display: flex;
@@ -16,13 +16,13 @@
   z-index: 9;
 }
 
-#header h1 {
+#navbar h1 {
   float: left;
   font-size: 1em;
   font-weight: 600;
 }
 
-#header .right .search-input {
+#navbar .right .search-input {
   position: relative;
   width: 270px;
   height: 35px;
@@ -32,13 +32,13 @@
   float: left;
 }
 
-#header .right .search-input .fa-search {
+#navbar .right .search-input .fa-search {
   position: absolute;
   left: 10px;
   top: 9px;
 }
 
-#header .right .search-input input {
+#navbar .right .search-input input {
   width: 100%;
   float: left;
   height: 100%;
@@ -48,30 +48,30 @@
           box-sizing: border-box;
 }
 
-#header .right .login-btn {
+#navbar .right .login-btn {
   margin-left: 40px;
   float: left;
   margin-top: 11px;
 }
 
-#header .right .login-component {
+#navbar .right .login-component {
   float: left;
   margin-left: 20px;
   position: relative;
 }
 
-#header .right .login-component .write-btn {
+#navbar .right .login-component .write-btn {
   float: left;
   margin-right: 40px;
   margin-top: 4px;
 }
 
-#header .right .login-component .profile {
+#navbar .right .login-component .profile {
   float: left;
   margin-top: 2px;
 }
 
-#header .right .login-component .profile .profile-img {
+#navbar .right .login-component .profile .profile-img {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -83,17 +83,17 @@
   float: left;
 }
 
-#header .right .login-component .profile .user-name {
+#navbar .right .login-component .profile .user-name {
   float: left;
   margin-top: 5px;
   margin-right: 10px;
 }
 
-#header .right .login-component .profile .fa-angle-down {
+#navbar .right .login-component .profile .fa-angle-down {
   margin-top: 9px;
 }
 
-#header .right .login-component .profile .menu {
+#navbar .right .login-component .profile .menu {
   position: absolute;
   right: 0;
   top: 40px;
@@ -101,7 +101,7 @@
   border: 1px solid #000;
 }
 
-#header .right .login-component .profile .menu li {
+#navbar .right .login-component .profile .menu li {
   width: 100%;
   float: left;
   text-align: left;
@@ -113,10 +113,10 @@
   cursor: pointer;
 }
 
-#header .right .login-component .profile .menu li:last-of-type {
+#navbar .right .login-component .profile .menu li:last-of-type {
   border-bottom: none;
 }
 
-#header + div {
+#navbar + div {
   padding-top: 30px;
 }

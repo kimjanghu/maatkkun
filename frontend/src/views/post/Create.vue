@@ -138,9 +138,8 @@
   import axios from 'axios'
   import 'codemirror/lib/codemirror.css';
   import '@toast-ui/editor/dist/toastui-editor.css';
-  import {
-    Editor
-  } from '@toast-ui/vue-editor';
+  import { Editor } from '@toast-ui/vue-editor';
+  import { mapActions } from 'vuex'
   import SERVER from '@/api/drf'
   import constants from '@/lib/constants'
 
@@ -193,6 +192,7 @@
       }
     },
     methods: {
+      ...mapActions(['changeMain']),
       detailPage(one) {
         axios.get(`${this.SERVER_URL}/subarticles/detail/${one.postId}`)
           .then((res) => {
@@ -572,14 +572,11 @@
     },
     created() {
       // 수정하러 왔으면 이전 데이터로 덮어 씌움
-
       if (this.isUpdate) {
         this.articleData = this.preArticleData
         if (this.articleData.hashtag) {
           this.hashtags = this.articleData.hashtag.split(",")
-
         }
-
       }
       if (this.isTemporary) {
         this.articleData.title = this.preArticleData.title
@@ -593,6 +590,7 @@
         this.articleData.url = this.preArticleData.url
         this.articleData.placename = this.preArticleData.placename
       }
+      this.changeMain(false)
     },
 
 

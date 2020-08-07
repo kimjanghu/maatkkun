@@ -19,13 +19,15 @@ export default {
       EDIT: 'userEdit'
     },
     POST: {
-      MAIN : "main",
-      CREATE : "create",
-      DETAIL : "detail",
-      TEMPORARY : "temporary",
-      RECOMMEND : "recommend",
+      MAIN: 'main',
+      LIKE: 'like',
+      VIEWS: 'views',
+      CREATE: 'create',
+      DETAIL: 'detail',
+      TEMPORARY: 'temporary',
+      RECOMMEND: 'recommend',
     },
-    TEST: "test"
+    TEST: 'test'
   },
 }
 
