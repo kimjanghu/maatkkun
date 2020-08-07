@@ -17,32 +17,28 @@
       <div class="modal">
         <div class="modal" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         <div id="mainWrapper">
+          <table id="demo-table">
+            <caption>임시저장 목록</caption>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Title</th>
+                <th>작성일</th>
+                <th>작성자</th>
+              </tr>
+            </thead>
+            <tbody >
+              <tr v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
+                <th>{{subarticle.id}}</th>
+                <td>{{subarticle.title}}</td>
+                <td>{{subarticle.createDate}}</td>
+                <td>{{subarticle.nickname}}</td>
+              </tr>
 
-          <ul>
-            <li>임시저장 목록 </li>
-            <ul id="ulTable">
-              <li>
-                <ul>
-                  <li>No</li>
-                  <li>Title</li>
-                  <li>작성일</li>
-                  <li>작성자</li>
+            </tbody>
+          </table>
 
 
-                </ul>
-              </li>
-              <li v-for="subarticle in subarticles" :key="subarticle.id">
-                <ul @click="detailPage(subarticle)">
-                  <li>{{subarticle.id}}</li>
-                  <li class="left">{{subarticle.title}}</li>
-                  <li>{{subarticle.createDate}}</li>
-                  <li>{{subarticle.userid}}</li>
-
-                </ul>
-              </li>
-
-            </ul>
-          </ul>
 
 
         </div>
@@ -57,7 +53,7 @@
     </div>
 
     <!-- <Map /> -->
-<br>
+    <br>
     <button class="create_button" @click.prevent="changeModal">
       음식점 위치가 어디인가요?
     </button>
@@ -122,14 +118,15 @@
       <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
       <label for="Soju">술집</label>
 
-      
+
     </div>
     <br>
-    
+
 
     <br><br>
     <div class="twobuttons">
-      <button class="create_button"  style="margin-right:2px;" v-if="!isUpdate || isTemporary" @click="createArticle">작성하기</button>
+      <button class="create_button" style="margin-right:2px;" v-if="!isUpdate || isTemporary"
+        @click="createArticle">작성하기</button>
       <button class="create_button" v-if="!isUpdate && !isTemporary" @click="goTemporary">임시저장</button>
       <button class="create_button" v-if="isUpdate" @click="updateArticle">수정하기</button>
     </div>
@@ -169,8 +166,8 @@
           lat: '',
           lon: '',
           userid: this.$cookies.get('auth-token'),
-          url:'',
-          placename:'',
+          url: '',
+          placename: '',
 
 
 
@@ -263,7 +260,7 @@
       // 키워드 검색을 요청하는 함수입니다
       searchPlaces() {
 
-        var keyword = "역삼동"+document.getElementById('keyword').value;
+        var keyword = "역삼동" + document.getElementById('keyword').value;
 
         if (!keyword.replace(/^\s+|\s+$/g, '')) {
           alert('키워드를 입력해주세요!');
@@ -330,71 +327,71 @@
           var lon = places[i].y;
           // console.log(address.includes("역삼동"))
 
-          if(address.includes("역삼동")){
+          if (address.includes("역삼동")) {
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-          // LatLngBounds 객체에 좌표를 추가합니다
-          bounds.extend(placePosition);
-          var map = this.map;
-          // console.log(places[i]);
+            // LatLngBounds 객체에 좌표를 추가합니다
+            bounds.extend(placePosition);
+            var map = this.map;
+            // console.log(places[i]);
 
-          (function (marker, title, abc, address,placeurl,lat,lon) {
-            var infowindow = new kakao.maps.InfoWindow({
-              content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
-              removable: true
-            })
-            kakao.maps.event.addListener(marker, 'mouseover', function () {
-              infowindow.open(map, marker);
-            });
-            kakao.maps.event.addListener(marker, 'mouseout', function () {
-              infowindow.close();
-            });
-            kakao.maps.event.addListener(marker, 'click', function () {
-              var a = confirm("이 식당이 맞습니까?")
-              if (a) {
-                // abc.placeDecision = title
-                abc.articleData.lat = lat;
-                abc.articleData.lon = lon;
-                abc.articleData.address = address;
-                abc.articleData.url = placeurl;
-                abc.articleData.placename = title;
-                abc.isModal = !abc.isModal;
-                console.log(abc.articleData.lat)
-                
+            (function (marker, title, abc, address, placeurl, lat, lon) {
+              var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
+                removable: true
+              })
+              kakao.maps.event.addListener(marker, 'mouseover', function () {
+                infowindow.open(map, marker);
+              });
+              kakao.maps.event.addListener(marker, 'mouseout', function () {
+                infowindow.close();
+              });
+              kakao.maps.event.addListener(marker, 'click', function () {
+                var a = confirm("이 식당이 맞습니까?")
+                if (a) {
+                  // abc.placeDecision = title
+                  abc.articleData.lat = lat;
+                  abc.articleData.lon = lon;
+                  abc.articleData.address = address;
+                  abc.articleData.url = placeurl;
+                  abc.articleData.placename = title;
+                  abc.isModal = !abc.isModal;
+                  console.log(abc.articleData.lat)
+
+                }
+              });
+
+              itemEl.onmouseover = function () {
+                infowindow.open(map, marker);
               }
-            });
 
-            itemEl.onmouseover = function () {
-              infowindow.open(map, marker);
-            }
-
-            itemEl.onmouseout = function () {
-              infowindow.close();
-            };
-            itemEl.onclick = function () {
-              var a = confirm("이 식당이 맞습니까?")
-              if (a) {
-                // abc.articleData.address = title
-                abc.articleData.lat = lat;
-                abc.articleData.lon = lon;
-                abc.articleData.address = address;
-                abc.articleData.url = placeurl;
-                abc.articleData.placename = title;
-                abc.isModal = !abc.isModal;
+              itemEl.onmouseout = function () {
+                infowindow.close();
+              };
+              itemEl.onclick = function () {
+                var a = confirm("이 식당이 맞습니까?")
+                if (a) {
+                  // abc.articleData.address = title
+                  abc.articleData.lat = lat;
+                  abc.articleData.lon = lon;
+                  abc.articleData.address = address;
+                  abc.articleData.url = placeurl;
+                  abc.articleData.placename = title;
+                  abc.isModal = !abc.isModal;
+                }
               }
-            }
 
-          })(marker, title, this, address,placeurl,lat,lon);
-
+            })(marker, title, this, address, placeurl, lat, lon);
 
 
 
-          fragment.appendChild(itemEl);
+
+            fragment.appendChild(itemEl);
 
           }
-         
 
 
-          
+
+
         }
 
 
@@ -527,7 +524,12 @@
         axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
           .then(() => {
             console.log(this.articleData.postId)
-            this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: this.articleData.postId } })
+            this.$router.push({
+              name: constants.URL_TYPE.POST.DETAIL,
+              params: {
+                id: this.articleData.postId
+              }
+            })
           })
           .catch(err => console.log(err))
 
@@ -626,296 +628,278 @@
 </script>
 
 <style>
-.main-wrapper {
-  position: relative;
-  align-items: center;
-  width: 100%;
-  margin: 0 auto;
-}
-
-@media(min-width:560px) {
   .main-wrapper {
     position: relative;
     align-items: center;
-    width: 60%;
+    width: 100%;
     margin: 0 auto;
   }
-}
 
-.main-wrapper:after {
-  content: "";
-  display: block;
-  padding-bottom: 100%;
-}
+  @media(min-width:560px) {
+    .main-wrapper {
+      position: relative;
+      align-items: center;
+      width: 60%;
+      margin: 0 auto;
+    }
+  }
 
-.create_button {
+  .main-wrapper:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
 
-  border: none;
-  font-size: 1em;
-  font-weight: 400;
-  cursor: pointer;
-  border: none;
-  border-radius: 10px;
-  color: #000000;
-}
+  .create_button {
 
-.twobuttons {
-  text-align: center;
-}
+    border: none;
+    font-size: 1em;
+    font-weight: 400;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    color: #000000;
+  }
 
-ul,
-li {
-  list-style: none;
-  text-align: center;
-  padding: 0;
-  margin: 0;
-}
+  .twobuttons {
+    text-align: center;
+  }
 
-#mainWrapper {
+  ul,
+  li {
+    list-style: none;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+  }
 
-  margin: 0 auto;
-  /*가운데 정렬*/
-}
+  #mainWrapper {
+    margin: 0 auto;
+  }
 
-#mainWrapper>ul>li:first-child {
-  text-align: center;
-  font-size: 14pt;
-  height: 30px;
-  vertical-align: middle;
-  line-height: 30px;
-}
+  #mainWrapper>table {
+    font: 100%;
+    width: 100%;
+    
+    border-collapse: collapse;
+  }
 
-#ulTable>li:first-child>ul>li {
-  background-color: #ffffff;
-  font-weight: bold;
-  text-align: center;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-#ulTable>li>ul {
-  clear: both;
-  padding: 0px;
-  position: relative;
-  min-width: 40px;
-}
-
-#ulTable>li>ul>li {
-  float: left;
-  font-size: 10pt;
-  border-bottom: 1px solid silver;
-  vertical-align: baseline;
-  width:100%;
-}
-
-#ulTable>li>ul>li:first-child {
-  width: 10%;
-}
-
-#ulTable>li>ul>li:first-child+li {
-  width: 30%;
-}
+  #demo-table>caption {
+    text-align: center;
+    font-weight: bold;
+    font-size: 150%;
+    padding-bottom:10px;
+    border-bottom: .1em solid #000;
+    margin-top:10px ;
+    
+  }
+  #demo-table thead{
+    background-color: #FFD732;
+  }
 
 
-#ulTable>li>ul>li:first-child+li+li {
-  width: 30%;
-}
+  /* basic shared rules */
+  #demo-table th,
+  #demo-table td {
+    text-align: center;
+    padding-right: .5em;
+  }
+  #demo-table tr{
+    border:1px solid black;
+    height:30px;
+  }
 
-/*작성일 열 크기*/
-#ulTable>li>ul>li:first-child+li+li+li {
-  width: 30%;
-}
-
-/*작성자 열 크기*/
-#ulTable>li>ul>li:first-child+li+li+li+li {
-  width: 10%;
-}
+  #demo-table th {
+    font-weight: bold;
+    padding-left: .5em;
+  }
 
 
 
-.map_wrap,
-.map_wrap * {
-  margin: 0;
-  padding: 0;
-  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
-  font-size: 12px;
-}
 
-.map_wrap a,
-.map_wrap a:hover,
-.map_wrap a:active {
-  color: #000;
-  text-decoration: none;
-}
+  .map_wrap,
+  .map_wrap * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+    font-size: 12px;
+  }
 
-.map_wrap {
-  position: relative;
-  width: 100%;
-  height: 500px;
-}
+  .map_wrap a,
+  .map_wrap a:hover,
+  .map_wrap a:active {
+    color: #000;
+    text-decoration: none;
+  }
 
-#menu_wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 250px;
-  margin: 10px 0 30px 10px;
-  padding: 5px;
-  overflow-y: auto;
-  background: rgba(255, 255, 255, 0.7);
-  z-index: 1;
-  font-size: 12px;
-  border-radius: 10px;
-}
+  .map_wrap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+  }
 
-.bg_white {
-  background: #fff;
-}
+  #menu_wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    margin: 10px 0 30px 10px;
+    padding: 5px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+    font-size: 12px;
+    border-radius: 10px;
+  }
 
-#menu_wrap hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 2px solid #5F5F5F;
-  margin: 3px 0;
-}
+  .bg_white {
+    background: #fff;
+  }
 
-#menu_wrap .option {
-  text-align: center;
-}
+  #menu_wrap hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #5F5F5F;
+    margin: 3px 0;
+  }
 
-#menu_wrap .option p {
-  margin: 10px 0;
-}
+  #menu_wrap .option {
+    text-align: center;
+  }
 
-#menu_wrap .option button {
-  margin-left: 5px;
-}
+  #menu_wrap .option p {
+    margin: 10px 0;
+  }
 
-#placesList li {
-  list-style: none;
-}
+  #menu_wrap .option button {
+    margin-left: 5px;
+  }
 
-#placesList .item {
-  position: relative;
-  border-bottom: 1px solid #888;
-  overflow: hidden;
-  cursor: pointer;
-  min-height: 65px;
-}
+  #placesList li {
+    list-style: none;
+  }
 
-#placesList .item span {
-  display: block;
-  margin-top: 4px;
-}
+  #placesList .item {
+    position: relative;
+    border-bottom: 1px solid #888;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 65px;
+  }
 
-#placesList .item h5,
-#placesList .item .info {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
+  #placesList .item span {
+    display: block;
+    margin-top: 4px;
+  }
 
-#placesList .item .info {
-  padding: 10px 0 10px 55px;
-}
+  #placesList .item h5,
+  #placesList .item .info {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-#placesList .info .gray {
-  color: #8a8a8a;
-}
+  #placesList .item .info {
+    padding: 10px 0 10px 55px;
+  }
 
-#placesList .info .jibun {
-  padding-left: 26px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
-}
+  #placesList .info .gray {
+    color: #8a8a8a;
+  }
 
-#placesList .info .tel {
-  color: #009900;
-}
+  #placesList .info .jibun {
+    padding-left: 26px;
+    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+  }
 
-#placesList .item .markerbg {
-  float: left;
-  position: absolute;
-  width: 36px;
-  height: 37px;
-  margin: 10px 0 0 10px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
-}
+  #placesList .info .tel {
+    color: #009900;
+  }
 
-#placesList .item .marker_1 {
-  background-position: 0 -10px;
-}
+  #placesList .item .markerbg {
+    float: left;
+    position: absolute;
+    width: 36px;
+    height: 37px;
+    margin: 10px 0 0 10px;
+    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+  }
 
-#placesList .item .marker_2 {
-  background-position: 0 -56px;
-}
+  #placesList .item .marker_1 {
+    background-position: 0 -10px;
+  }
 
-#placesList .item .marker_3 {
-  background-position: 0 -102px
-}
+  #placesList .item .marker_2 {
+    background-position: 0 -56px;
+  }
 
-#placesList .item .marker_4 {
-  background-position: 0 -148px;
-}
+  #placesList .item .marker_3 {
+    background-position: 0 -102px
+  }
 
-#placesList .item .marker_5 {
-  background-position: 0 -194px;
-}
+  #placesList .item .marker_4 {
+    background-position: 0 -148px;
+  }
 
-#placesList .item .marker_6 {
-  background-position: 0 -240px;
-}
+  #placesList .item .marker_5 {
+    background-position: 0 -194px;
+  }
 
-#placesList .item .marker_7 {
-  background-position: 0 -286px;
-}
+  #placesList .item .marker_6 {
+    background-position: 0 -240px;
+  }
 
-#placesList .item .marker_8 {
-  background-position: 0 -332px;
-}
+  #placesList .item .marker_7 {
+    background-position: 0 -286px;
+  }
 
-#placesList .item .marker_9 {
-  background-position: 0 -378px;
-}
+  #placesList .item .marker_8 {
+    background-position: 0 -332px;
+  }
 
-#placesList .item .marker_10 {
-  background-position: 0 -423px;
-}
+  #placesList .item .marker_9 {
+    background-position: 0 -378px;
+  }
 
-#placesList .item .marker_11 {
-  background-position: 0 -470px;
-}
+  #placesList .item .marker_10 {
+    background-position: 0 -423px;
+  }
 
-#placesList .item .marker_12 {
-  background-position: 0 -516px;
-}
+  #placesList .item .marker_11 {
+    background-position: 0 -470px;
+  }
 
-#placesList .item .marker_13 {
-  background-position: 0 -562px;
-}
+  #placesList .item .marker_12 {
+    background-position: 0 -516px;
+  }
 
-#placesList .item .marker_14 {
-  background-position: 0 -608px;
-}
+  #placesList .item .marker_13 {
+    background-position: 0 -562px;
+  }
 
-#placesList .item .marker_15 {
-  background-position: 0 -654px;
-}
+  #placesList .item .marker_14 {
+    background-position: 0 -608px;
+  }
 
-#pagination {
-  margin: 10px auto;
-  text-align: center;
-}
+  #placesList .item .marker_15 {
+    background-position: 0 -654px;
+  }
 
-#pagination a {
-  display: inline-block;
-  margin-right: 10px;
-}
+  #pagination {
+    margin: 10px auto;
+    text-align: center;
+  }
 
-#pagination .on {
-  font-weight: bold;
-  cursor: default;
-  color: #777;
-}
+  #pagination a {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  #pagination .on {
+    font-weight: bold;
+    cursor: default;
+    color: #777;
+  }
 </style>
