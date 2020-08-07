@@ -132,7 +132,11 @@
                     this.wantRecommend.isDrink = 1
 
                 }
-                axios.get()
+                axios.get(`${this.SERVER_URL}/articles/getRecommendList/${this.wantRecommend}`)
+                .then((res)=>{
+                    console.log(res)
+                })
+                .catch(err=>console.log(err))
 
             },
             handClick() {
