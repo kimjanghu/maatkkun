@@ -326,8 +326,8 @@
           var address = places[i].address_name;
           var placeurl = places[i].place_url;
 
-          var lat = places[i].x;
-          var lon = places[i].y;
+          var lat = places[i].y;
+          var lon = places[i].x;
           // console.log(address.includes("역삼동"))
 
           if (address.includes("역삼동")) {
