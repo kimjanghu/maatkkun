@@ -687,9 +687,9 @@ public class PostController {
             starAvg += Double.parseDouble(p.getStarpoint());
             
             // 미터(Meter) 단위
-            // final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
+            final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
 
-            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint());
+            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint()+"\t"+distanceMeter);
         }
 
         hitsAvg /= list.size();
