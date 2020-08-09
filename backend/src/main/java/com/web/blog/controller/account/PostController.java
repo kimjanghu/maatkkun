@@ -174,9 +174,6 @@ public class PostController {
             element.attr("id",filename);
 
         }
-        System.out.println(body.html());
-        System.out.println("========================");
-        System.out.println(hm.get("menu"));
         post.setContent(body.html() + hm.get("menu"));
 
         if(service.register(post)>0){
