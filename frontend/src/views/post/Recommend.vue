@@ -6,24 +6,52 @@
         <div class="map_act_btn_wrap clear_box"></div>
         <p id="result"></p>
         <br />
-        <ul v-for="list in List" :key="list.id">
-        <li>
-        Menu : {{list.title}}
-        <br>
-        Location : {{list.address}}
-        <br>
-        likes : {{list.likes}} likes
-        </li>
-        </ul>
-        
+        <div class="post">
+            <div class="wrapB">
+                <section class="post-list">
+                    <div v-for="recommend in recommendList" :key="recommend.id">
+                        <div class="post-card">
+                            <a @click="detailPage(recommend.postId)">
+                                <img :src="article.content"
+                                    :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
+                                    class="post-img" />
+                                <div class="contents">
+                                    <h3>{{recommend.title}}</h3>
+                                    <br>
+                                    <span class="date"><i class="far fa-user"></i> {{recommend.nickname}}</span>
+                                    <br>
+                                    <span class="date"><i class="far fa-clock"></i> {{recommend.createDate}}</span>
+                                    <br>
+                                    <div class="tag" v-for="(tag, index) in recommend.hashtag.split(',')"
+                                        :key="`hash_${index}`">
+                                        <span class="tag-btn"># {{ tag }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="writer-wrap">
+
+                                <div class="comment-like-wrap">
+                                    <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
+                                    <p style="margin-left: 5px;">{{ recommend.likes }}likes</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+
         <button class="create_button" style="margin-top:2px;" @click="recommendToMe">다른 메뉴를 추천해주세요!</button>
         <br>
         <br>
         <hr>
         <br>
         <p>피드백을 주세요</p>
-        
+
         <button class="create_button" style="margin-right:2px;">평점이 너무 낮아요!</button>
+        <button class="create_button" style="margin-right:2px;">조회수가 너무 낮아요!</button>
+        <button class="create_button" style="margin-right:2px;">뭐더라..>?너무 낮아요!</button>
         <br>
         <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고
             싶어요!</button>
@@ -42,12 +70,16 @@
 
 </template>
 
+
 <script>
+    import '@/assets/css/post.css'
     import axios from 'axios'
     import jQuery from 'jquery'
-    import { mapActions } from 'vuex'
+    import {
+        mapActions
+    } from 'vuex'
     import '@/assets/css/checkbox.css'
-    
+
     export default {
         name: "Recommend",
         data() {
@@ -61,7 +93,6 @@
                 totalMarkerArr: [],
                 drawInfoArr: [],
                 resultdrawArr: [],
-                recommend_list: [],
                 mapdata: {
                     appKey: "l7xx85f17a9a757349b59a2d9eb9d1382cb3",
                     startX: "127.0260036",
@@ -79,56 +110,29 @@
                 polyline_: '',
                 directions: [],
                 listnumber: 0,
-                hashtags: [],
-                wantRecommend: {
-                    food:'',
-                    isCafe:null,
-                    isDrink:null,
-                    
-                },
+
                 isRestaurant: false,
                 isCafe: false,
                 isDrink: false,
-                List : this.$route.params.List
+                recommendList: this.$route.params.recommendList,
+                wantRecommend: this.$route.params.wantRecommend,
 
 
             }
         },
-        
+
         methods: {
             ...mapActions(['changeMain']),
-            recommendToMe(){
-                if(this.isRestaurant)
-                {
-                    this.wantRecommend.food = this.hashtags.join(",")
+            recommendToMe() {
+                axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
+                        "wantRecommend": this.wantRecommend
+                    })
+                    .then((res) => {
+                        console.log(res)
+                        this.recommendList = res.data
 
-                }
-                else{
-                    this.wantRecommend.food = null;
-                }
-                if(this.isCafe){
-                    
-                    this.wantRecommend.isCafe = 1
-
-                }
-                else{
-                    this.wantRecommend.isCafe = null;
-                }
-
-                if(this.isDrink){
-                    this.wantRecommend.isDrink = 1
-
-                }
-                else{
-                    this.wantRecommend.isDrink = null
-                }
-                axios.post(`${this.SERVER_URL}/articles/getRecommentList/`,{
-                   "wantRecommend" :  this.wantRecommend
-                })
-                .then((res)=>{
-                    console.log(res)
-                })
-                .catch(err=>console.log(err))
+                    })
+                    .catch(err => console.log(err))
 
             },
             handClick() {
@@ -345,8 +349,10 @@
             }
 
 
+
         },
         updated() {
+            console.log("data바뀜")
 
         }
 

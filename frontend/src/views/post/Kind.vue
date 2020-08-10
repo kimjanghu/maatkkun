@@ -90,7 +90,7 @@
                     })
                     .then((res) => {
                         console.log(res)
-                        this.$router.push({ name: constants.URL_TYPE.POST.RECOMMEND, params: {List : res.data}})
+                        this.$router.push({ name: constants.URL_TYPE.POST.RECOMMEND, params: {recommendList : res.data,wantRecommend:this.wantRecommend}})
                     })
                     .catch(err => console.log(err))
 
