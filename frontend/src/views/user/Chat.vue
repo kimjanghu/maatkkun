@@ -38,8 +38,8 @@ export default {
       console.log("Send message:" + this.message);
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
-          userName: this.userName,
-          content: this.message 
+          postId: this.userName,
+          status: this.message 
         };
         this.stompClient.send("/receive", JSON.stringify(msg), {});
       }
@@ -58,8 +58,9 @@ export default {
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
           this.stompClient.subscribe("/send", res => {
+            console.log("===================================");
             console.log(res);
-            console.log('구독으로 받은 메시지 입니다.', res.body);
+            // console.log('구독으로 받은 메시지 입니다.', res.body);
 
             // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
             this.recvList.push(JSON.parse(res.body))
