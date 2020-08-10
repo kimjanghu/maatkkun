@@ -3,9 +3,6 @@
     <button class="create_button" @click="goRecommend">
       추천 받아보실래요?
     </button>
-    <button class="create_button" @click="Chat">
-      Chat
-    </button>
     <br><br>
 
     <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
@@ -46,9 +43,6 @@ export default {
     ...mapActions(['searchResult', 'changeMain']),
     goRecommend(){
       this.$router.push('/post/kind')
-    },
-    Chat(){
-      this.$router.push('/user/chat')
     },
     changeMainRecentList() {
       this.isRecentList = false,
