@@ -1,10 +1,13 @@
 <template>
     <div class="main-wrapper">
-        <div id="map_wrap" class="map_wrap3">
-            <div id="map_div"></div>
+        <div v-if="isSeveral">
+            <div id="map_wrap" class="map_wrap3">
+                <div id="map_div"></div>
+            </div>
+            <div class="map_act_btn_wrap clear_box"></div>
+            <p id="result"></p>
         </div>
-        <div class="map_act_btn_wrap clear_box"></div>
-        <p id="result"></p>
+        <div v-if="!isSeveral" id="map" style="width:100%;height:350px;"></div>
         <br />
         <div class="post">
             <div class="wrapB">
@@ -42,7 +45,8 @@
             </div>
         </div>
 
-        <button class="create_button" style="margin-top:2px;" @click.prevent="recommendToMe(); select(); search();">다른 메뉴를 추천해주세요!</button>
+        <button class="create_button" style="margin-top:2px;" @click.prevent="recommendToMe(); select(); search();">다른
+            메뉴를 추천해주세요!</button>
         <br>
         <br>
         <hr>
@@ -117,6 +121,9 @@
                 isDrink: false,
                 recommendList: this.$route.params.recommendList,
                 wantRecommend: this.$route.params.wantRecommend,
+                isSeveral: false,
+
+
 
 
             }
@@ -124,9 +131,50 @@
 
         methods: {
             ...mapActions(['changeMain']),
-            detailPage(articleId){
-      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: articleId }})
-    },
+            initMap() {
+                var container = document.getElementById('map')
+                var options = {
+                    center: new kakao.maps.LatLng(33.450701, 126.570667),
+                    level: 3
+                }
+                this.map = new kakao.maps.Map(container, options)
+                this.geocoder = new kakao.maps.services.Geocoder();
+                var address_name = this.recommendList[Object.keys(this.recommendList)[0]].address
+                this.geocoder.addressSearch(address_name, (result, status) => {
+                    // 정상적으로 검색이 완료됐으면 
+                    if (status === kakao.maps.services.Status.OK) {
+                        console.log(address_name)
+
+                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+
+                        // 결과값으로 받은 위치를 마커로 표시합니다
+                        var marker = new kakao.maps.Marker({
+                            map: this.map,
+                            position: coords
+                        });
+                        var title = address_name;
+
+                        // 인포윈도우로 장소에 대한 설명을 표시합니다
+                        var infowindow = new kakao.maps.InfoWindow({
+                            content: '<div style="width:150px;text-align:center;padding:6px 0;">' +
+                                title + '</div>'
+                        });
+                        infowindow.open(this.map, marker);
+
+                        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                        this.map.setCenter(coords);
+                    }
+                });
+            },
+            detailPage(articleId) {
+                this.$router.push({
+                    name: constants.URL_TYPE.POST.DETAIL,
+                    params: {
+                        id: articleId
+                    }
+                })
+            },
             recommendToMe() {
                 axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
                         "wantRecommend": this.wantRecommend
@@ -139,13 +187,13 @@
                     .catch(err => console.log(err))
 
             },
-          
+
             fn_spread(id) {
                 var getID = document.getElementById(id);
                 getID.style.display = (getID.style.display == 'block') ? 'none' : 'block';
             },
-            search(){
-                 var querystring = Object.entries(this.mapdata).map(e => e.join('=')).join('&')
+            search() {
+                var querystring = Object.entries(this.mapdata).map(e => e.join('=')).join('&')
 
                 axios.post(
                         `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&${querystring}`
@@ -274,13 +322,13 @@
             initTmap() {
                 this.select();
                 if (this.resultdrawArr.length > 0) {
-                            for (var i in this.resultdrawArr) {
-                                this.resultdrawArr[i]
-                                    .setMap(null);
-                            }
-                            this.resultdrawArr = [];
-                        }
-                
+                    for (var i in this.resultdrawArr) {
+                        this.resultdrawArr[i]
+                            .setMap(null);
+                    }
+                    this.resultdrawArr = [];
+                }
+
                 this.map = new Tmapv2.Map('map_div', {
                     center: new Tmapv2.LatLng(37.50350600000003, 127.026588),
                     width: '100%',
@@ -289,123 +337,126 @@
                     zoomControl: true,
                     scrollwheel: true
                 });
-                if(Object.keys(this.recommendList).length==1){
+                if (Object.keys(this.recommendList).length == 1) {
                     this.marker_s = new Tmapv2.Marker({
 
-                    position: new Tmapv2.LatLng(37.5024399, 127.0260036),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                console.log(this.mapdata.startX)
-                 this.marker_e = new Tmapv2.Marker({
+                        position: new Tmapv2.LatLng(37.5024399, 127.0260036),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    console.log(this.mapdata.startX)
+                    this.marker_e = new Tmapv2.Marker({
 
-                    position: new Tmapv2.LatLng(this.mapdata.startY,this.mapdata.startX),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_p1 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.5004038, 127.0248098),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-
-
-                }
-                else if(Object.keys(this.recommendList).length==2){
-                    
-                this.marker_s = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_e = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-
-                }
-                else if(Object.keys(this.recommendList).length==3){
-                     this.marker_s = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_e = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[2]].lon, this.recommendList[ Object.keys(this.recommendList)[2]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_p1 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
+                        position: new Tmapv2.LatLng(this.mapdata.startY, this.mapdata.startX),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    this.marker_p1 = new Tmapv2.Marker({
+                        position: new Tmapv2.LatLng(37.5004038, 127.0248098),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
 
 
-                }else{ 
+                } else if (Object.keys(this.recommendList).length == 2) {
+
                     this.marker_s = new Tmapv2.Marker({
 
-                    position: new Tmapv2.LatLng(37.5024399, 127.0260036),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_e = new Tmapv2.Marker({
+                        position: new Tmapv2.LatLng(this.recommendList[Object.keys(this.recommendList)[0]].lon,
+                            this.recommendList[Object.keys(this.recommendList)[0]].lat),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    this.marker_e = new Tmapv2.Marker({
 
-                    position: new Tmapv2.LatLng(37.5004042, 127.0313759),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_p1 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.5004038, 127.0248098),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
+                        position: new Tmapv2.LatLng(this.recommendList[Object.keys(this.recommendList)[1]].lon,
+                            this.recommendList[Object.keys(this.recommendList)[1]].lat),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+
+                } else if (Object.keys(this.recommendList).length == 3) {
+                    this.marker_s = new Tmapv2.Marker({
+
+                        position: new Tmapv2.LatLng(this.recommendList[Object.keys(this.recommendList)[0]].lon,
+                            this.recommendList[Object.keys(this.recommendList)[0]].lat),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    this.marker_e = new Tmapv2.Marker({
+
+                        position: new Tmapv2.LatLng(this.recommendList[Object.keys(this.recommendList)[2]].lon,
+                            this.recommendList[Object.keys(this.recommendList)[2]].lat),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    this.marker_p1 = new Tmapv2.Marker({
+                        position: new Tmapv2.LatLng(this.recommendList[Object.keys(this.recommendList)[1]].lon,
+                            this.recommendList[Object.keys(this.recommendList)[1]].lat),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+
+
+                } else {
+                    this.marker_s = new Tmapv2.Marker({
+
+                        position: new Tmapv2.LatLng(37.5024399, 127.0260036),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    this.marker_e = new Tmapv2.Marker({
+
+                        position: new Tmapv2.LatLng(37.5004042, 127.0313759),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
+                    this.marker_p1 = new Tmapv2.Marker({
+                        position: new Tmapv2.LatLng(37.5004038, 127.0248098),
+                        icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                        iconSize: new Tmapv2.Size(24, 38),
+                        map: this.map
+                    });
 
 
                 }
 
-                
 
-               
 
-            }
-            ,
-            select(){
-                if(Object.keys(this.recommendList).length==1 && this.recommendList[ Object.keys(this.recommendList)[0]].lon && this.recommendList[ Object.keys(this.recommendList)[0]].lat ){
-                    this.mapdata.startX = this.recommendList[ Object.keys(this.recommendList)[0]].lon;
-                    this.mapdata.startY = this.recommendList[ Object.keys(this.recommendList)[0]].lat;
+
+
+            },
+            select() {
+                if (Object.keys(this.recommendList).length == 1 && this.recommendList[Object.keys(this.recommendList)[
+                        0]].lon && this.recommendList[Object.keys(this.recommendList)[0]].lat) {
+                    this.mapdata.startX = this.recommendList[Object.keys(this.recommendList)[0]].lon;
+                    this.mapdata.startY = this.recommendList[Object.keys(this.recommendList)[0]].lat;
+                } else if (Object.keys(this.recommendList).length == 2) {
+                    this.mapdata.startX = this.recommendList[Object.keys(this.recommendList)[0]].lon;
+                    this.mapdata.startY = this.recommendList[Object.keys(this.recommendList)[0]].lat;
+                    this.mapdata.endX = this.recommendList[Object.keys(this.recommendList)[1]].lon;
+                    this.mapdata.endY = this.recommendList[Object.keys(this.recommendList)[1]].lat;
+
+                } else if (Object.keys(this.recommendList).length == 3) {
+                    this.mapdata.startX = this.recommendList[Object.keys(this.recommendList)[0]].lon;
+                    this.mapdata.startY = this.recommendList[Object.keys(this.recommendList)[0]].lat;
+                    this.mapdata.passList = this.recommendList[Object.keys(this.recommendList)[1]].lon + this
+                        .recommendList[Object.keys(this.recommendList)[1]].lat;
+                    this.mapdata.endX = this.recommendList[Object.keys(this.recommendList)[2]].lon;
+                    this.mapdata.endY = this.recommendList[Object.keys(this.recommendList)[2]].lat;
+
                 }
-                 else if(Object.keys(this.recommendList).length==2){
-                    this.mapdata.startX =this.recommendList[ Object.keys(this.recommendList)[0]].lon;
-                    this.mapdata.startY =this.recommendList[ Object.keys(this.recommendList)[0]].lat;
-                    this.mapdata.endX = this.recommendList[ Object.keys(this.recommendList)[1]].lon;
-                    this.mapdata.endY = this.recommendList[ Object.keys(this.recommendList)[1]].lat;
 
-                }else if(Object.keys(this.recommendList).length==3){
-                    this.mapdata.startX = this.recommendList[ Object.keys(this.recommendList)[0]].lon;
-                    this.mapdata.startY = this.recommendList[ Object.keys(this.recommendList)[0]].lat;
-                    this.mapdata.passList =this.recommendList[ Object.keys(this.recommendList)[1]].lon+this.recommendList[ Object.keys(this.recommendList)[1]].lat;
-                    this.mapdata.endX = this.recommendList[ Object.keys(this.recommendList)[2]].lon;
-                    this.mapdata.endY = this.recommendList[ Object.keys(this.recommendList)[2]].lat;
-
-                }
-                
             },
 
 
@@ -434,32 +485,58 @@
             this.changeMain(false)
         },
         mounted() {
-            
-         
-            if (window.Tmapv2 && window.Tmapv2.Map) {
-                
-                this.initTmap();
-                this.search();
-            } else {
-                const script = document.createElement('script');
-                /* global Tmapv2 */
-                
-                script.onload = () => Tmapv2.Map.load(this.initTmap);
-                script.src =
-                    "https://apis.openapi.sk.com/tmap/js?version=1&format=javascript&appKey=l7xx85f17a9a757349b59a2d9eb9d1382cb3";
-                document.head.appendChild(script);
+            if (Object.keys(this.recommendList).length >= 2) {
+                this.isSeveral = true;
+                if (window.Tmapv2 && window.Tmapv2.Map) {
+
+                    this.initTmap();
+                    this.search();
+
+                } else {
+                    const script = document.createElement('script');
+                    /* global Tmapv2 */
+
+                    script.onload = () => Tmapv2.Map.load(this.initTmap);
+                    script.src =
+                        "https://apis.openapi.sk.com/tmap/js?version=1&format=javascript&appKey=l7xx85f17a9a757349b59a2d9eb9d1382cb3";
+                    document.head.appendChild(script);
+                }
+
             }
-            
-            
-            
+             if (Object.keys(this.recommendList).length == 1){
+                 this.initMap();
+             }
+       
+
+
+
+
+
+
+
+
 
 
 
         },
         updated() {
             console.log("data바뀜")
+             if (Object.keys(this.recommendList).length == 1) {
+                this.isSeveral = false;
+                if (window.kakao && window.kakao.maps) {
+                    this.initMap();
+                } else {
+                    const script = document.createElement('script');
+                    /* global kakao */
+                    script.onload = () => kakao.maps.load(this.initMap);
+                    script.src =
+                        'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=caabdd0825a33e45f0ba6cdb6c0570af';
+                    document.head.appendChild(script);
+                }
 
-           
+            }
+
+
         }
 
 
