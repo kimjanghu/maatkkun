@@ -35,6 +35,7 @@ import com.web.blog.service.PostServiceImpl;
 import com.web.blog.service.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -91,6 +92,12 @@ public class PostController {
 
     @Autowired
     CommentServiceImpl commentservice;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+
+
 
     //window 환경
     final String path = "C:\\Users\\images\\";
