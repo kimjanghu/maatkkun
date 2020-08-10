@@ -32,7 +32,7 @@
 
                                 <div class="comment-like-wrap">
                                     <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
-                                    <p style="margin-left: 5px;">{{ recommend.likes }}likes</p>
+                                    <p style="margin-left: 5px;">{{ recommend.likes }} likes</p>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <button class="create_button" style="margin-top:2px;" @click="recommendToMe">다른 메뉴를 추천해주세요!</button>
+        <button class="create_button" style="margin-top:2px;" @click="recommendToMe(); initTmap();">다른 메뉴를 추천해주세요!</button>
         <br>
         <br>
         <hr>
@@ -51,7 +51,7 @@
 
         <button class="create_button" style="margin-right:2px;">평점이 너무 낮아요!</button>
         <button class="create_button" style="margin-right:2px;">조회수가 너무 낮아요!</button>
-        <button class="create_button" style="margin-right:2px;">뭐더라..>?너무 낮아요!</button>
+        <button class="create_button" style="margin-right:2px;">좋아요가 너무 낮아요!</button>
         <br>
         <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고
             싶어요!</button>
@@ -79,6 +79,7 @@
         mapActions
     } from 'vuex'
     import '@/assets/css/checkbox.css'
+    import constants from '@/lib/constants'
 
     export default {
         name: "Recommend",
@@ -95,11 +96,11 @@
                 resultdrawArr: [],
                 mapdata: {
                     appKey: "l7xx85f17a9a757349b59a2d9eb9d1382cb3",
-                    startX: "127.0260036",
-                    startY: "37.5024399",
-                    endX: "127.0313759",
-                    endY: "37.5004042",
-                    passList: "127.0248098,37.5004038",
+                    startX: "",
+                    startY: "",
+                    endX: "",
+                    endY: "",
+                    passList: "",
                     reqCoordType: "WGS84GEO",
                     resCoordType: "EPSG3857",
 
@@ -123,6 +124,9 @@
 
         methods: {
             ...mapActions(['changeMain']),
+            detailPage(articleId){
+      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: articleId }})
+    },
             recommendToMe() {
                 axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
                         "wantRecommend": this.wantRecommend
@@ -135,30 +139,73 @@
                     .catch(err => console.log(err))
 
             },
-            handClick() {
-                this.isRestaurant = !this.isRestaurant
-            },
-            handCafe() {
-                this.isCafe = !this.isCafe
-            },
-            handDrink() {
-                this.isDrink = !this.isDrink
-            },
+          
             fn_spread(id) {
                 var getID = document.getElementById(id);
                 getID.style.display = (getID.style.display == 'block') ? 'none' : 'block';
             },
             initTmap() {
                 this.map = new Tmapv2.Map('map_div', {
-                    center: new Tmapv2.LatLng(37.49795, 127.0254483),
+                    center: new Tmapv2.LatLng(37.50350600000003, 127.026588),
                     width: '100%',
                     height: '400px',
                     zoom: 15,
                     zoomControl: true,
                     scrollwheel: true
                 });
+                if(Object.keys(this.recommendList).length==1){
+                     this.marker_s = new Tmapv2.Marker({
 
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+                }
+                else if(Object.keys(this.recommendList).length==2){
+                    
                 this.marker_s = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_e = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+                }
+                else if(Object.keys(this.recommendList).length==3){
+                     this.marker_s = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_e = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[2]].lon, this.recommendList[ Object.keys(this.recommendList)[2]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_p1 = new Tmapv2.Marker({
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+
+                }else{ 
+                    this.marker_s = new Tmapv2.Marker({
 
                     position: new Tmapv2.LatLng(37.5024399, 127.0260036),
                     icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
@@ -179,12 +226,10 @@
                     map: this.map
                 });
 
-                this.marker_p2 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.565778, 126.987319),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
+
+                }
+
+                
 
                 var querystring = Object.entries(this.mapdata).map(e => e.join('=')).join('&')
 
@@ -192,6 +237,7 @@
                         `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&${querystring}`
                     )
                     .then((res) => {
+                        console.log(res)
 
 
 
@@ -310,6 +356,28 @@
                     .catch(err => console.log(err))
 
             },
+            select(){
+                if(Object.keys(this.recommendList).length==1){
+                    console.log(this.recommendList[ Object.keys(this.recommendList)[0]].lon)
+                    
+                    this.mapdata.startX = this.recommendList[ Object.keys(this.recommendList)[0]].lon;
+                    this.mapdata.startY = this.recommendList[ Object.keys(this.recommendList)[0]].lat;
+                }
+                 else if(Object.keys(this.recommendList).length==2){
+                    this.mapdata.startX =this.recommendList[ Object.keys(this.recommendList)[0]].lon;
+                    this.mapdata.startY =this.recommendList[ Object.keys(this.recommendList)[0]].lat;
+                    this.mapdata.endX = this.recommendList[ Object.keys(this.recommendList)[1]].lon;
+                    this.mapdata.endY = this.recommendList[ Object.keys(this.recommendList)[1]].lat;
+
+                }else if(Object.keys(this.recommendList).length==3){
+                    this.mapdata.startX = this.recommendList[ Object.keys(this.recommendList)[0]].lon;
+                    this.mapdata.startY = this.recommendList[ Object.keys(this.recommendList)[0]].lat;
+                    this.mapdata.passList =this.recommendList[ Object.keys(this.recommendList)[1]].lon+this.recommendList[ Object.keys(this.recommendList)[1]].lat;
+                    this.mapdata.endX = this.recommendList[ Object.keys(this.recommendList)[2]].lon;
+                    this.mapdata.endY = this.recommendList[ Object.keys(this.recommendList)[2]].lat;
+
+                }
+            },
 
 
 
@@ -337,16 +405,22 @@
             this.changeMain(false)
         },
         mounted() {
+            console.log( Object.keys(this.recommendList)[0])
             if (window.Tmapv2 && window.Tmapv2.Map) {
+                this.select();
                 this.initTmap();
             } else {
                 const script = document.createElement('script');
                 /* global Tmapv2 */
+                this.select();
                 script.onload = () => Tmapv2.Map.load(this.initTmap);
                 script.src =
                     "https://apis.openapi.sk.com/tmap/js?version=1&format=javascript&appKey=l7xx85f17a9a757349b59a2d9eb9d1382cb3";
                 document.head.appendChild(script);
             }
+            
+            
+            
 
 
 
