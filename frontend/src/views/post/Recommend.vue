@@ -12,7 +12,7 @@
                     <div v-for="recommend in recommendList" :key="recommend.id">
                         <div class="post-card">
                             <a @click="detailPage(recommend.postId)">
-                                <img :src="article.content"
+                                <img :src="recommend.content"
                                     :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
                                     class="post-img" />
                                 <div class="contents">
