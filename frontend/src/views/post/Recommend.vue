@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <button class="create_button" style="margin-top:2px;" @click="recommendToMe(); initTmap();">다른 메뉴를 추천해주세요!</button>
+        <button class="create_button" style="margin-top:2px;" @click.prevent="recommendToMe(); select(); search();">다른 메뉴를 추천해주세요!</button>
         <br>
         <br>
         <hr>
@@ -96,11 +96,11 @@
                 resultdrawArr: [],
                 mapdata: {
                     appKey: "l7xx85f17a9a757349b59a2d9eb9d1382cb3",
-                    startX: "",
-                    startY: "",
-                    endX: "",
-                    endY: "",
-                    passList: "",
+                    startX: "127.026588",
+                    startY: "37.50350600000003",
+                    endX: "127.026588",
+                    endY: "37.50350600000003",
+                    passList: "126.987319,37.565778_126.983072,37.573028",
                     reqCoordType: "WGS84GEO",
                     resCoordType: "EPSG3857",
 
@@ -144,94 +144,8 @@
                 var getID = document.getElementById(id);
                 getID.style.display = (getID.style.display == 'block') ? 'none' : 'block';
             },
-            initTmap() {
-                this.map = new Tmapv2.Map('map_div', {
-                    center: new Tmapv2.LatLng(37.50350600000003, 127.026588),
-                    width: '100%',
-                    height: '400px',
-                    zoom: 15,
-                    zoomControl: true,
-                    scrollwheel: true
-                });
-                if(Object.keys(this.recommendList).length==1){
-                     this.marker_s = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-
-                }
-                else if(Object.keys(this.recommendList).length==2){
-                    
-                this.marker_s = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_e = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-
-                }
-                else if(Object.keys(this.recommendList).length==3){
-                     this.marker_s = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_e = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[2]].lon, this.recommendList[ Object.keys(this.recommendList)[2]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_p1 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-
-
-                }else{ 
-                    this.marker_s = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(37.5024399, 127.0260036),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_e = new Tmapv2.Marker({
-
-                    position: new Tmapv2.LatLng(37.5004042, 127.0313759),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-                this.marker_p1 = new Tmapv2.Marker({
-                    position: new Tmapv2.LatLng(37.5004038, 127.0248098),
-                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
-                    iconSize: new Tmapv2.Size(24, 38),
-                    map: this.map
-                });
-
-
-                }
-
-                
-
-                var querystring = Object.entries(this.mapdata).map(e => e.join('=')).join('&')
+            search(){
+                 var querystring = Object.entries(this.mapdata).map(e => e.join('=')).join('&')
 
                 axios.post(
                         `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&${querystring}`
@@ -242,6 +156,7 @@
 
 
                         var resultData = res.data.features;
+                        console.log(resultData)
 
 
                         //결과 출력
@@ -356,10 +271,123 @@
                     .catch(err => console.log(err))
 
             },
-            select(){
+            initTmap() {
+                this.select();
+                if (this.resultdrawArr.length > 0) {
+                            for (var i in this.resultdrawArr) {
+                                this.resultdrawArr[i]
+                                    .setMap(null);
+                            }
+                            this.resultdrawArr = [];
+                        }
+                
+                this.map = new Tmapv2.Map('map_div', {
+                    center: new Tmapv2.LatLng(37.50350600000003, 127.026588),
+                    width: '100%',
+                    height: '400px',
+                    zoom: 15,
+                    zoomControl: true,
+                    scrollwheel: true
+                });
                 if(Object.keys(this.recommendList).length==1){
-                    console.log(this.recommendList[ Object.keys(this.recommendList)[0]].lon)
+                    this.marker_s = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(37.5024399, 127.0260036),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                console.log(this.mapdata.startX)
+                 this.marker_e = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.mapdata.startY,this.mapdata.startX),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_p1 = new Tmapv2.Marker({
+                    position: new Tmapv2.LatLng(37.5004038, 127.0248098),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+
+                }
+                else if(Object.keys(this.recommendList).length==2){
                     
+                this.marker_s = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_e = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+                }
+                else if(Object.keys(this.recommendList).length==3){
+                     this.marker_s = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[0]].lon, this.recommendList[ Object.keys(this.recommendList)[0]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_e = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[2]].lon, this.recommendList[ Object.keys(this.recommendList)[2]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_p1 = new Tmapv2.Marker({
+                    position: new Tmapv2.LatLng(this.recommendList[ Object.keys(this.recommendList)[1]].lon, this.recommendList[ Object.keys(this.recommendList)[1]].lat),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+
+                }else{ 
+                    this.marker_s = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(37.5024399, 127.0260036),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_e = new Tmapv2.Marker({
+
+                    position: new Tmapv2.LatLng(37.5004042, 127.0313759),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+                this.marker_p1 = new Tmapv2.Marker({
+                    position: new Tmapv2.LatLng(37.5004038, 127.0248098),
+                    icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
+                    iconSize: new Tmapv2.Size(24, 38),
+                    map: this.map
+                });
+
+
+                }
+
+                
+
+               
+
+            }
+            ,
+            select(){
+                if(Object.keys(this.recommendList).length==1 && this.recommendList[ Object.keys(this.recommendList)[0]].lon && this.recommendList[ Object.keys(this.recommendList)[0]].lat ){
                     this.mapdata.startX = this.recommendList[ Object.keys(this.recommendList)[0]].lon;
                     this.mapdata.startY = this.recommendList[ Object.keys(this.recommendList)[0]].lat;
                 }
@@ -377,6 +405,7 @@
                     this.mapdata.endY = this.recommendList[ Object.keys(this.recommendList)[2]].lat;
 
                 }
+                
             },
 
 
@@ -405,14 +434,16 @@
             this.changeMain(false)
         },
         mounted() {
-            console.log( Object.keys(this.recommendList)[0])
+            
+         
             if (window.Tmapv2 && window.Tmapv2.Map) {
-                this.select();
+                
                 this.initTmap();
+                this.search();
             } else {
                 const script = document.createElement('script');
                 /* global Tmapv2 */
-                this.select();
+                
                 script.onload = () => Tmapv2.Map.load(this.initTmap);
                 script.src =
                     "https://apis.openapi.sk.com/tmap/js?version=1&format=javascript&appKey=l7xx85f17a9a757349b59a2d9eb9d1382cb3";
@@ -428,6 +459,7 @@
         updated() {
             console.log("data바뀜")
 
+           
         }
 
 
