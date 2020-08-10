@@ -6,39 +6,18 @@
         <div class="map_act_btn_wrap clear_box"></div>
         <p id="result"></p>
         <br />
-        <h2>어떤 종류의 음식점을 추천받고 싶나요?</h2>
-        <button v-if="!isRestaurant" class="create_button" @click.prevent="fn_spread('hiddenContent03'); handClick();"
-            style="margin-right:2px;">식사</button>
-        <button v-if="isRestaurant" class="select_button" @click.prevent="fn_spread('hiddenContent03'); handClick();"
-            style="margin-right:2px;">식사</button>
-        <div id="hiddenContent03" class="example02" style="display: none; margin-top:20px;">
-            <div class="checkbox-container" id="cook">
-
-                <input type="checkbox" id="Korean" value="한식" v-model="hashtags">
-                <label for="Korean">한식</label>
-
-                <input type="checkbox" id="Chinese" value="중식" v-model="hashtags">
-                <label for="Chinese">중식</label>
-
-                <input type="checkbox" id="Western" value="양식" v-model="hashtags">
-                <label for="Western">양식</label>
-
-                <input type="checkbox" id="Japanese" value="일식" v-model="hashtags">
-                <label for="Japanese">일식</label>
-
-                <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
-                <label for="Bunsik">분식</label>
-
-
-            </div>
-        </div>
-        <button v-if="!isCafe" class="create_button" @click.prevent="handCafe" style="margin-right:2px;">카페</button>
-        <button v-if="isCafe" class="select_button" @click.prevent="handCafe" style="margin-right:2px;">카페</button>
-        <button v-if="!isDrink" class="create_button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
-        <button v-if="isDrink" class="select_button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
+        <ul v-for="list in List" :key="list.id">
+        <li>
+        Menu : {{list.title}}
         <br>
+        Location : {{list.address}}
         <br>
-        <button class="create_button" style="margin-top:2px;" @click="recommendToMe">추천해주세요!</button>
+        likes : {{list.likes}} likes
+        </li>
+        </ul>
+        
+        <button class="create_button" style="margin-top:2px;" @click="recommendToMe">다른 메뉴를 추천해주세요!</button>
+        <br>
         <br>
         <hr>
         <br>
@@ -110,6 +89,7 @@
                 isRestaurant: false,
                 isCafe: false,
                 isDrink: false,
+                List : this.$route.params.List
 
 
             }

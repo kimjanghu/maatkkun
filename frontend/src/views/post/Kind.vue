@@ -41,6 +41,7 @@
  import axios from 'axios'
     import { mapActions } from 'vuex'
     import '@/assets/css/checkbox.css'
+    import constants from '@/lib/constants'
     export default {
         name:"Kind",
         data() {
@@ -89,6 +90,7 @@
                     })
                     .then((res) => {
                         console.log(res)
+                        this.$router.push({ name: constants.URL_TYPE.POST.RECOMMEND, params: {List : res.data}})
                     })
                     .catch(err => console.log(err))
 
