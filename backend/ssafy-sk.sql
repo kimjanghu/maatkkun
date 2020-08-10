@@ -106,3 +106,6 @@ alter table post add placename varchar(100) default null;
 -- 2000809
 alter table post modify content varchar(5000);
 
+--docker add
+docker run -p 6379:6379 --name redis_boot -d redis
+
