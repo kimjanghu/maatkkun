@@ -153,8 +153,9 @@ public class PostController {
         })
     public ResponseEntity<Object> register(@Valid @RequestBody final Post post){
 
-        post.setStarpoint(crawling(post.getUrl()));
+        HashMap<String,String> hm = crawling(post.getUrl());
 
+        post.setStarpoint(hm.get("star"));
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
         final ArrayList<String> srcAr = new ArrayList<String>();
@@ -173,7 +174,7 @@ public class PostController {
             element.attr("id",filename);
 
         }
-        post.setContent(body.html());
+        post.setContent(body.html() + hm.get("menu"));
 
         if(service.register(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
@@ -633,17 +634,16 @@ public class PostController {
         boolean iscafe = false;
         boolean isfood = false;
 
+        String[] foodkindArr = null;
 
         try{
             JSONParser jp = new JSONParser(); 
             JSONObject jo = (JSONObject)jp.parse(wantRecommend);
             JSONObject joo = (JSONObject)jp.parse(jo.get("wantRecommend").toString());
-            // System.out.println(joo.get("isDrink").toString());
-            // System.out.println(joo.get("isCafe").toString());
-            // System.out.println(joo.get("food").toString());
 
             if(joo.get("food") != null){
                 isfood = true;
+                foodkindArr = joo.get("food").toString().split(",");
             }
             if(joo.get("isCafe") != null){
                 iscafe = true;
@@ -655,41 +655,103 @@ public class PostController {
         catch(Exception e){
             System.out.println(e.getMessage());
         }
-
-        System.out.println(isfood);
-        System.out.println(iscafe);
-        System.out.println(isdrink);
-        
-
-
-
-        final Double std_lat = 37.5006744185994;
-        final Double std_lon = 127.03646946847;
+        System.out.println(Arrays.toString(foodkindArr));
+        // System.out.println(isfood);
+        // System.out.println(iscafe);
+        // System.out.println(isdrink);
+        // final Double std_lat = 37.5006744185994;
+        // final Double std_lon = 127.03646946847;
         
         
-        final double hitScore = 20.0;   // 조회수 계수
-        final double likeScore = 20.0;  // 좋아요 계수 
-        final double starScore = 20.0;  // 별점 계수
+        double hitScore = 33.0;   // 조회수 계수
+        double likeScore = 33.0;  // 좋아요 계수 
+        double starScore = 33.0;  // 별점 계수
         // final double disScore = 20.0;   // 거리 계수
 
-        final Map<Integer,Double> hm = new HashMap<Integer,Double>();
+        
 
         //전체 리스트 받아오기
         final List<Post> list =  service.getList();
         System.out.println("pid\thits\tlikes\tstarpoint\tdistance");
 
+        
+
+        List<Post> foodList= new ArrayList<>();
+        List<Post> cafeList= new ArrayList<>();
+        List<Post> drinkList= new ArrayList<>();
+
+       
+        for(final Post p : list){
+            // 미터(Meter) 단위
+            // final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
+
+            // System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint()+"\t"+distanceMeter);
+
+            if(isfood){
+                for(int i = 0;i < foodkindArr.length; i++){
+                    if(p.getHashtag().contains(foodkindArr[i])){
+                        foodList.add(p);
+                    }
+                }
+            }
+    
+            if(iscafe && p.getHashtag().contains("카페")){
+                cafeList.add(p);
+            }
+    
+            if(isdrink && p.getHashtag().contains("술집")){
+                drinkList.add(p);
+            }
+        }
+
+
+        // System.out.println("음식 리스트");
+        // for(Post p : foodList){
+        //     System.out.println(p);
+        // }
+        // System.out.println("카페 리스트");
+        // for(Post p : cafeList){
+        //     System.out.println(p);
+        // }
+        // System.out.println("술집 리스트");
+        // for(Post p : drinkList){
+        //     System.out.println(p);
+        // }
+        
+        final HashMap<String,Post> result = new HashMap<>();
+        if(isfood){
+            List<KeyValue> li = returnArr(foodList,hitScore,likeScore,starScore);
+            int random = (int)(Math.random()*3);
+            result.put("음식", service.getPost(li.get(random).getPostid()));
+        }
+        if(iscafe){
+            List<KeyValue> li = returnArr(cafeList,hitScore,likeScore,starScore);
+            int random = (int)(Math.random()*3);
+            result.put("카페", service.getPost(li.get(random).getPostid()));
+        }
+        if(isdrink){
+            List<KeyValue> li = returnArr(drinkList,hitScore,likeScore,starScore);
+            int random = (int)(Math.random()*3);
+            result.put("술집", service.getPost(li.get(random).getPostid()));
+        }
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    public List<KeyValue> returnArr(List<Post> list,double hit,double like,double star){
+
+        double hitScore = hit;   // 조회수 계수
+        double likeScore = like;  // 좋아요 계수 
+        double starScore = star;  // 별점 계수
+
         Double hitsAvg = 0.0;
         Double likesAvg = 0.0;
         Double starAvg = 0.0;
+
         for(final Post p : list){
             hitsAvg += p.getHits();
             likesAvg += p.getLikes();
             starAvg += Double.parseDouble(p.getStarpoint());
-            
-            // 미터(Meter) 단위
-            // final double distanceMeter = distance(std_lat, std_lon, Double.parseDouble(p.getLat()), Double.parseDouble(p.getLon()), "meter");
-
-            System.out.println(p.getPostId()+"\t"+p.getHits()+"\t"+p.getLikes()+"\t"+p.getStarpoint());
         }
 
         hitsAvg /= list.size();
@@ -700,18 +762,20 @@ public class PostController {
         final double likeUnit = (likeScore/2)/likesAvg;
         final double starUnit = (starScore/2)/starAvg;
 
-        System.out.println("hitsAvg : "+hitsAvg);
-        System.out.println("likesAvg : "+likesAvg);
-        System.out.println("starAvg : "+starAvg);
+        // System.out.println("hitsAvg : "+hitsAvg);
+        // System.out.println("likesAvg : "+likesAvg);
+        // System.out.println("starAvg : "+starAvg);
 
-        System.out.println();
+        // System.out.println();
 
-        System.out.println("hitUnit : "+hitUnit);
-        System.out.println("likeUnit : "+likeUnit);
-        System.out.println("starUnit : "+starUnit);
+        // System.out.println("hitUnit : "+hitUnit);
+        // System.out.println("likeUnit : "+likeUnit);
+        // System.out.println("starUnit : "+starUnit);
 
+        final Map<Integer,Double> hm = new HashMap<Integer,Double>();
 
-        final List<KeyValue> li = new ArrayList<KeyValue>();
+        List<KeyValue> li = new ArrayList<KeyValue>();
+        
         for(final Post p : list){
             final Double score =  p.getHits() * hitUnit +
                             p.getLikes() * likeUnit +
@@ -722,49 +786,20 @@ public class PostController {
             li.add(new KeyValue(p.getPostId(), hm.get(p.getPostId())));
         }
 
-        System.out.println("================================");
         Collections.sort(li,Collections.reverseOrder());
-        for(final KeyValue kv : li){
-            System.out.println(kv);
-        }
+
+         // for(final KeyValue kv : li){
+        //     System.out.println(kv);
+        // }
         
         // System.out.println(x);
         // System.out.println(y);
-        System.out.println("==========================================");
-
-        final HashMap<String,Post> result = new HashMap<>();
-        result.put("음식", service.getPost(li.get(0).getPostid()));
-        result.put("카페", service.getPost(li.get(1).getPostid()));
-        result.put("술집", service.getPost(li.get(2).getPostid()));
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return li;
     }
-    @Getter
-    @Setter
-    public class KeyValue implements Comparable<KeyValue>{
-        int postid;
-        double score;
+    
 
-        KeyValue(){
-
-        }
-
-        KeyValue(final int postid,final double score){
-            this.postid = postid;
-            this.score = score;
-        }
-
-        @Override
-        public String toString(){
-            return this.postid+"\t"+this.score;
-        }
-
-        @Override
-        public int compareTo(final KeyValue o) {
-            return (int)(this.score - o.score);
-        }
-    }
-
-    public String crawling(final String url){
+    public HashMap<String,String> crawling(final String url){
+        HashMap<String,String> hm = new HashMap<>();
         final String WEB_DRIVER_ID = "webdriver.chrome.driver";
         final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
         // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
@@ -788,6 +823,8 @@ public class PostController {
             final Document doc = Jsoup.parse(driver.getPageSource());
             final Elements el = doc.body().getElementsByClass("link_evaluation");
             star = Double.parseDouble(el.text().split(" ")[1].substring(0,3));
+            hm.put("star", star+"");
+            hm.put("menu", doc.body().getElementsByClass("list_menu").html());
         }
         catch(final Exception e){
             System.out.println(e.getMessage());
@@ -796,7 +833,7 @@ public class PostController {
             driver.close();
         }
         System.out.println(star);
-        return star+"";
+        return hm;
     }
 
     private static double distance(final double lat1, final double lon1, final double lat2, final double lon2, final String unit) {
@@ -821,6 +858,32 @@ public class PostController {
      
     private static double rad2deg(final double rad) {
         return (rad * 180 / Math.PI);
+    }
+
+    @Getter
+    @Setter
+    public class KeyValue implements Comparable<KeyValue>{
+        int postid;
+        double score;
+
+        KeyValue(){
+
+        }
+
+        KeyValue(final int postid,final double score){
+            this.postid = postid;
+            this.score = score;
+        }
+
+        @Override
+        public String toString(){
+            return this.postid+"\t"+this.score;
+        }
+
+        @Override
+        public int compareTo(final KeyValue o) {
+            return (int)(this.score - o.score);
+        }
     }
 
 }

@@ -115,6 +115,9 @@
       <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
       <label for="Bunsik">분식</label>
 
+      <input type="checkbox" id="Cafe" value="카페" v-model="hashtags">
+      <label for="Cafe">카페</label>
+
       <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
       <label for="Soju">술집</label>
 
@@ -323,8 +326,8 @@
           var address = places[i].address_name;
           var placeurl = places[i].place_url;
 
-          var lat = places[i].x;
-          var lon = places[i].y;
+          var lat = places[i].y;
+          var lon = places[i].x;
           // console.log(address.includes("역삼동"))
 
           if (address.includes("역삼동")) {
