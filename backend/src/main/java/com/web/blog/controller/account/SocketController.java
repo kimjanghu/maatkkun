@@ -51,7 +51,9 @@ public class SocketController {
         }
         else if(status.equals("out")){
             System.out.println("out");
-            vop.set(postid, vop.get(postid) - 1);
+            if(vop.get(postid) > 0){
+                vop.set(postid, vop.get(postid) - 1);
+            }
         }
         else if(status.equals("list")){
             System.out.println("list");
