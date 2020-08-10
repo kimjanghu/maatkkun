@@ -721,17 +721,40 @@ public class PostController {
         final HashMap<String,Post> result = new HashMap<>();
         if(isfood){
             List<KeyValue> li = returnArr(foodList,hitScore,likeScore,starScore);
-            int random = (int)(Math.random()*3);
+
+            int random = 0;
+
+            if(li.size() < 3){
+                random = li.size();
+            }
+            else{
+                random = (int)(Math.random()*3);
+            }
+            
             result.put("음식", service.getPost(li.get(random).getPostid()));
         }
         if(iscafe){
             List<KeyValue> li = returnArr(cafeList,hitScore,likeScore,starScore);
-            int random = (int)(Math.random()*3);
+            int random = 0;
+
+            if(li.size() < 3){
+                random = li.size();
+            }
+            else{
+                random = (int)(Math.random()*3);
+            }
             result.put("카페", service.getPost(li.get(random).getPostid()));
         }
         if(isdrink){
             List<KeyValue> li = returnArr(drinkList,hitScore,likeScore,starScore);
-            int random = (int)(Math.random()*3);
+            int random = 0;
+
+            if(li.size() < 3){
+                random = li.size();
+            }
+            else{
+                random = (int)(Math.random()*3);
+            }
             result.put("술집", service.getPost(li.get(random).getPostid()));
         }
         
