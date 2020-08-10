@@ -234,27 +234,18 @@ export default {
         })
         .catch(err => console.log(err))
     },
-
-    
-    send(status) {
-      // console.log("Send message:" + this.message);
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = { 
-          postId: this.articleId,
-          status: status
-        };
-        this.stompClient.send("/receive", JSON.stringify(msg), {});
-      }
-    },    
-    
     disconnect(){
       console.log("연결 끊기")
-      this.send({ articleId: this.articleId, status: 'in' })
+      this.sendPostId({ articleId: this.articleId, status: 'out' })
     }
 
   },
   
   created() {
+    // this.sendPostId({ articleId: this.articleId, status: 'in' })
+    setTimeout(() => {
+      this.sendPostId({ articleId: this.articleId, status: 'in' })
+    }, 300)
     this.detailPage()
     this.changeMain(false)
     if (this.$cookies.get('auth-token')) {
@@ -273,9 +264,11 @@ export default {
 
         })
     }
+    window.addEventListener('beforeunload', () => {
+      this.sendPostId({ articleId: this.articleId, status: 'out' })
+    })
   },
   mounted() {
-    this.send({ articleId: this.articleId, status: 'in' })
     console.log(this.recvList)
     window.addEventListener("click", e => {
       const modal = document.getElementById("modal");
@@ -296,8 +289,8 @@ export default {
       document.head.appendChild(script);
     }
   },
-  beforeDestroy() {
-    this.disconnect()
+  destroyed() {
+    // this.disconnect()
   }
 }
 </script>

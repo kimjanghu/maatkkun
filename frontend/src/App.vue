@@ -3,7 +3,6 @@
     <Navbar :isNavbar="isNavbar" />
     <Main />
     <router-view />
-    {{ recvList }}
   </div>
 </template>
 
@@ -12,7 +11,7 @@ import './assets/css/style.css'
 import Navbar from './components/common/Navbar.vue'
 import Main from './components/common/Main.vue'
 import constants from './lib/constants'
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 
 export default {
@@ -21,13 +20,16 @@ export default {
     Navbar,
     Main
   },
+  beforeCreate() {
+  },
   created() {
     this.connectWebsocket()
     let url = this.$route.name
     this.checkUrl(url)
   },
+  mounted() {
+  },
   computed: {
-    ...mapState(['recvList'])
   },
   watch: {
     $route(to) {
@@ -35,7 +37,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['connectWebsocket']),
+    ...mapActions(['connectWebsocket', 'sendPostId']),
     checkUrl(url) {
       let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
 

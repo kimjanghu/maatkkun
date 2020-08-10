@@ -18,6 +18,7 @@
         <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
       </div>
     </div>
+    {{ recvList }}
   </div>
 </template>
 
@@ -37,10 +38,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isMain'])
+    ...mapState(['isMain', 'recvList'])
   },
   methods: {
-    ...mapActions(['searchResult', 'changeMain']),
+    ...mapActions(['searchResult', 'changeMain', 'sendPostId']),
     goRecommend(){
       this.$router.push('/post/kind')
     },
@@ -63,6 +64,9 @@ export default {
   created() {
   },
   mounted() {
+    setTimeout(() => {
+      this.sendPostId({ articleId: null, status: 'list' })
+    }, 500)
   },
   updated() {
   },

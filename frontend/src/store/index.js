@@ -147,6 +147,7 @@ export default new Vuex.Store({
     },
     sendPostId({ commit }, articleData) {
       // console.log("Send message:" + this.message);
+      console.log(articleData)
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
           postId: articleData.articleId,

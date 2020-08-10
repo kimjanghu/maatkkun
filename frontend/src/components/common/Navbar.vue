@@ -1,7 +1,8 @@
 <template>
   <div id="navbar" v-if="isNavbar">
     <h1>
-      <router-link @click.native="changeMain(true)" :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link>
+      <!-- <router-link @click.native="changeMain(true)" :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link> -->
+      <a href="http://localhost:3000/">MAAT KUUN</a>
     </h1>
     <div class="right">
       <div v-if="!isLoggedIn">
@@ -23,7 +24,6 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Navbar',
-  mounted() {},
   components: {},
   props: {
     isNavbar: {
@@ -35,16 +35,19 @@ export default {
   },
   watch: {},
   methods: {
-    ...mapActions(['changeMain']),
+    ...mapActions(['changeMain', 'sendPostId']),
   },
-  data: function() {
+  data() {
     return {
       constants,
       loginId: this.$cookies.get('auth-token'),
-    };
+    }
   },
   created() {
-    console.log(JSON.parse(window.localStorage.getItem('userInfo')))
+    // console.log(JSON.parse(window.localStorage.getItem('userInfo')))
+  },
+  
+  mounted() {
   },
   updated() {
     // console.log(JSON.parse(window.localStorage.getItem('userInfo')).uid)
