@@ -658,13 +658,13 @@ public class PostController {
             }
 
             if(joo.get("like") != null){
-                likeD = 2.0;
+                likeD = 4.0;
             }
             if(joo.get("watch") != null){
-                hitD = 2.0;
+                hitD = 4.0;
             }
             if(joo.get("star") != null){
-                starD = 2.0;
+                starD = 4.0;
             } 
         }
         catch(Exception e){
@@ -780,6 +780,10 @@ public class PostController {
     }
 
     public List<KeyValue> returnArr(List<Post> list,double hit,double like,double star){
+
+        System.out.println("hit : "+hit);
+        System.out.println("like : "+like);
+        System.out.println("star : "+star);
 
         double hitScore = hit;   // 조회수 계수
         double likeScore = like;  // 좋아요 계수 
