@@ -1,29 +1,7 @@
 <template> 
   <div class="post">
     <div class="wrapB">
-      <!-- <button class="create_button" @click="goRecommend">
-        추천 받아보실래요?
-      </button>
-      <br><br>
-
-      <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
-      <br>
-      <div class="post-list-link">
-        <div class="main-link" :class="{ active: isRecentList }" @click.prevent="changeMainRecentList">
-          <p><i class="far fa-clock fa-lg" style="margin-right: 5px;"></i>최신순</p>
-        </div>
-        <div class="main-link" :class="{ active: isLikeList }" @click.prevent="changeMainLikeList">
-          <p><i class="far fa-heart fa-lg" style="margin-right: 5px;"></i>좋아요</p>
-        </div>
-        <div class="main-link" :class="{ active: isHitList }" @click.prevent="changeMainHitList">
-          <p><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</p>
-        </div>
-      </div>
-      
-      <br><br> -->
-
       <section class="post-list">
-        
         <div v-for="(article, index) in articles.list" :key="article.id">
           <div class="post-card">
             <a @click="detailPage(article.postId)" >
@@ -34,11 +12,13 @@
               />
 
               <div class="contents">
-                <h3>{{article.title}}</h3>
+                <h3>{{ article.title }}</h3>
                 <br>
-                <span class="date"><i class="far fa-user"></i> {{article.nickname}}</span>
+                <span class="date"><i class="far fa-user"></i> {{ article.nickname }}</span>
                 <br>
-                <span class="date"><i class="far fa-clock"></i> {{article.createDate}}</span>
+                <span class="date"><i class="far fa-clock"></i> {{ article.createDate }}</span>
+                <br>
+                <span class="date"><i class="far fa-eye"></i> {{ article.hits }}</span>
                 <br>
                 <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
                   <span class="tag-btn"># {{ tag }}</span>
@@ -71,61 +51,12 @@
               <div v-else class="comment-like-wrap">
                 <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
               </div>
-              
-              <!-- <div>
-                <i v-bind:ref="article.postId" @click="change(article); checkLike(article);"  class="far fa-heart fa-lg animated infinite bounce delay-1s" style="color: gray;"></i>
-                <span class="article_likes">{{article.likes}}</span>
-              </div> -->
-
             </div>
           </div>
         </div>
       </section>
-
-      <!-- <section class="post-list" v-show="!isHitList">
-        
-        <div v-for="(article, index) in hitArticles.list" :key="article.id">
-          <div class="post-card">
-            <a @click="detailPage(article.postId)" >
-              <img
-                :src="article.content"
-                :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
-                class="post-img"
-              />
-
-              <div class="contents">
-                <h3>{{article.title}}</h3>
-                <br>
-                <span class="date"><i class="far fa-user"></i> {{article.nickname}}</span>
-                <br>
-                <span class="date"><i class="far fa-clock"></i> {{article.createDate}}</span>
-                <br>
-                <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
-                  <span class="tag-btn"># {{ tag }}</span>
-                </div>
-              </div>
-            </a>
-
-            <div class="writer-wrap">
-              <div class="comment-like-wrap">
-                <i class="far fa-comment-alt fa-lg"></i><p style="margin: 0 5px;">{{ hitArticles.comment[index] }}</p>
-              </div>
-              <div v-if="isLoggedIn" class="comment-like-wrap">
-                <i :ref="article.postId" @click="change(article); checkLike(article);" v-if="includes(article)" class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
-                <i :ref="article.postId" @click="change(article); checkLike(article);" v-if="!includes(article)" class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
-              </div>
-              <div v-else class="comment-like-wrap">
-                <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-      </section> -->
-
     </div>
   </div>
-
 </template>
 
 <script>
