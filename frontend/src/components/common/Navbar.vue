@@ -10,8 +10,8 @@
       </div>
       <div v-if="isLoggedIn">
         <router-link class="nav-link" :to="{ name:constants.URL_TYPE.POST.CREATE }">Create</router-link>
-        <!-- <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.LOGOUT }">Logout</router-link> -->
-        <a href="/user/logout" class="nav-link">Logout</a>
+        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.LOGOUT }">Logout</router-link>
+        <!-- <a href="/user/logout" class="nav-link">Logout</a> -->
         <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.MYPAGE, params:{ id: loginId }}">Mypage</router-link>
       </div>
     </div>
