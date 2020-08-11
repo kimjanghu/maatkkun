@@ -35,6 +35,8 @@ import com.web.blog.service.PostServiceImpl;
 import com.web.blog.service.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,18 +50,18 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.Getter;
 import lombok.Setter;
-import io.swagger.annotations.ApiImplicitParam;
+
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
-import org.jsoup.Connection.KeyVal;
+
 import org.jsoup.nodes.Document; 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -92,6 +94,13 @@ public class PostController {
     @Autowired
     CommentServiceImpl commentservice;
 
+    @Autowired
+    RedisTemplate<String, Integer> redisTemplate;
+    
+    
+
+
+
     //window 환경
     final String path = "C:\\Users\\images\\";
     //ec2 환경
@@ -117,9 +126,12 @@ public class PostController {
         final List<Post> postList = service.getList();
         final List<Integer> commentList = new ArrayList<>();
         
+        
+        // ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
-
+            // String pp = post.getPostId()+"";
+            // vop.set(pp, 0);
 
             final Document doc = Jsoup.parseBodyFragment(post.getContent());
             final Elements dd = doc.select("img");
@@ -157,6 +169,13 @@ public class PostController {
 
         post.setStarpoint(hm.get("star"));
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
+
+        ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        
+        System.out.println("================================");
+        String s = service.getTopNum()+"";
+        vop.set(s, 0);
+        System.out.println("================================");
 
         final ArrayList<String> srcAr = new ArrayList<String>();
 
@@ -199,7 +218,8 @@ public class PostController {
                     e.printStackTrace();
                 }
             }
-                return new ResponseEntity<>("글작성 성공",HttpStatus.OK);
+            
+            return new ResponseEntity<>("글작성 성공",HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>("글작성 실패",HttpStatus.NOT_FOUND);
@@ -327,6 +347,10 @@ public class PostController {
     public ResponseEntity<Object> dropArticle(@RequestParam(required = true) final int postId){
         final Post post = service.showArticle(postId);
         System.out.println("글 삭제");
+        System.out.println("======================");
+        ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        redisTemplate.delete(postId+"");
+        System.out.println("======================");
         final Document doc = Jsoup.parseBodyFragment(post.getContent());
         final Element body = doc.body();
         final Elements dd = doc.select("img");
@@ -363,6 +387,7 @@ public class PostController {
         }
 
         if(service.deletePost(postId)>0){
+            
             return new ResponseEntity<>("삭제 성공",HttpStatus.OK);
         }
         else{
@@ -827,7 +852,6 @@ public class PostController {
                             p.getLikes() * likeUnit +
                             Double.parseDouble(p.getStarpoint()) * starUnit;
             hm.put(p.getPostId(), score);
-            
             
             li.add(new KeyValue(p.getPostId(), hm.get(p.getPostId())));
         }
