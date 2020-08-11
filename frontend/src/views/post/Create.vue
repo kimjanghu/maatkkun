@@ -497,7 +497,8 @@
         }
       },
       createArticle() {
-        const config = {
+        if(this.articleData.lat && this.articleData.lon){
+          const config = {
           headers: {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
@@ -514,9 +515,15 @@
             this.$router.push('/')
           })
           .catch(err => console.log(err.response))
+
+        }else{
+          alert('음식점 위치 안찍으면 죽어')
+        }
+        
       },
       updateArticle() {
-        const config = {
+        if(this.articleData.lat && this.articleData.lon){
+          const config = {
           headers: {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
@@ -535,6 +542,12 @@
             })
           })
           .catch(err => console.log(err))
+
+        }
+        else{
+          alert('음식점 위치 안찍으면 죽는다')
+        }
+        
 
 
 
