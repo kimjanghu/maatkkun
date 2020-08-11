@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div v-show="isMain">
     <div class="best-post">
       <h3 class="best-post-main">MAAT GGUN Best</h3>
       <hr>
-      <div v-for="recv in displayRecvList" :key="`recv_${recv[0].postId}`">
-        <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ recv[0].title }}</router-link></p>
+      <div v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+        <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
       </div>
     </div>
-    <div class="wrapB" v-show="isMain">
+    <div class="wrapB">
       <button class="create_button" @click="goRecommend">
         추천 받아보실래요?
       </button>
@@ -77,7 +77,7 @@ export default {
         })
         this.displayRecvList.push(tmp)
       })
-      console.log(this.displayRecvList)
+      // console.log(this.displayRecvList)
     },
     sortRecvList() {
       const tmpSortRecvList = []
@@ -88,14 +88,6 @@ export default {
         return b[1] - a[1];
       })
       this.filterRecvList(tmpSortRecvList)
-      // const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
-      // tmpFilterRecvList.forEach(recv => {
-      //   let tmp = this.articles.list.filter(item => {
-      //     return item.postId === +recv[0]
-      //   })
-      //   this.displayRecvList.push(tmp)
-      // })
-      // console.log(this.displayRecvList)
     },
   },
   created() {
@@ -105,7 +97,7 @@ export default {
       this.sendPostId({ articleId: null, status: 'list' })
       setTimeout(() => {
         this.sortRecvList()
-      }, 100)
+      }, 200)
     }, 200)
   },
   updated() {
@@ -121,20 +113,20 @@ export default {
   /* padding: 2rem; */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
   width: 200px;
 }
 
 .best-post-main {
-  margin-bottom: 1rem;
+  margin: 1rem auto;
   font-size: 20px;
   color: var(--primary-color);
 }
 
 .best-post div p {
   word-break: normal;
-  margin: 1rem 0;
+  margin: 7px 1rem;
   font-size: 13px;
 }
 
