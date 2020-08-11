@@ -39,6 +39,18 @@ export default new Vuex.Store({
       window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
     },
 
+
+    SET_MAIN(state, main) {
+      state.isMain = main
+    },
+    SET_RECV_DATA(state, recvList) {
+      state.recvList = recvList
+    },
+    SET_SOCKET_IN(state, socketIn) {
+      state.socketStatus = socketIn
+    },
+
+    
     SET_ARTICLES(state, articles) {
       state.articles = articles
     },
@@ -51,15 +63,7 @@ export default new Vuex.Store({
     SET_POSTINFO(state, post) {
       state.post = post
     },
-    SET_MAIN(state, main) {
-      state.isMain = main
-    },
-    SET_RECV_DATA(state, recvList) {
-      state.recvList = recvList
-    },
-    SET_SOCKET_IN(state, socketIn) {
-      state.socketStatus = socketIn
-    }
+    
   },
   actions: {
     // User
@@ -146,8 +150,6 @@ export default new Vuex.Store({
       commit('SET_MAIN', main)
     },
     sendPostId({ commit }, articleData) {
-      // console.log("Send message:" + this.message);
-      console.log(articleData)
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
           postId: articleData.articleId,

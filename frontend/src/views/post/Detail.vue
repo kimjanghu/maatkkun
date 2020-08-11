@@ -1,16 +1,31 @@
 <template>
   <div v-if="article">
     <div class="main-wrapper">
-      <div class="box-container">
-        <div class="box" style="font-weight:bold;"> {{article.createDate}}</div>
-        <div class="box" style="font-weight:bold;"> {{article.hashtag}}</div>
-      </div>
+      
       <br>
       <div class="post-title">
-        <p style="font-weight: bold; font-size: 20px">제목</p>
-        <p>: {{ article.title }}</p>
+        <p style="font-weight: bold; font-size: 50px">{{ article.title }}</p>
       </div>
-      <br>
+      <div class="box-container">
+        <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
+        <p class="post-date">{{ article.createDate }}</p>
+      </div>
+      <hr>
+      <div v-if="isLoggedIn" class="post-like-wrap">
+        <i ref="postId" v-if="included" @click="change(); checkLike(article);"
+          class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
+        <i ref="postId" v-if="!included" @click="change(); checkLike(article);"
+          class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
+        <p style="margin-left: 5px;">{{ article.likes }} likes</p>
+      </div>
+      <div v-else class="post-like-wrap">
+        <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
+        <p style="margin-left: 5px;">{{ article.likes }} likes</p>
+      </div>
+
+
+
+
 
       <div>
         <div style="margin-top:3px;">
@@ -19,17 +34,7 @@
           </p>
         </div>
         <br>
-        <div v-if="isLoggedIn" class="comment-like-wrap">
-          <i ref="postId" v-if="included" @click="change(); checkLike(article);"
-            class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
-          <i ref="postId" v-if="!included" @click="change(); checkLike(article);"
-            class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
-          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
-        </div>
-        <div v-else class="comment-like-wrap">
-          <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
-          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
-        </div>
+        
         <br>
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
@@ -45,6 +50,8 @@
 
         </div>
       </div>
+      
+      <div class="box" style="font-weight:bold;"> {{ article.hashtag }}</div>
       <br>
       <br>
       <Comment :article="article" />
@@ -54,8 +61,6 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -245,7 +250,7 @@ export default {
     // this.sendPostId({ articleId: this.articleId, status: 'in' })
     setTimeout(() => {
       this.sendPostId({ articleId: this.articleId, status: 'in' })
-    }, 300)
+    }, 250)
     this.detailPage()
     this.changeMain(false)
     if (this.$cookies.get('auth-token')) {
@@ -296,30 +301,47 @@ export default {
 </script>
 
 <style scoped>
+.main-wrapper {
+  position: relative;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media(min-width:560px) {
   .main-wrapper {
     position: relative;
     align-items: center;
-    width: 100%;
+    width: 60%;
     margin: 0 auto;
   }
+}
 
-  @media(min-width:560px) {
-    .main-wrapper {
-      position: relative;
-      align-items: center;
-      width: 60%;
-      margin: 0 auto;
-    }
-  }
+.box-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
 
-  .box-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
+.post-title {
+  display: flex;
+  align-items: center;
+}
 
-  .post-title {
-    display: flex;
-    align-items: center;
-  }
+.post-date {
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+.realtime-post {
+  color: var(--primary-color);
+}
+
+.post-like-wrap {
+}
+
+hr {
+  margin: 2rem 0;
+}
 </style>

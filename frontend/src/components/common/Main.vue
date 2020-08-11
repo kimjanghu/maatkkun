@@ -66,7 +66,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
-    }, 500)
+    }, 200)
   },
   updated() {
   },

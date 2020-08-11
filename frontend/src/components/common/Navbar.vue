@@ -2,7 +2,7 @@
   <div id="navbar" v-if="isNavbar">
     <h1>
       <!-- <router-link @click.native="changeMain(true)" :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link> -->
-      <a href="http://localhost:3000/">MAAT KUUN</a>
+      <a href="/">MAAT KUUN</a>
     </h1>
     <div class="right">
       <div v-if="!isLoggedIn">
@@ -10,7 +10,8 @@
       </div>
       <div v-if="isLoggedIn">
         <router-link class="nav-link" :to="{ name:constants.URL_TYPE.POST.CREATE }">Create</router-link>
-        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.LOGOUT }">Logout</router-link>
+        <!-- <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.LOGOUT }">Logout</router-link> -->
+        <a href="/user/logout" class="nav-link">Logout</a>
         <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.MYPAGE, params:{ id: loginId }}">Mypage</router-link>
       </div>
     </div>
@@ -40,7 +41,7 @@ export default {
   data() {
     return {
       constants,
-      loginId: this.$cookies.get('auth-token'),
+      loginId: this.$cookies.get('auth-token')
     }
   },
   created() {
