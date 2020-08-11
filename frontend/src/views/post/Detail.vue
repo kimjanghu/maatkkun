@@ -1,64 +1,55 @@
 <template>
   <div v-if="article">
     <div class="main-wrapper">
-      
-      <br>
+      <p class="main-detail-page">MAAT GGUN Page</p>
       <div class="post-title">
-        <p style="font-weight: bold; font-size: 50px">{{ article.title }}</p>
+        <p class="post-title-text">{{ article.title }}</p>
       </div>
       <div class="box-container">
         <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
+        <Like :article="article" />
+        <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>
         <p class="post-date">{{ article.createDate }}</p>
+        <!-- <div v-if="isLoggedIn" class="post-like-wrap">
+          <i ref="postId" v-if="included" @click="change(); checkLike(article);"
+            class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
+          <i ref="postId" v-if="!included" @click="change(); checkLike(article);"
+            class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
+          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
+        </div>
+        <div v-else class="post-like-wrap">
+          <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
+          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
+        </div> -->
       </div>
       <hr>
-      <div v-if="isLoggedIn" class="post-like-wrap">
-        <i ref="postId" v-if="included" @click="change(); checkLike(article);"
-          class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
-        <i ref="postId" v-if="!included" @click="change(); checkLike(article);"
-          class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
-        <p style="margin-left: 5px;">{{ article.likes }} likes</p>
-      </div>
-      <div v-else class="post-like-wrap">
-        <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
-        <p style="margin-left: 5px;">{{ article.likes }} likes</p>
-      </div>
-
-
-
-
-
-      <div>
+      <div class="main-text-area">
+        <p class="content-text">Content</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
             <Viewer v-if="content != null" :initialValue="content" />
           </p>
         </div>
-        <br>
         
-        <br>
+        <hr>
+        <div class="location-title">
+          <p class="content-text">Location</p>
+          <p class="store-name">{{article.placename}}</p>
+        </div>
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
-        <p>음식점 이름 : {{article.placename}}</p>
-        <button class="create_button" style="margin-right:2px;" @click.prevent="changeModal">공유하기</button>
-        <div v-show="isModal" class="modal-container" id="modal">
-          <div class="modal">
-            <p>공유</p>
-            <input type="text" id="ShareUrl">
-            <span class="btn-type1"><button class="create_button" @click="CopyUrlToClipboard">URL 복사</button></span>
-
-          </div>
-
-        </div>
+      </div>
+      <div class="post-button-area">
+        <button class="update-post-button" @click.prevent="goupdateArticle()">수정</button>
+        <button class="update-post-button delete-button" @click.prevent="deleteArticle()">삭제</button>
       </div>
       
-      <div class="box" style="font-weight:bold;"> {{ article.hashtag }}</div>
-      <br>
-      <br>
-      <Comment :article="article" />
-      <div class="twobuttons">
-        <button class="create_button" style="margin-right:2px;" @click.prevent="goupdateArticle()">게시글 수정</button>
-        <button class="create_button" @click.prevent="deleteArticle()">게시글 삭제</button>
+      <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
+        <p class="tag-btn">#{{ tag }}</p>
       </div>
+      <!-- <div class="box" style="font-weight:bold;"> {{ article.hashtag }}</div> -->
+      <hr>
+      <Comment :article="article" />
     </div>
   </div>
 </template>
@@ -72,6 +63,7 @@ import constants from '@/lib/constants'
 import axios from 'axios'
 import SERVER from '@/api/drf'
 import Comment from '@/components/common/Comment.vue'
+import Like from '@/components/common/Like.vue'
 import '@/assets/css/modal.css'
 
 
@@ -79,7 +71,8 @@ export default {
   name: 'Detail',
   components: {
     Viewer,
-    Comment
+    Comment,
+    Like
   },
   data() {
     return {
@@ -176,38 +169,15 @@ export default {
             })
         })
     },
-
-    CopyUrlToClipboard()
-
-    {
-
-      var obShareUrl = document.getElementById("ShareUrl");
-
-      obShareUrl.value = window.document.location.href;
-
-
-
-      obShareUrl.select();
-
-      document.execCommand("copy");
-
-
-
-      obShareUrl.blur();
-
-
-
-      alert("URL이 클립보드에 복사되었습니다");
-
-    }
-
-    ,
-
-    changeModal() {
-      this.isModal = !this.isModal
+    CopyUrlToClipboard() {
+      const tmpInput = document.createElement('textarea');
+      document.body.appendChild(tmpInput);
+      tmpInput.value = window.document.location.href;
+      tmpInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tmpInput);
+      alert("URL이 클립보드에 복사되었습니다")
     },
-
-
     goupdateArticle() {
       if (this.loginUser === this.article.userid) {
         this.$router.push({
@@ -236,11 +206,11 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
+          // console.log(res.data)
         })
         .catch(err => console.log(err))
     },
     disconnect(){
-      console.log("연결 끊기")
       this.sendPostId({ articleId: this.articleId, status: 'out' })
     }
 
@@ -253,22 +223,22 @@ export default {
     }, 250)
     this.detailPage()
     this.changeMain(false)
-    if (this.$cookies.get('auth-token')) {
-      axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
-          "uid": this.$cookies.get('auth-token')
-        })
-        .then((res) => {
-          var liked_list = res.data.likedpost.split(',').map(i => parseInt(i))
-          var result = liked_list.slice(0, -1)
-          this.likedposts = result
-          if (this.likedposts.includes(this.articleId)) {
-            this.included = true;
-          } else {
-            this.included = false;
-          }
+    // if (this.$cookies.get('auth-token')) {
+    //   axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
+    //       "uid": this.$cookies.get('auth-token')
+    //     })
+    //     .then((res) => {
+    //       var liked_list = res.data.likedpost.split(',').map(i => parseInt(i))
+    //       var result = liked_list.slice(0, -1)
+    //       this.likedposts = result
+    //       if (this.likedposts.includes(this.articleId)) {
+    //         this.included = true;
+    //       } else {
+    //         this.included = false;
+    //       }
 
-        })
-    }
+    //     })
+    // }
     window.addEventListener('beforeunload', () => {
       this.sendPostId({ articleId: this.articleId, status: 'out' })
     })
@@ -293,9 +263,6 @@ export default {
       script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=caabdd0825a33e45f0ba6cdb6c0570af';
       document.head.appendChild(script);
     }
-  },
-  destroyed() {
-    // this.disconnect()
   }
 }
 </script>
@@ -308,13 +275,9 @@ export default {
   margin: 0 auto;
 }
 
-@media(min-width:560px) {
-  .main-wrapper {
-    position: relative;
-    align-items: center;
-    width: 60%;
-    margin: 0 auto;
-  }
+.main-detail-page {
+  font-size: 13px;
+  opacity: 0.5;
 }
 
 .box-container {
@@ -324,9 +287,21 @@ export default {
   justify-content: flex-end;
 }
 
+.content-text {
+  margin: 0 0 1rem 1rem;
+  font-size: 13px;
+  opacity: 0.5;
+}
+
 .post-title {
   display: flex;
   align-items: center;
+}
+
+.post-title-text {
+  font-weight: bold;
+  font-size: 50px;
+  margin: 2rem 0 0 1rem;
 }
 
 .post-date {
@@ -335,13 +310,65 @@ export default {
 }
 
 .realtime-post {
-  color: var(--primary-color);
+  color: var(--third-color);
 }
 
-.post-like-wrap {
+.copy-url {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.location-title {
+  margin: 2rem 0 1rem 0;
+  display: flex;
+}
+
+
+.store-name {
+  color: var(--third-color);
+  margin-left: 1rem;
+}
+
+.post-button-area {
+  display: flex;
+  justify-content: flex-end;
+  margin: 2rem 0;
+}
+
+.update-post-button {
+  padding: 5px 7px;
+  background-color: var(--primary-color);
+  border: none;
+}
+
+.delete-button {
+  margin-left: 5px;
 }
 
 hr {
   margin: 2rem 0;
+}
+
+.tag {
+  display: flex;
+}
+
+.tag-btn {
+  width: 65px;
+  margin-right: 10px;
+  background-color: var(--fifth-color);
+  text-align: center;
+  border-radius: 3px;
+  color: #fff;
+}
+
+@media(min-width:560px) {
+  .main-wrapper {
+    position: relative;
+    align-items: center;
+    width: 60%;
+    margin: 0 auto;
+  }
 }
 </style>
