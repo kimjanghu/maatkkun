@@ -54,9 +54,12 @@
         <br>
         <p>피드백을 주세요</p>
 
-        <button class="create_button" style="margin-right:2px;">평점이 너무 낮아요!</button>
-        <button class="create_button" style="margin-right:2px;">조회수가 너무 낮아요!</button>
-        <button class="create_button" style="margin-right:2px;">좋아요가 너무 낮아요!</button>
+        <button v-if="!lowStar" class="create_button" style="margin-right:2px;" @click="handStar(); recommendToMe();initTmap();">평점이 너무 낮아요!</button>
+        <button v-if="lowStar" class="select_button" @click.prevent="handStar();" style="margin-right:2px;">평점 피드백 적용 완료!</button>
+        <button v-if="!lowWatch" class="create_button" style="margin-right:2px;" @click="handWatch(); recommendToMe(); initTmap();">조회수가 너무 낮아요!</button>
+        <button v-if="lowWatch" class="select_button" @click.prevent="handWatch();" style="margin-right:2px;">조회수 피드백 적용 완료!</button>
+        <button v-if="!lowLike" class="create_button" style="margin-right:2px;" @click="handLike(); recommendToMe(); initTmap();">좋아요가 너무 낮아요!</button>
+        <button v-if="lowLike" class="select_button" @click.prevent="handLike();" style="margin-right:2px;">좋아요 피드백 적용 완료!</button>
         <br>
         <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">가는 길을 더 자세하게 알고
             싶어요!</button>
@@ -122,8 +125,21 @@
                 isCafe: false,
                 isDrink: false,
                 recommendList: this.$route.params.recommendList,
-                wantRecommend: this.$route.params.wantRecommend,
+
+                wantRecommend: {
+                    food : this.$route.params.wantRecommend.food,
+                    isCafe : this.$route.params.wantRecommend.isCafe,
+                    isDrink: this.$route.params.wantRecommend.isDrink,
+                    like: null,
+                    watch:null,
+                    star:null,
+                    }
+                    ,
                 isSeveral: false,
+
+                lowStar:false,
+                lowWatch:false,
+                lowLike:false,
 
 
 
@@ -133,6 +149,26 @@
 
         methods: {
             ...mapActions(['changeMain']),
+            handLike(){
+                this.lowLike=!this.lowLike
+                if(!this.lowLike){
+                    this.wantRecommend.like =null
+                }
+            },
+            handWatch(){
+                 this.lowWatch=!this.lowWatch
+                 if(!this.lowWatch){
+                     this.wantRecommend.watch=null
+                 }
+            },
+            handStar(){
+                this.lowStar=!this.lowStar
+                if(!this.lowStar){
+                     this.wantRecommend.star=null
+                 }
+
+            },
+
             initMap() {
                 var container = document.getElementById('map')
                 var options = {
@@ -178,7 +214,20 @@
                 })
             },
             recommendToMe() {
-                axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
+                if(this.lowLike){
+                    this.wantRecommend.like="low"
+                }
+               
+                if(this.lowWatch){
+                    this.wantRecommend.watch="low"
+                }
+                 
+                if(this.lowStar){
+                    this.wantRecommend.star="low"
+                }
+                
+                if(this.lowStar || this.lowLike || this.lowWatch){
+                     axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
                         "wantRecommend": this.wantRecommend
                     })
                     .then((res) => {
@@ -187,6 +236,18 @@
 
                     })
                     .catch(err => console.log(err))
+
+                }
+                else{axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
+                        "wantRecommend": this.$route.params.wantRecommend
+                    })
+                    .then((res) => {
+                        console.log(res)
+                        this.recommendList = res.data
+
+                    })
+                    .catch(err => console.log(err))
+                }
 
             },
 
