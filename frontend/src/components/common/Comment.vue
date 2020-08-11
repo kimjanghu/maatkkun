@@ -1,26 +1,28 @@
 <template>
   <div>
-  <CreateComment @submit-comment="createComment" />
+    
     <br><h2>댓글</h2><br>
     <div class="comment" v-for="comment in comments" :key="`comment_${comment.commentid}`">
       <router-link
         class="comment-username" 
         :to="{ name:constants.URL_TYPE.USER.MYPAGE, params:{ id: comment.userid }}"
-      >{{ comment.nickname }}</router-link> | {{ comment.createDate }}<br>
+      >{{ comment.nickname }}</router-link>
+      <p class="comment-time">{{ comment.createDate }}</p>
 
       <div v-if="checkComment.isComment && comment.commentid === checkComment.commentId">
         <CreateComment :checkComment="checkComment" @change-comment="updateComment"/>
       </div>
       <div v-else>
-        <br>{{ comment.content }}<br>
+        <p class="comment-content">{{ comment.content }}</p>
       </div>
       
       <div class="rightbuttons" v-if="!checkComment.isComment && +commentForm.userid === comment.userid">
-        <button class="create_button" style="margin-right:2px;" @click="changeIsComment(comment)">수정</button>
-        <button class="create_button" @click="deleteComment(comment.commentid)">삭제</button>
+        <button class="create-button" style="margin-right:2px;" @click="changeIsComment(comment)">수정</button>
+        <button class="create-button" @click="deleteComment(comment.commentid)">삭제</button>
       </div><br>
     </div>
     <hr><br>
+    <CreateComment @submit-comment="createComment" />
     
   </div>
 </template>
@@ -141,14 +143,14 @@ export default {
 </script>
 
 <style scoped>
-.create_button {
-  border: none;
+.create-button {
   font-size: 1em;
   font-weight: 400;
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  color: #000000;
+  color: #fff;
+  padding: 5px 7px;
 }
 .comment {
   position: relative;
@@ -160,5 +162,14 @@ export default {
 }
 .comment-username:hover {
   color: var(--primary-color)
+}
+
+.comment-time {
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.comment-content {
+  margin: 1rem 0 0 5px;
 }
 </style>
