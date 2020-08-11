@@ -634,6 +634,11 @@ public class PostController {
         boolean iscafe = false;
         boolean isfood = false;
 
+        final double totalScore = 100.0;
+        double hitD = 1.0;
+        double likeD = 1.0;
+        double starD = 1.0; 
+
         String[] foodkindArr = null;
 
         try{
@@ -651,11 +656,22 @@ public class PostController {
             if(joo.get("isDrink") != null){
                 isdrink = true;
             }
+
+            if(joo.get("like") != null){
+                likeD = 2.0;
+            }
+            if(joo.get("watch") != null){
+                hitD = 2.0;
+            }
+            if(joo.get("star") != null){
+                starD = 2.0;
+            } 
         }
         catch(Exception e){
             System.out.println(e.getMessage());
         }
         System.out.println(Arrays.toString(foodkindArr));
+
         // System.out.println(isfood);
         // System.out.println(iscafe);
         // System.out.println(isdrink);
@@ -663,16 +679,18 @@ public class PostController {
         // final Double std_lon = 127.03646946847;
         
         
-        double hitScore = 33.0;   // 조회수 계수
-        double likeScore = 33.0;  // 좋아요 계수 
-        double starScore = 33.0;  // 별점 계수
+       
+        
+        double hitScore = totalScore*(hitD/(hitD+likeD+starD));   // 조회수 계수
+        double likeScore = totalScore*(likeD/(hitD+likeD+starD));  // 좋아요 계수 
+        double starScore = totalScore*(starD/(hitD+likeD+starD));  // 별점 계수
         // final double disScore = 20.0;   // 거리 계수
 
         
 
         //전체 리스트 받아오기
         final List<Post> list =  service.getList();
-        System.out.println("pid\thits\tlikes\tstarpoint\tdistance");
+        // System.out.println("pid\thits\tlikes\tstarpoint\tdistance");
 
         
 
@@ -770,6 +788,7 @@ public class PostController {
         Double hitsAvg = 0.0;
         Double likesAvg = 0.0;
         Double starAvg = 0.0;
+        
 
         for(final Post p : list){
             hitsAvg += p.getHits();
