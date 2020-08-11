@@ -106,6 +106,7 @@ export default new Vuex.Store({
       cookies.remove('auth-token')
       window.localStorage.removeItem('userInfo')
       router.push('/')
+      alert('로그아웃 되었습니다.')
     },
     // Post
     searchResult({ commit },keyword){
