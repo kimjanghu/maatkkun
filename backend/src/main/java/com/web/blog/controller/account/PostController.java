@@ -96,7 +96,8 @@ public class PostController {
 
     @Autowired
     RedisTemplate<String, Integer> redisTemplate;
-
+    
+    
 
 
 
@@ -125,8 +126,8 @@ public class PostController {
         final List<Post> postList = service.getList();
         final List<Integer> commentList = new ArrayList<>();
         
+        
         // ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
-
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
             // String pp = post.getPostId()+"";
@@ -169,6 +170,13 @@ public class PostController {
         post.setStarpoint(hm.get("star"));
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
+        ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        
+        System.out.println("================================");
+        String s = service.getTopNum()+"";
+        vop.set(s, 0);
+        System.out.println("================================");
+
         final ArrayList<String> srcAr = new ArrayList<String>();
 
         final Document doc = Jsoup.parseBodyFragment(post.getContent());
@@ -210,7 +218,8 @@ public class PostController {
                     e.printStackTrace();
                 }
             }
-                return new ResponseEntity<>("글작성 성공",HttpStatus.OK);
+            
+            return new ResponseEntity<>("글작성 성공",HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>("글작성 실패",HttpStatus.NOT_FOUND);
@@ -338,6 +347,10 @@ public class PostController {
     public ResponseEntity<Object> dropArticle(@RequestParam(required = true) final int postId){
         final Post post = service.showArticle(postId);
         System.out.println("글 삭제");
+        System.out.println("======================");
+        ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        redisTemplate.delete(postId+"");
+        System.out.println("======================");
         final Document doc = Jsoup.parseBodyFragment(post.getContent());
         final Element body = doc.body();
         final Elements dd = doc.select("img");
@@ -374,6 +387,7 @@ public class PostController {
         }
 
         if(service.deletePost(postId)>0){
+            
             return new ResponseEntity<>("삭제 성공",HttpStatus.OK);
         }
         else{
