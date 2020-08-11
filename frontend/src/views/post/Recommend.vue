@@ -204,7 +204,7 @@
                 container.innerHTML= null;
                
                 this.tmap = new Tmapv2.Map("mapmap", {
-                    center: new Tmapv2.LatLng(37.50350600000003, 127.026588),
+                    center: new Tmapv2.LatLng(37.5009039, 127.0338411),
                     zoom: 15,
                     zoomControl: true,
                     scrollwheel: true
@@ -225,8 +225,10 @@
                         map: this.tmap
                     });
                     if(this.mapdata.passList){
+                        var pass = this.mapdata.passList.split(',')
+                        console.log(pass)
                         this.marker_p1 = new Tmapv2.Marker({
-                        position: new Tmapv2.LatLng(37.5004038, 127.0248098),
+                        position: new Tmapv2.LatLng(pass[1],pass[0]),
                         icon: "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_p.png",
                         iconSize: new Tmapv2.Size(24, 38),
                         map: this.tmap
@@ -351,6 +353,7 @@
                         } //for문 [E]
 
                         this.drawLine(this.drawInfoArr);
+                        this.tmap.setCenter()
 
                     })
                     .catch(err => console.log(err))
