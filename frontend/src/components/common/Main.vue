@@ -3,8 +3,12 @@
     <div class="best-post">
       <h3 class="best-post-main">MAAT GGUN Best</h3>
       <hr>
-      <div v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+      
+      <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
         <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+      </div>
+      <div v-if="isLoading" class="main-loading">
+        <Loading />
       </div>
     </div>
     <div class="wrapB">
@@ -33,9 +37,13 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import constants from '@/lib/constants.js'
+import Loading from '@/components/common/Loading.vue'
 
 export default {
   name: 'Main',
+  components: {
+    Loading
+  },
   data() {
     return {
       constants,
@@ -43,6 +51,7 @@ export default {
       isRecentList: false,
       isLikeList: true,
       isHitList: true,
+      isLoading: true,
       displayRecvList: []
     }
   },
@@ -96,6 +105,7 @@ export default {
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
       setTimeout(() => {
+        this.isLoading = false
         this.sortRecvList()
       }, 200)
     }, 200)
@@ -166,5 +176,11 @@ export default {
   padding: 12px 20px 12px 40px;
   border: 2px solid var(--primary-color);
   margin-bottom: 12px;
+}
+
+.main-loading {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
 }
 </style>
