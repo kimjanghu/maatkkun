@@ -53,6 +53,7 @@ export default new Vuex.Store({
     
     SET_ARTICLES(state, articles) {
       state.articles = articles
+      window.sessionStorage.setItem('articles', JSON.stringify(articles.list))
     },
     SET_LIKE_ARTICLES(state, likeArticles) {
       state.likeArticles = likeArticles
@@ -134,8 +135,6 @@ export default new Vuex.Store({
     getHitArticles({ commit }) {
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.hitList)
         .then(res => {
-          console.log(process.env.VUE_APP_API_URL + SERVER.ROUTES.hitList)
-          console.log(res.data)
           commit('SET_HIT_ARTICLES', res.data)
         })
         .catch(err => console.log(err))
@@ -158,6 +157,7 @@ export default new Vuex.Store({
         };
         commit('SET_SOCKET_IN', true)
         this.stompClient.send("/receive", JSON.stringify(msg), {});
+        // console.log(1)
       }
     },
     connectWebsocket({ commit }) {
@@ -175,6 +175,7 @@ export default new Vuex.Store({
           // console.log('구독으로 받은 메시지 입니다.', res.body);
           // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
           commit('SET_RECV_DATA', JSON.parse(res.body))
+          // console.log(this.state.recvList)
           // this.recvList.push(JSON.parse(res.body))
         });
       },
