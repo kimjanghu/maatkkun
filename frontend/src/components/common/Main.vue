@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isMain">
+  <div v-if="isMain">
     <div class="best-post">
       <h3 class="best-post-main">MAAT GGUN Best</h3>
       <hr>
@@ -19,7 +19,7 @@
 
       <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>
-      <div class="post-list-link">
+      <!-- <div class="post-list-link">
         <div class="main-link" :class="{ active: isRecentList }" @click.prevent="changeMainRecentList">
           <router-link :to="{ name: constants.URL_TYPE.POST.MAIN }"><i class="far fa-clock fa-lg" style="margin-right: 5px;"></i>최신순</router-link>
         </div>
@@ -29,7 +29,7 @@
         <div class="main-link" :class="{ active: isHitList }" @click.prevent="changeMainHitList">
           <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -52,36 +52,37 @@ export default {
       isLikeList: true,
       isHitList: true,
       isLoading: true,
+      articles: null,
       displayRecvList: []
     }
   },
   computed: {
-    ...mapState(['isMain', 'recvList', 'articles'])
+    ...mapState(['isMain', 'recvList'])
   },
   methods: {
     ...mapActions(['searchResult', 'changeMain', 'sendPostId']),
     goRecommend(){
       this.$router.push('/post/kind')
     },
-    changeMainRecentList() {
-      this.isRecentList = false,
-      this.isLikeList = true,
-      this.isHitList = true
-    },
-    changeMainLikeList() {
-      this.isRecentList = true,
-      this.isLikeList = false
-      this.isHitList = true
-    },
-    changeMainHitList() {
-      this.isRecentList = true,
-      this.isLikeList = true,
-      this.isHitList = false
-    },
+    // changeMainRecentList() {
+    //   this.isRecentList = false,
+    //   this.isLikeList = true,
+    //   this.isHitList = true
+    // },
+    // changeMainLikeList() {
+    //   this.isRecentList = true,
+    //   this.isLikeList = false
+    //   this.isHitList = true
+    // },
+    // changeMainHitList() {
+    //   this.isRecentList = true,
+    //   this.isLikeList = true,
+    //   this.isHitList = false
+    // },
     filterRecvList(tmpSortRecvList) {
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
-        let tmp = this.articles.list.filter(item => {
+        let tmp = this.articles.filter(item => {
           return item.postId === +recv[0]
         })
         this.displayRecvList.push(tmp)
@@ -89,6 +90,10 @@ export default {
       // console.log(this.displayRecvList)
     },
     sortRecvList() {
+      // console.log(1)
+      // console.log(this.recvList)
+      
+      // console.log(this.articles)
       const tmpSortRecvList = []
       for (let idx in this.recvList) {
         tmpSortRecvList.push([idx, this.recvList[idx]])
@@ -100,14 +105,17 @@ export default {
     },
   },
   created() {
+    this.articles = JSON.parse(window.sessionStorage.getItem('articles'))
   },
   mounted() {
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
-      setTimeout(() => {
-        this.isLoading = false
-        this.sortRecvList()
-      }, 200)
+        .then(() => {
+          setTimeout(() => {
+            this.isLoading = false
+            this.sortRecvList()
+          }, 100)
+        })
     }, 200)
   },
   updated() {
