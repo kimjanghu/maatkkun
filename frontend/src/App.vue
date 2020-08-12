@@ -23,6 +23,7 @@ export default {
   beforeCreate() {
   },
   created() {
+    // console.log(1)
     this.connectWebsocket()
     let url = this.$route.name
     this.checkUrl(url)

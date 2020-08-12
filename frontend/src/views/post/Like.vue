@@ -101,7 +101,6 @@ export default {
       else{
         return false
       }
-      
     },
     checkLike(post){
       post.userid=this.$cookies.get('auth-token')

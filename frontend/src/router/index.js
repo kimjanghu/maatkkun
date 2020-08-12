@@ -17,6 +17,7 @@ import testPage from '@/views/user/Test.vue'
 import List from '@/views/post/List.vue'
 import Like from '@/views/post/Like.vue'
 import Views from '@/views/post/Views.vue'
+// import SearchPost from '@/views/post/SearchPost.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
@@ -96,6 +97,12 @@ const routes = [
     name: constants.URL_TYPE.POST.TEMPORARY,
     component: Temporary
   },
+  // Search post
+  {
+    path: '/search',
+    name: constants.URL_TYPE.POST.SEARCH,
+    component: () => import('@/views/post/SearchPost.vue')
+  },
   {
     path: '/post/kind',
     name: constants.URL_TYPE.POST.KIND,
@@ -105,12 +112,6 @@ const routes = [
     path: '/post/recommend',
     name: constants.URL_TYPE.POST.RECOMMEND,
     component: Recommend
-  },
-  // My page
-  {
-    path: '/user/mypage',
-    name: constants.URL_TYPE.USER.MYPAGE,
-    component: Mypage
   },
   // Error
   {

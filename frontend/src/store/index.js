@@ -5,6 +5,7 @@ import cookies from 'vue-cookies'
 import router from '@/router'
 import axios from 'axios'
 import SERVER from '@/api/drf'
+// import constants from '@/lib/constants'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     articles: [],
     likeArticles: [],
     hitArticles: [],
+    searchArticles: [],
     recvList: [],
     socketStatus: null,
     postInfo: null,
@@ -61,6 +63,9 @@ export default new Vuex.Store({
     SET_HIT_ARTICLES(state, hitArticles) {
       state.hitArticles = hitArticles
     },
+    SET_SEARCH_ARTICLES(state, searchArticles) {
+      state.searchArticles = searchArticles
+    },
     SET_POSTINFO(state, post) {
       state.post = post
     },
@@ -98,7 +103,8 @@ export default new Vuex.Store({
         .then(res => {
           commit('SET_USERINFO', { uid: res.data.uid, nickname: res.data.nickname })
           commit('SET_TOKEN', res.data.uid)
-          router.push('/')
+          // router.push('/')
+          window.document.location.href = '/'
         })
         .catch(() => alert('Check login information again'))
     },
@@ -110,11 +116,10 @@ export default new Vuex.Store({
       alert('로그아웃 되었습니다.')
     },
     // Post
-    searchResult({ commit },keyword){
-      console.log(keyword)
+    searchPost({ commit }, keyword){
       axios.get(`${process.env.VUE_APP_API_URL}/articles/searchArticle/${keyword}`)
         .then((res)=>{
-          commit('SET_ARTICLES', res.data)
+          commit('SET_SEARCH_ARTICLES', res.data)
         })
         .catch(err=>console.log(err))
     },

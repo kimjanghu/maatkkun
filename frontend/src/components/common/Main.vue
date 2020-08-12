@@ -17,7 +17,7 @@
       </button>
       <br><br>
 
-      <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
+      <input type="text" v-model="searchKeyword" id="myInput" @keyup.enter="moveSearchPage(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>
       <!-- <div class="post-list-link">
         <div class="main-link" :class="{ active: isRecentList }" @click.prevent="changeMainRecentList">
@@ -60,9 +60,13 @@ export default {
     ...mapState(['isMain', 'recvList'])
   },
   methods: {
-    ...mapActions(['searchResult', 'changeMain', 'sendPostId']),
-    goRecommend(){
+    ...mapActions(['changeMain', 'sendPostId']),
+    goRecommend() {
       this.$router.push('/post/kind')
+    },
+    moveSearchPage(content) {
+      this.$router.push({ name: constants.URL_TYPE.POST.SEARCH, query: { search: content }})
+      this.searchKeyword = ''
     },
     // changeMainRecentList() {
     //   this.isRecentList = false,
@@ -116,7 +120,7 @@ export default {
             this.sortRecvList()
           }, 100)
         })
-    }, 200)
+    }, 300)
   },
   updated() {
   },
