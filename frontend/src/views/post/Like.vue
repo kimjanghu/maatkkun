@@ -1,6 +1,7 @@
 <template>
   <div class="post">
     <div class="wrapB">
+      <PostNavbar :listStatus="listStatus" />
       <section class="post-list">
         <div v-for="(article, index) in likeArticles.list" :key="article.id">
           <div class="post-card">
@@ -63,16 +64,26 @@
 <script>
 import '@/assets/css/post.css'
 import { mapState, mapActions, mapGetters} from 'vuex'
+// import { mapActions, mapGetters} from 'vuex'
 import axios from 'axios'
 import constants from '@/lib/constants.js'
+import PostNavbar from '@/components/common/PostNavbar.vue'
 
 export default {
   name: 'Like',
+  components: {
+    PostNavbar
+  },
   data() {
     return {
       constants,
       SERVER_URL: process.env.VUE_APP_API_URL,
       likedposts: [],
+      listStatus: {
+        isRecentList: true,
+        isLikeList: false,
+        isHitList: true
+      }
     }
   },
   computed: {
@@ -116,6 +127,8 @@ export default {
   },
   created() {
     this.getLikeArticles()
+    // this.likeArticles = JSON.parse(window.localStorage.getItem('like-articles'))
+    // console.log(this.likeArticles)
   },
   mounted() {
     if(this.$cookies.get('auth-token')){
