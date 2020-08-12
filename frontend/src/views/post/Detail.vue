@@ -27,10 +27,18 @@
         <p class="content-text">Content</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content != null" :initialValue="content" />
+            <Viewer v-if="content[0] != null" :initialValue="content[0]" />
           </p>
         </div>
         
+        <hr>
+        <p class="content-text">Menu</p>
+        <div style="margin-top:3px;">
+          <p style="text-align:center;">
+            <Viewer v-if="content[1] != null" :initialValue="content[1]" />
+          </p>
+        </div>
+
         <hr>
         <div class="location-title">
           <p class="content-text">Location</p>
@@ -208,8 +216,9 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
-          this.content = this.article.content
-          console.log(this.content)
+          this.content = this.article.content.split('=/.=/.')
+          // console.log(this.content)
+          console.log(this.content.split('=/.=/.'))
           // console.log(res.data)
         })
         .catch(err => console.log(err))
