@@ -153,7 +153,17 @@
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1</version>
-        </dependency>
+		</dependency>
+		
+		<!-- redis-->
+		<dependency>    
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		
+		
+		
+		
 
 
 

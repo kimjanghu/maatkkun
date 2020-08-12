@@ -9,7 +9,6 @@ import Login from '@/views/user/Login.vue'
 import Logout from '@/views/user/Logout.vue'
 import Mypage from '@/views/user/MyPage.vue'
 import EditUserInfo from '@/views/user/EditUserInfo.vue'
-import Chat from '@/views/user/Chat.vue'
 
 //testPage
 import testPage from '@/views/user/Test.vue'
@@ -124,12 +123,6 @@ const routes = [
     path: '/user/test',
     name: constants.URL_TYPE.TEST,
     component: testPage
-  },
-  //Chat
-  {
-    path: '/user/chat',
-    name: constants.URL_TYPE.USER.Chat,
-    component: Chat
   },
   // Page not found
   {

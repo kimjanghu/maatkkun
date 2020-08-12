@@ -7,10 +7,12 @@
 </template>
 
 <script>
-import './assets/css/style.css';
-import Navbar from './components/common/Navbar.vue';
+import './assets/css/style.css'
+import Navbar from './components/common/Navbar.vue'
 import Main from './components/common/Main.vue'
-import constants from './lib/constants';
+import constants from './lib/constants'
+import { mapActions } from 'vuex'
+
 
 export default {
   name: 'App',
@@ -18,11 +20,16 @@ export default {
     Navbar,
     Main
   },
+  beforeCreate() {
+  },
   created() {
-    let url = this.$route.name;
-
-    this.checkUrl(url);
-    //  this.islogin=this.$cookies.isKey('uid')
+    this.connectWebsocket()
+    let url = this.$route.name
+    this.checkUrl(url)
+  },
+  mounted() {
+  },
+  computed: {
   },
   watch: {
     $route(to) {
@@ -30,6 +37,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['connectWebsocket', 'sendPostId']),
     checkUrl(url) {
       let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
 

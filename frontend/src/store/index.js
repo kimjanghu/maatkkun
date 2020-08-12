@@ -5,6 +5,8 @@ import cookies from 'vue-cookies'
 import router from '@/router'
 import axios from 'axios'
 import SERVER from '@/api/drf'
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
 
 Vue.use(Vuex)
 
@@ -14,6 +16,8 @@ export default new Vuex.Store({
     articles: [],
     likeArticles: [],
     hitArticles: [],
+    recvList: [],
+    socketStatus: null,
     postInfo: null,
     isMain: true
   },
@@ -35,6 +39,18 @@ export default new Vuex.Store({
       window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
     },
 
+
+    SET_MAIN(state, main) {
+      state.isMain = main
+    },
+    SET_RECV_DATA(state, recvList) {
+      state.recvList = recvList
+    },
+    SET_SOCKET_IN(state, socketIn) {
+      state.socketStatus = socketIn
+    },
+
+    
     SET_ARTICLES(state, articles) {
       state.articles = articles
     },
@@ -47,9 +63,7 @@ export default new Vuex.Store({
     SET_POSTINFO(state, post) {
       state.post = post
     },
-    SET_MAIN(state, main) {
-      state.isMain = main
-    }
+    
   },
   actions: {
     // User
@@ -92,6 +106,7 @@ export default new Vuex.Store({
       cookies.remove('auth-token')
       window.localStorage.removeItem('userInfo')
       router.push('/')
+      alert('로그아웃 되었습니다.')
     },
     // Post
     searchResult({ commit },keyword){
@@ -134,6 +149,40 @@ export default new Vuex.Store({
     },
     changeMain({ commit }, main) {
       commit('SET_MAIN', main)
+    },
+    sendPostId({ commit }, articleData) {
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = { 
+          postId: articleData.articleId,
+          status: articleData.status
+        };
+        commit('SET_SOCKET_IN', true)
+        this.stompClient.send("/receive", JSON.stringify(msg), {});
+      }
+    },
+    connectWebsocket({ commit }) {
+      let socket = new SockJS(process.env.VUE_APP_API_URL);
+      this.stompClient = Stomp.over(socket);
+      // console.log(`소켓 연결을 시도합니다. 서버 주소: ${process.env.VUE_APP_API_URL}`)
+      this.stompClient.connect({}, () => {
+        // 소켓 연결 성공
+        this.connected = true;
+        // console.log('소켓 연결 성공', frame);
+        // 서버의 메시지 전송 endpoint를 구독합니다.
+        // 이런형태를 pub sub 구조라고 합니다.
+        this.stompClient.subscribe("/send", res => {
+          // console.log(res);
+          // console.log('구독으로 받은 메시지 입니다.', res.body);
+          // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
+          commit('SET_RECV_DATA', JSON.parse(res.body))
+          // this.recvList.push(JSON.parse(res.body))
+        });
+      },
+      error => {
+        // 소켓 연결 실패
+        console.log('소켓 연결 실패', error);
+        this.connected = false;
+      });
     }
   },
   modules: {},
