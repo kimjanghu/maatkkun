@@ -27,7 +27,7 @@
                 <th>작성자</th>
               </tr>
             </thead>
-            <tbody >
+            <tbody>
               <tr v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
                 <th>{{subarticle.id}}</th>
                 <td>{{subarticle.title}}</td>
@@ -63,6 +63,9 @@
 
     <div v-show="isModal" class="modal-container" id="modal">
       <div class="modal">
+        <div>역삼동 술집만 가능합니다!</div>
+        <br>
+        <br>
         <div class="map_wrap">
           <div id="map" class="modal" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
           <div id="menu_wrap" class="bg_white">
@@ -79,6 +82,7 @@
             <div id="pagination"></div>
           </div>
         </div>
+      
       </div>
     </div>
 
@@ -141,8 +145,12 @@
   import axios from 'axios'
   import 'codemirror/lib/codemirror.css';
   import '@toast-ui/editor/dist/toastui-editor.css';
-  import { Editor } from '@toast-ui/vue-editor';
-  import { mapActions } from 'vuex'
+  import {
+    Editor
+  } from '@toast-ui/vue-editor';
+  import {
+    mapActions
+  } from 'vuex'
   import SERVER from '@/api/drf'
   import constants from '@/lib/constants'
 
@@ -191,6 +199,8 @@
         isModal: false,
         isTemporaryModal: false,
         subarticles: [],
+
+        coordinate:'',
 
       }
     },
@@ -242,17 +252,61 @@
       },
       initMap() {
         var container = document.getElementById('map')
-        var options = {
-          center: new kakao.maps.LatLng(33.450701, 126.570667),
-          level: 3
+        var mapOption = {
+          center: new kakao.maps.LatLng(37.500649, 127.036530),
+          level: 5
         }
-        this.map = new kakao.maps.Map(container, options) //마커추가하려면 객체를 아래와 같이 하나 만든다. 
+        this.map = new kakao.maps.Map(container, mapOption) //마커추가하려면 객체를 아래와 같이 하나 만든다. 
         this.marker = new kakao.maps.Marker({
           position: this.map.getCenter()
         })
         this.marker.setMap(this.map);
-        this.ps = new kakao.maps.services.Places();
+        // 다각형을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 다각형을 표시합니다
+        var polygonPath = [
+          new kakao.maps.LatLng(37.504432, 127.0222243),
 
+          new kakao.maps.LatLng(37.510435, 127.043856),
+
+          new kakao.maps.LatLng(37.496263, 127.052837),
+          new kakao.maps.LatLng(37.489680, 127.031581),
+        ];
+
+        // 지도에 표시할 다각형을 생성합니다
+        var polygon = new kakao.maps.Polygon({
+          path: polygonPath, // 그려질 다각형의 좌표 배열입니다
+          strokeWeight: 3, // 선의 두께입니다
+          strokeColor: "#D96523", // 선의 색깔입니다
+          strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+          strokeStyle: 'solid', // 선의 스타일입니다
+          fillColor: '#fff', // 채우기 색깔입니다
+          fillOpacity: 0.1 // 채우기 불투명도 입니다
+        });
+
+        // 지도에 다각형을 표시합니다
+        polygon.setMap(this.map);
+        this.ps = new kakao.maps.services.Places();
+        
+        (function (abc){
+          kakao.maps.event.addListener(abc.map, 'center_changed', function () {
+          
+
+
+          // 지도의 중심좌표를 얻어옵니다 
+          var latlng = abc.map.getCenter();
+          if(latlng.getLat()>=37.5035425 || latlng.getLat()<=37.489616 || latlng.getLng()<=127.0216998 || latlng.getLng()>=127.052837){
+            alert("역삼동을 벗어났습니다.")
+            abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
+
+          }
+
+
+        });
+
+        })(this)
+        
+
+
+        
       },
 
 
@@ -497,57 +551,56 @@
         }
       },
       createArticle() {
-        if(this.articleData.lat && this.articleData.lon){
+        if (this.articleData.lat && this.articleData.lon) {
           const config = {
-          headers: {
-            Authorization: `Token ${this.$cookies.get('auth-token')}`
-          }
-        }
-        this.articleData.hashtag = this.hashtags.join(",")
-        this.createAction();
-        axios.post(this.SERVER_URL + '/articles/register/', this.articleData, config)
-          .then((res) => {
-            console.log(res)
-            if (this.isTemporary) {
-              axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
+            headers: {
+              Authorization: `Token ${this.$cookies.get('auth-token')}`
             }
+          }
+          this.articleData.hashtag = this.hashtags.join(",")
+          this.createAction();
+          axios.post(this.SERVER_URL + '/articles/register/', this.articleData, config)
+            .then((res) => {
+              console.log(res)
+              if (this.isTemporary) {
+                axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
+              }
 
-            this.$router.push('/')
-          })
-          .catch(err => console.log(err.response))
+              this.$router.push('/')
+            })
+            .catch(err => console.log(err.response))
 
-        }else{
+        } else {
           alert('음식점 위치 안찍으면 죽어')
         }
-        
+
       },
       updateArticle() {
-        if(this.articleData.lat && this.articleData.lon){
+        if (this.articleData.lat && this.articleData.lon) {
           const config = {
-          headers: {
-            Authorization: `Token ${this.$cookies.get('auth-token')}`
+            headers: {
+              Authorization: `Token ${this.$cookies.get('auth-token')}`
+            }
           }
-        }
-        // console.log(this.articleData)
-        this.articleData.hashtag = this.hashtags.join(",")
-        this.createAction();
-        axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
-          .then(() => {
-            console.log(this.articleData.postId)
-            this.$router.push({
-              name: constants.URL_TYPE.POST.DETAIL,
-              params: {
-                id: this.articleData.postId
-              }
+          // console.log(this.articleData)
+          this.articleData.hashtag = this.hashtags.join(",")
+          this.createAction();
+          axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
+            .then(() => {
+              console.log(this.articleData.postId)
+              this.$router.push({
+                name: constants.URL_TYPE.POST.DETAIL,
+                params: {
+                  id: this.articleData.postId
+                }
+              })
             })
-          })
-          .catch(err => console.log(err))
+            .catch(err => console.log(err))
 
-        }
-        else{
+        } else {
           alert('음식점 위치 안찍으면 죽는다')
         }
-        
+
 
 
 
@@ -632,10 +685,13 @@
         const modal = document.getElementById("temporaryModal");
         e.target === modal ? (this.isTemporaryModal = false) : false;
       });
+
     },
     updated() {
       if (this.isModal) {
-        this.map.relayout()
+        console.log("쒸")
+        this.map.relayout() 
+        
       }
     },
   }
@@ -694,7 +750,7 @@
   #mainWrapper>table {
     font: 100%;
     width: 100%;
-    
+
     border-collapse: collapse;
   }
 
@@ -702,12 +758,13 @@
     text-align: center;
     font-weight: bold;
     font-size: 150%;
-    padding-bottom:10px;
+    padding-bottom: 10px;
     border-bottom: .1em solid #000;
-    margin-top:10px ;
-    
+    margin-top: 10px;
+
   }
-  #demo-table thead{
+
+  #demo-table thead {
     background-color: #FFD732;
   }
 
@@ -718,9 +775,10 @@
     text-align: center;
     padding-right: .5em;
   }
-  #demo-table tr{
-    border:1px solid black;
-    height:30px;
+
+  #demo-table tr {
+    border: 1px solid black;
+    height: 30px;
   }
 
   #demo-table th {
