@@ -43,10 +43,12 @@
         <button class="update-post-button" @click.prevent="goupdateArticle()">수정</button>
         <button class="update-post-button delete-button" @click.prevent="deleteArticle()">삭제</button>
       </div>
-      
-      <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
-        <p class="tag-btn">#{{ tag }}</p>
+      <div class="tag-area">
+        <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
+          <p class="tag-btn">#{{ tag }}</p>
+        </div>
       </div>
+      
       <!-- <div class="box" style="font-weight:bold;"> {{ article.hashtag }}</div> -->
       <hr>
       <Comment :article="article" />
@@ -206,6 +208,8 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
+          this.content = this.article.content
+          console.log(this.content)
           // console.log(res.data)
         })
         .catch(err => console.log(err))
@@ -251,7 +255,6 @@ export default {
     });
   },
   updated() {
-    this.content = this.article.content
     this.loginUser = parseInt(this.$cookies.get('auth-token'))
 
     if (window.kakao && window.kakao.maps) {
@@ -348,6 +351,10 @@ export default {
 
 hr {
   margin: 2rem 0;
+}
+
+.tag-area {
+  display: flex;
 }
 
 .tag {
