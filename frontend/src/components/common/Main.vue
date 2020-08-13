@@ -117,6 +117,11 @@ export default {
   flex-direction: column;
   width: 200px;
 }
+@media(max-width:1300px){
+  .best-post{
+    display:none;
+  }
+}
 
 .best-post-main {
   margin: 1rem auto;
