@@ -11,8 +11,7 @@
       <div v-if="isLoggedIn">
         <router-link class="nav-link" :to="{ name:constants.URL_TYPE.POST.CREATE }">Create</router-link>
         <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.LOGOUT }">Logout</router-link>
-        <!-- <a href="/user/logout" class="nav-link">Logout</a> -->
-        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.MYPAGE, params:{ id: loginId }}">Mypage</router-link>
+        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.MYPAGE, params:{ id: loginId }}"><i class="fas fa-user-circle fa-lg"></i> {{ nickname }}</router-link>
       </div>
     </div>
   </div>
@@ -41,18 +40,16 @@ export default {
   data() {
     return {
       constants,
-      loginId: this.$cookies.get('auth-token')
+      loginId: this.$cookies.get('auth-token'),
+      nickname: JSON.parse(window.localStorage.getItem('userInfo')).nickname
     }
   },
   created() {
-    // console.log(JSON.parse(window.localStorage.getItem('userInfo')))
-    console.log(this.loginId)
   },
   
   mounted() {
   },
   updated() {
-    // console.log(JSON.parse(window.localStorage.getItem('userInfo')).uid)
   },
 };
 </script>
