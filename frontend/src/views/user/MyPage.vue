@@ -96,7 +96,9 @@ export default {
       }
       axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userPostList}`, { 'uid': +this.clickUserId }, config)
         .then(res => {
-          this.userPostList = res.data
+          if (res.data) {
+            this.userPostList = res.data
+          }
         })
         .catch(err => {
           console.log(err)
@@ -111,7 +113,9 @@ export default {
       }
       axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userLikeList}`, { 'uid': this.clickUserId }, config)
         .then(res => {
-          this.userPostLikedList = res.data
+          if (res.data) {
+            this.userPostLikedList = res.data
+          }
         })
         .catch(err => {
           console.log(err)
@@ -131,7 +135,6 @@ export default {
   mounted() {
   },
   created() {
-    console.log(this.clickUserId)
     this.getUserInfo()
     this.getUserPost()
     this.getUserLikedPost()
