@@ -63,7 +63,7 @@
 
     <div v-show="isModal" class="modal-container" id="modal">
       <div class="modal">
-        <div>역삼동 술집만 가능합니다!</div>
+        <div class="modaltitle">역삼동 음식점만 가능합니다!</div>
         <br>
         <br>
         <div class="map_wrap">
@@ -293,6 +293,7 @@
 
           // 지도의 중심좌표를 얻어옵니다 
           var latlng = abc.map.getCenter();
+          console.log(latlng)
           if(latlng.getLat()>=37.5035425 || latlng.getLat()<=37.489616 || latlng.getLng()<=127.0216998 || latlng.getLng()>=127.052837){
             alert("역삼동을 벗어났습니다.")
             abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
@@ -784,6 +785,10 @@
   #demo-table th {
     font-weight: bold;
     padding-left: .5em;
+  }
+  .modaltitle{
+    text-align:center;
+
   }
 
 

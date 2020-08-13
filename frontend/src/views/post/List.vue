@@ -1,7 +1,8 @@
 <template> 
   <div class="post">
     <div class="wrapB">
-      <section class="post-list">
+    
+      <div class="post-list">
         <div v-for="(article, index) in articles.list" :key="article.id">
           <div class="post-card">
             <a @click="detailPage(article.postId)" >
@@ -54,7 +55,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   </div>
 </template>

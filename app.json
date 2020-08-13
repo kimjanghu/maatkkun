@@ -4,7 +4,7 @@
       "cwd": ".",
       "args": [
         "-jar",
-        "/home/ubuntu/s03p12a609/backend/target/webBlog-0.0.1-SNAPSHOT.jar"
+        "/home/ubuntu/s03p12a609/dist/server/webBlog-0.0.1-SNAPSHOT.jar"
       ],
       "env": {
       },

@@ -1,7 +1,7 @@
 <template>
   <div v-show="isMain">
     <div class="best-post">
-      <h3 class="best-post-main">MAAT GGUN Best</h3>
+      <h3 class="best-post-main">MAAT KKUN Best</h3>
       <hr>
       <div v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
         <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
