@@ -34,6 +34,7 @@
 import { mapActions, mapState } from 'vuex'
 import constants from '@/lib/constants.js'
 
+
 export default {
   name: 'Main',
   data() {

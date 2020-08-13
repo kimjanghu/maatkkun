@@ -4,6 +4,14 @@
   align-items: center;
   margin: 0 auto;
 }
+@media(min-width:709px){
+  .post {
+    position: relative;
+    width: 100%;
+    align-items: center;
+    margin: 0 auto;
+  }
+}
 
 .post h2 {
   margin-top: 80px;
@@ -11,13 +19,28 @@
   margin-bottom: 40px;
   font-size: 1.875em;
 }
-
+@media(min-width:709px) and (max-width:992px){
 .post .post-list {
   width: 100%;
   margin-top: 15px;
+  align-items: center; 
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
   
 }
-
+}
+@media(min-width:710px) {
+  .post .post-list {
+    width: 100%;
+    margin-top: 15px;
+    align-items: center; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    
+  }
+  }
 @media(min-width:458px) {
 
   .post .post-list>div {
@@ -25,11 +48,11 @@
 
     margin-right: 20px;
     margin-bottom: 30px;
-    width: 30%;
+    width: 100%;
   }
 }
 
-@media(max-width:457px) {
+@media(max-width:708) {
   .post .post-list>div {
     float: left;
     margin-right: 30px;

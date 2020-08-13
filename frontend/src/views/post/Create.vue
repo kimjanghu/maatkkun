@@ -63,9 +63,9 @@
 
     <div v-show="isModal" class="modal-container" id="modal">
       <div class="modal">
-        <div class="modaltitle">역삼동 음식점만 가능합니다!</div>
-        <br>
-        <br>
+      <br>
+        <h2 class="modaltitle">역삼동 음식점만 가능합니다!</h2>
+      <br>
         <div class="map_wrap">
           <div id="map" class="modal" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
           <div id="menu_wrap" class="bg_white">
@@ -285,25 +285,9 @@
         // 지도에 다각형을 표시합니다
         polygon.setMap(this.map);
         this.ps = new kakao.maps.services.Places();
-        
-        (function (abc){
-          kakao.maps.event.addListener(abc.map, 'center_changed', function () {
-          
 
-
-          // 지도의 중심좌표를 얻어옵니다 
-          var latlng = abc.map.getCenter();
-          console.log(latlng)
-          if(latlng.getLat()>=37.5035425 || latlng.getLat()<=37.489616 || latlng.getLng()<=127.0216998 || latlng.getLng()>=127.052837){
-            alert("역삼동을 벗어났습니다.")
-            abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
-
-          }
-
-
-        });
-
-        })(this)
+        console.log(this.map.getCenter());
+       
         
 
 
@@ -691,7 +675,26 @@
     updated() {
       if (this.isModal) {
         console.log("쒸")
-        this.map.relayout() 
+        // this.map.relayout() ;
+        this.initMap();
+         (function (abc){
+          kakao.maps.event.addListener(abc.map, 'center_changed', function () {
+          
+
+
+          // 지도의 중심좌표를 얻어옵니다 
+          var latlng = abc.map.getCenter();
+          console.log(latlng)
+          if(latlng.getLat()>=37.51 || latlng.getLat()<=37.4 || latlng.getLng()<=127.01 || latlng.getLng()>=127.06){
+            alert("역삼동을 벗어났습니다.")
+            abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
+
+          }
+
+
+        });
+
+        })(this)
         
       }
     },
