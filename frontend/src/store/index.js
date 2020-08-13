@@ -109,11 +109,14 @@ export default new Vuex.Store({
         .catch(() => alert('Check login information again'))
     },
     logout({ commit }) {
-      commit('SET_TOKEN', null)
-      cookies.remove('auth-token')
-      window.localStorage.removeItem('userInfo')
-      router.push('/')
-      alert('로그아웃 되었습니다.')
+      const check = confirm('로그아웃 하시겠습니까?')
+      if (check) {
+        commit('SET_TOKEN', null)
+        cookies.remove('auth-token')
+        window.localStorage.removeItem('userInfo')
+        router.push('/')
+        alert('로그아웃 되었습니다.')
+      }
     },
     // Post
     searchPost({ commit }, keyword){
@@ -141,13 +144,6 @@ export default new Vuex.Store({
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.hitList)
         .then(res => {
           commit('SET_HIT_ARTICLES', res.data)
-        })
-        .catch(err => console.log(err))
-    },
-    getSubarticles({ commit }) {
-      axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.temporaryList)
-        .then(res => {
-          commit('SET_ARTICLES', res.data)
         })
         .catch(err => console.log(err))
     },
