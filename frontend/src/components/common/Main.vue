@@ -1,16 +1,28 @@
 <template>
   <div v-if="isMain">
-    <div class="best-post">
-      <h3 class="best-post-main">MAAT KKUN Best</h3>
-      <hr>
-      
-      <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
-        <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+    
+    <div class="best-post-area" @mouseover="changeDisplay()" @mouseout="changeDisplay()">
+      <div>
+        <i 
+          class="fas fa-chevron-circle-up fa-2x arrow" 
+          :class="{ active: isArrow }" 
+        ></i>
       </div>
-      <div v-if="isLoading" class="main-loading">
-        <Loading />
+      <div 
+        class="best-post" 
+        id="best-post"
+        :class="{ active: isBestPost }">
+        <h3 class="best-post-main">MAAT KKUN Best</h3>
+        <hr>
+        <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+          <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+        </div>
+        <div v-if="isLoading" class="main-loading">
+          <Loading />
+        </div>
       </div>
     </div>
+
     <div class="wrapB">
       <button class="create_button" @click="goRecommend">
         추천 받아보실래요?
@@ -53,6 +65,8 @@ export default {
       isLikeList: true,
       isHitList: true,
       isLoading: true,
+      isArrow: false,
+      isBestPost: false,
       articles: null,
       displayRecvList: []
     }
@@ -62,6 +76,15 @@ export default {
   },
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
+    changeDisplay() {
+      if (!this.isArrow) {
+        this.isArrow = true,
+        this.isBestPost = true
+      } else {
+        this.isArrow = false,
+        this.isBestPost = false
+      }
+    },
     goRecommend() {
       this.$router.push('/post/kind')
     },
@@ -99,7 +122,7 @@ export default {
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
-          }, 100)
+          }, 300)
         })
     }, 200)
   },
@@ -109,17 +132,53 @@ export default {
 </script>
 
 <style scoped>
-.best-post {
+.best-post-area {
+  z-index: 100;
   position: fixed;
-  top: 20%;
+  bottom: 12%;
   right: 5%;
-  display: flex;
-  flex-direction: column;
-  width: 200px;
+  width: 350px;
 }
-@media(max-width:1300px){
-  .best-post{
-    display:none;
+/* 
+.best-post-area:hover {
+  
+} */
+
+.arrow {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transition: transform .3s ease-in;
+}
+
+.arrow.active {
+  transform: rotate(-90deg)
+}
+
+.best-post {
+  /* display: flex; */
+  display: none;
+  width: 300px;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.best-post.active {
+  display: flex;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s;
+  -webkit-animation: fadein 1s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
