@@ -68,21 +68,6 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.POST.SEARCH, query: { search: content }})
       this.searchKeyword = ''
     },
-    // changeMainRecentList() {
-    //   this.isRecentList = false,
-    //   this.isLikeList = true,
-    //   this.isHitList = true
-    // },
-    // changeMainLikeList() {
-    //   this.isRecentList = true,
-    //   this.isLikeList = false
-    //   this.isHitList = true
-    // },
-    // changeMainHitList() {
-    //   this.isRecentList = true,
-    //   this.isLikeList = true,
-    //   this.isHitList = false
-    // },
     filterRecvList(tmpSortRecvList) {
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
@@ -91,13 +76,8 @@ export default {
         })
         this.displayRecvList.push(tmp)
       })
-      // console.log(this.displayRecvList)
     },
     sortRecvList() {
-      // console.log(1)
-      // console.log(this.recvList)
-      
-      // console.log(this.articles)
       const tmpSortRecvList = []
       for (let idx in this.recvList) {
         tmpSortRecvList.push([idx, this.recvList[idx]])
@@ -109,18 +89,18 @@ export default {
     },
   },
   created() {
-    this.articles = JSON.parse(window.sessionStorage.getItem('articles'))
   },
   mounted() {
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
         .then(() => {
+          this.articles = JSON.parse(window.sessionStorage.getItem('articles'))
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
           }, 100)
         })
-    }, 300)
+    }, 200)
   },
   updated() {
   },
@@ -132,11 +112,8 @@ export default {
   position: fixed;
   top: 20%;
   right: 5%;
-  /* padding: 2rem; */
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: center; */
   width: 200px;
 }
 
