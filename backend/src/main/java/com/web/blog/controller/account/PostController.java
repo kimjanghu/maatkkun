@@ -193,7 +193,8 @@ public class PostController {
             element.attr("id",filename);
 
         }
-        post.setContent(body.html() + hm.get("menu"));
+        post.setContent(body.html() +"=/.=/."+hm.get("menu"));
+        System.out.println(post.getContent());
 
         if(service.register(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
@@ -869,10 +870,10 @@ public class PostController {
     
 
     public HashMap<String,String> crawling(final String url){
-        HashMap<String,String> hm = new HashMap<>();
-        final String WEB_DRIVER_ID = "webdriver.chrome.driver";
-        // final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
-        final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
+            HashMap<String,String> hm = new HashMap<>();
+            final String WEB_DRIVER_ID = "webdriver.chrome.driver";
+            // final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
+            final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
 
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
         final ChromeOptions options = new ChromeOptions();
@@ -894,7 +895,8 @@ public class PostController {
             final Elements el = doc.body().getElementsByClass("link_evaluation");
             star = Double.parseDouble(el.text().split(" ")[1].substring(0,3));
             hm.put("star", star+"");
-            hm.put("menu", doc.body().getElementsByClass("list_menu").html());
+            
+            hm.put("menu", doc.body().getElementsByClass("list_menu").html().replaceAll("명:"," "));
         }
         catch(final Exception e){
             System.out.println(e.getMessage());
