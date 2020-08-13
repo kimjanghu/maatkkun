@@ -1,6 +1,6 @@
 <template>
   <div class="main-wrapper">
-    <button class="create_button" @click.prevent="changeTemoporaryModal();getSubarticles()">임시저장 목록 가져오기</button>
+    <button class="create_button" @click.prevent="changeTemoporaryModal();getSubArticles()">임시저장 목록 가져오기</button>
     <br><br><br>
     <table class="table table-bordered">
       <tbody>
@@ -170,10 +170,6 @@
           userid: this.$cookies.get('auth-token'),
           url: '',
           placename: '',
-
-
-
-
         },
         hashtags: [],
 
@@ -209,7 +205,7 @@
           })
           .catch(err => console.log(err))
       },
-      getSubarticles() {
+      getSubArticles() {
         const user = parseInt(this.$cookies.get('auth-token'))
         axios.get(`${this.SERVER_URL}/subarticles/list/${user}`)
           .then((res) => {
@@ -222,23 +218,14 @@
       changeTemoporaryModal() {
         this.isTemporaryModal = !this.isTemporaryModal
       },
-
       changeModal() {
         this.isModal = !this.isModal
       },
-
-      getTemporary() {
-
-      },
-
-
       createAction() {
-
         // var content = this.$refs.toastuiEditor.invoke('getMarkdown');
         var content2 = this.$refs.toastuiEditor.invoke('getHtml');
         // console.log(content)
         this.articleData.content = content2;
-
       },
       initMap() {
         var container = document.getElementById('map')
@@ -497,56 +484,92 @@
         }
       },
       createArticle() {
-        if(this.articleData.lat && this.articleData.lon){
-          const config = {
-          headers: {
-            Authorization: `Token ${this.$cookies.get('auth-token')}`
+        this.createAction()
+        if (!this.articleData.title) {
+          alert('제목은 필수 항목입니다.')
+        } else if (!this.articleData.content) {
+          alert('내용을 입력해주세요')
+        } else if (!this.articleData.lat || !this.articleData.lon) {
+          alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
+        } else {
+          const check = confirm('글을 제출하시겠습니까?')
+          if (check) {
+            const config = {
+              headers: {
+                Authorization: `Token ${this.$cookies.get('auth-token')}`
+              }
+            }
+            this.articleData.hashtag = this.hashtags.join(',')
+            axios.post(this.SERVER_URL + '/articles/register/', this.articleData, config)
+              .then(() => {
+                if (this.isTemporary) {
+                  axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
+                }
+                alert('작성이 완료되었습니다.')
+                // this.$router.push('/')
+                window.document.location.href = '/'
+              })
+              .catch(err => console.log(err.response))
           }
         }
-        this.articleData.hashtag = this.hashtags.join(",")
-        this.createAction();
-        axios.post(this.SERVER_URL + '/articles/register/', this.articleData, config)
-          .then((res) => {
-            console.log(res)
-            if (this.isTemporary) {
-              axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
-            }
-
-            this.$router.push('/')
-          })
-          .catch(err => console.log(err.response))
-
-        }else{
-          alert('음식점 위치 안찍으면 죽어')
-        }
-        
       },
       updateArticle() {
-        if(this.articleData.lat && this.articleData.lon){
-          const config = {
-          headers: {
-            Authorization: `Token ${this.$cookies.get('auth-token')}`
+        this.createAction()
+        if (!this.articleData.title) {
+          alert('제목은 필수 항목입니다.')
+        } else if (!this.articleData.content) {
+          alert('내용을 입력해주세요')
+        } else if (!this.articleData.lat || !this.articleData.lon) {
+          alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
+        } else {
+          const check = confirm('글을 제출하시겠습니까?')
+          if (check) {
+            const config = {
+              headers: {
+                Authorization: `Token ${this.$cookies.get('auth-token')}`
+              }
+            }
+            this.articleData.hashtag = this.hashtags.join(',')
+            axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
+              .then(() => {
+                this.$router.push({
+                  name: constants.URL_TYPE.POST.DETAIL,
+                  params: {
+                    id: this.articleData.postId
+                  }
+                })
+              })
           }
         }
-        // console.log(this.articleData)
-        this.articleData.hashtag = this.hashtags.join(",")
-        this.createAction();
-        axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
-          .then(() => {
-            console.log(this.articleData.postId)
-            this.$router.push({
-              name: constants.URL_TYPE.POST.DETAIL,
-              params: {
-                id: this.articleData.postId
-              }
-            })
-          })
-          .catch(err => console.log(err))
 
-        }
-        else{
-          alert('음식점 위치 안찍으면 죽는다')
-        }
+
+
+
+        // if(this.articleData.lat && this.articleData.lon){
+        //   const config = {
+        //   headers: {
+        //     Authorization: `Token ${this.$cookies.get('auth-token')}`
+        //   }
+        // }
+        // console.log(this.articleData)
+        // this.articleData.hashtag = this.hashtags.join(",")
+        // this.createAction()
+        // axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
+        //   .then(() => {
+        //     console.log(this.articleData.postId)
+        //     this.$router.push({
+        //       name: constants.URL_TYPE.POST.DETAIL,
+        //       params: {
+        //         id: this.articleData.postId
+        //       }
+        //     })
+        //   })
+        //   .catch(err => console.log(err))
+
+        // }
+        // else{
+        //   alert('음식점 위치 안찍으면 죽는다')
+        // }
         
 
 
