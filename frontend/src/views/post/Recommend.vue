@@ -26,9 +26,9 @@
                                     <br>
                                     <span class="date"><i class="far fa-clock"></i> {{recommend.createDate}}</span>
                                     <br>
-                                    <span class="date"><i class="far fa-eye"></i> {{ article.hits }}</span>
+                                    <span class="date"><i class="far fa-eye"></i> {{ recommend.hits }}</span>
                                     <br>
-                                    <span class="date"><i class="fas fa-star"></i> {{ article.starpoint }}</span>
+                                    <span class="date"><i class="fas fa-star"></i> {{ recommend.starpoint }}</span>
                                     <br>
                                     <div class="tag" v-for="(tag, index) in recommend.hashtag.split(',')"
                                         :key="`hash_${index}`">
@@ -58,8 +58,8 @@
         <br>
         <p>피드백을 주세요</p>
 
-        <button v-if="!lowStar" class="create_button" style="margin-right:2px;" @click="handStar(); recommendToMe();initTmap();">평점이 너무 낮아요!</button>
-        <button v-if="lowStar" class="select_button" @click.prevent="handStar();" style="margin-right:2px;">평점 피드백 적용 완료!</button>
+        <button v-if="!lowStar" class="create_button" style="margin-right:2px;" @click="handStar(); recommendToMe();initTmap();">별점이 너무 낮아요!</button>
+        <button v-if="lowStar" class="select_button" @click.prevent="handStar();" style="margin-right:2px;">별점 피드백 적용 완료!</button>
         <button v-if="!lowWatch" class="create_button" style="margin-right:2px;" @click="handWatch(); recommendToMe(); initTmap();">조회수가 너무 낮아요!</button>
         <button v-if="lowWatch" class="select_button" @click.prevent="handWatch();" style="margin-right:2px;">조회수 피드백 적용 완료!</button>
         <button v-if="!lowLike" class="create_button" style="margin-right:2px;" @click="handLike(); recommendToMe(); initTmap();">좋아요가 너무 낮아요!</button>
