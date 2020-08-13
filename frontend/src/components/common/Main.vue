@@ -1,10 +1,14 @@
 <template>
-  <div v-show="isMain">
+  <div v-if="isMain">
     <div class="best-post">
       <h3 class="best-post-main">MAAT KKUN Best</h3>
       <hr>
-      <div v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+      
+      <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
         <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+      </div>
+      <div v-if="isLoading" class="main-loading">
+        <Loading />
       </div>
     </div>
     <div class="wrapB">
@@ -13,9 +17,9 @@
       </button>
       <br><br>
 
-      <input type="text" v-model="searchKeyword" id="myInput" v-on:keyup.enter="searchResult(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
+      <input type="text" v-model="searchKeyword" id="myInput" @keyup.enter="moveSearchPage(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>
-      <div class="post-list-link">
+      <!-- <div class="post-list-link">
         <div class="main-link" :class="{ active: isRecentList }" @click.prevent="changeMainRecentList">
           <router-link :to="{ name: constants.URL_TYPE.POST.MAIN }"><i class="far fa-clock fa-lg" style="margin-right: 5px;"></i>최신순</router-link>
         </div>
@@ -25,7 +29,7 @@
         <div class="main-link" :class="{ active: isHitList }" @click.prevent="changeMainHitList">
           <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -33,9 +37,13 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import constants from '@/lib/constants.js'
+import Loading from '@/components/common/Loading.vue'
 
 export default {
   name: 'Main',
+  components: {
+    Loading
+  },
   data() {
     return {
       constants,
@@ -43,41 +51,31 @@ export default {
       isRecentList: false,
       isLikeList: true,
       isHitList: true,
+      isLoading: true,
+      articles: null,
       displayRecvList: []
     }
   },
   computed: {
-    ...mapState(['isMain', 'recvList', 'articles'])
+    ...mapState(['isMain', 'recvList'])
   },
   methods: {
-    ...mapActions(['searchResult', 'changeMain', 'sendPostId']),
-    goRecommend(){
+    ...mapActions(['changeMain', 'sendPostId']),
+    goRecommend() {
       this.$router.push('/post/kind')
     },
-    changeMainRecentList() {
-      this.isRecentList = false,
-      this.isLikeList = true,
-      this.isHitList = true
-    },
-    changeMainLikeList() {
-      this.isRecentList = true,
-      this.isLikeList = false
-      this.isHitList = true
-    },
-    changeMainHitList() {
-      this.isRecentList = true,
-      this.isLikeList = true,
-      this.isHitList = false
+    moveSearchPage(content) {
+      this.$router.push({ name: constants.URL_TYPE.POST.SEARCH, query: { search: content }})
+      this.searchKeyword = ''
     },
     filterRecvList(tmpSortRecvList) {
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
-        let tmp = this.articles.list.filter(item => {
+        let tmp = this.articles.filter(item => {
           return item.postId === +recv[0]
         })
         this.displayRecvList.push(tmp)
       })
-      // console.log(this.displayRecvList)
     },
     sortRecvList() {
       const tmpSortRecvList = []
@@ -95,9 +93,13 @@ export default {
   mounted() {
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
-      setTimeout(() => {
-        this.sortRecvList()
-      }, 200)
+        .then(() => {
+          this.articles = JSON.parse(window.sessionStorage.getItem('articles'))
+          setTimeout(() => {
+            this.isLoading = false
+            this.sortRecvList()
+          }, 100)
+        })
     }, 200)
   },
   updated() {
@@ -110,11 +112,8 @@ export default {
   position: fixed;
   top: 20%;
   right: 5%;
-  /* padding: 2rem; */
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: center; */
   width: 200px;
 }
 
@@ -166,5 +165,11 @@ export default {
   padding: 12px 20px 12px 40px;
   border: 2px solid var(--primary-color);
   margin-bottom: 12px;
+}
+
+.main-loading {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
 }
 </style>

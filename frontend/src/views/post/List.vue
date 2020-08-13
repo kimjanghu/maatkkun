@@ -1,8 +1,8 @@
 <template> 
   <div class="post">
     <div class="wrapB">
-    
-      <div class="post-list">
+      <PostNavbar :listStatus="listStatus" />
+      <section class="post-list">
         <div v-for="(article, index) in articles.list" :key="article.id">
           <div class="post-card">
             <a @click="detailPage(article.postId)" >
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>
@@ -66,12 +66,26 @@ import axios from 'axios'
 import { mapActions, mapState, mapGetters } from 'vuex';
 // import SERVER from '@/api/drf'
 import constants from '@/lib/constants'
-// import Stomp from 'webstomp-client'
-// import SockJS from 'sockjs-client'
-// import { mapGetters } from 'vuex'
+import PostNavbar from '@/components/common/PostNavbar.vue'
+
 export default {
   name: 'Post',
-  components: {},
+  components: {
+    PostNavbar
+  },
+  data(){
+    return {
+      constants,
+      SERVER_URL: process.env.VUE_APP_API_URL,
+      likedposts:[],
+      // searchKeyword:"",
+      listStatus: {
+        isRecentList: false,
+        isLikeList: true,
+        isHitList: true
+      }
+    };
+  },
   computed:{
     // ...mapState(['articles', 'likeArticles', 'hitArticles']),
     ...mapState(['articles']),
@@ -170,17 +184,6 @@ export default {
     //     }
     //   );        
     // }
-  },
-  data(){
-    return {
-      constants,
-      SERVER_URL: process.env.VUE_APP_API_URL,
-      likedposts:[],
-      // searchKeyword:"",
-      // isRecentList: false,
-      // isLikeList: true,
-      // isHitList: true
-    };
   },
   created() {
     this.getArticles()
