@@ -490,7 +490,7 @@ public class PostController {
         // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
         // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
     })
-    public ResponseEntity<List<Post>> getPostedList(@Valid @RequestBody final User request){
+    public ResponseEntity<Object> getPostedList(@Valid @RequestBody final User request){
         final List<Post> postedList = service.getPostedList(Integer.parseInt(request.getUid()));
         if(postedList.isEmpty()) { // 비어있을때
             return new ResponseEntity<>(null, HttpStatus.OK);
