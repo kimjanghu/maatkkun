@@ -2,7 +2,7 @@
   <div id="navbar" v-if="isNavbar">
     <h1>
       <!-- <router-link @click.native="changeMain(true)" :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link> -->
-      <a href="/">MAAT KUUN</a>
+      <a href="/">MAAT KKUN</a>
     </h1>
     <div class="right">
       <div v-if="!isLoggedIn">

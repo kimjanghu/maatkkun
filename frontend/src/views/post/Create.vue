@@ -63,7 +63,7 @@
 
     <div v-show="isModal" class="modal-container" id="modal">
       <div class="modal">
-        <div>역삼동 술집만 가능합니다!</div>
+        <div class="modaltitle">역삼동 음식점만 가능합니다!</div>
         <br>
         <br>
         <div class="map_wrap">
@@ -785,6 +785,10 @@
   #demo-table th {
     font-weight: bold;
     padding-left: .5em;
+  }
+  .modaltitle{
+    text-align:center;
+
   }
 
 
