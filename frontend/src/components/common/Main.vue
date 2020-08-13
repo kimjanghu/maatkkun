@@ -14,8 +14,8 @@
         :class="{ active: isBestPost }">
         <h3 class="best-post-main">MAAT KKUN Best</h3>
         <hr>
-        <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
-          <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+        <div class="tmp" v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+          <p class="best-post-index">{{ index+1 }}</p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ recv[0].title }}</router-link>
         </div>
         <div v-if="isLoading" class="main-loading">
           <Loading />
@@ -144,6 +144,11 @@ export default {
   
 } */
 
+.tmp {
+  display: flex;
+  align-items: center;
+}
+
 .arrow {
   position: absolute;
   bottom: 0;
@@ -186,12 +191,18 @@ export default {
   margin: 1rem auto;
   font-size: 20px;
   color: var(--primary-color);
+  text-shadow: 2px 2px 2px var(--secondary-color);
 }
 
 .best-post div p {
   word-break: normal;
   margin: 7px 1rem;
   font-size: 13px;
+}
+
+.best-post-title {
+  font-weight: bold;
+  text-shadow: 1px 1px 2px gray;
 }
 
 .best-post-title:hover {
@@ -201,6 +212,14 @@ export default {
 .best-post hr {
   width: 100%;
   margin-bottom: 5px;
+  border-bottom: 2px solid rgba(200, 200, 200, 0.4);
+}
+
+.best-post-index {
+  border: 2px solid var(--primary-color);
+  padding: 2px;
+  font-weight: bold;
+  /* color: var(--primary-color) */
 }
 
 .post-list-link {
