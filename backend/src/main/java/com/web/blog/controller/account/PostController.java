@@ -193,7 +193,8 @@ public class PostController {
             element.attr("id",filename);
 
         }
-        post.setContent(body.html() + hm.get("menu"));
+        post.setContent(body.html() +"=/.=/."+hm.get("menu"));
+        System.out.println(post.getContent());
 
         if(service.register(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){

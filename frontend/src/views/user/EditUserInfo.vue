@@ -66,6 +66,10 @@ export default {
       this.userInfo.content = editUserInfo.introduction
       axios.put(`${this.SERVER_URL}${SERVER.ROUTES.updateUserInfo}`, this.userInfo, config)
         .then(() => {
+          window.localStorage.setItem('userInfo', JSON.stringify({ 
+            "uid": this.$cookies.get(`auth-token`),
+            "nickname": this.userInfo.nickname
+          }))
           this.$router.push('/')
         })
         .catch(err => console.log(err))
