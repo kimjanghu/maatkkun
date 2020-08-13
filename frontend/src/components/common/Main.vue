@@ -191,7 +191,7 @@ export default {
   margin: 1rem auto;
   font-size: 20px;
   color: var(--primary-color);
-  text-shadow: 2px 2px 2px var(--secondary-color);
+  text-shadow: 1px 2px 2px var(--secondary-color);
 }
 
 .best-post div p {
@@ -201,8 +201,9 @@ export default {
 }
 
 .best-post-title {
-  font-weight: bold;
-  text-shadow: 1px 1px 2px gray;
+  /* font-weight: bold; */
+  /* text-shadow: 1px 1px 1px var(--primary-color); */
+  text-shadow: 1px 1px 1px gray;
 }
 
 .best-post-title:hover {
