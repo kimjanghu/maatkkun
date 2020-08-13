@@ -12,13 +12,16 @@
       </div>
     </div>
 
-    <header class="picture" >
-    <div>
-      <button class="create_button" @click="goRecommend">
-        추천 받아보실래요?
-      </button>
-      <br><br>
+    <div style="position:relative;">
 
+  <img
+    :src="imageCandidate"
+    alt="Food"
+    style="width:100%; height:400px;"
+  />
+
+    <div style="position:absolute;left:15%;bottom: 40%;width: 70%;">
+      
       <input type="text" v-model="searchKeyword" id="myInput" @keyup.enter="moveSearchPage(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>
       <!-- <div class="post-list-link">
@@ -32,8 +35,13 @@
           <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
         </div>
       </div> -->
+      <button class="create_button" @click="goRecommend">
+        추천 받아보실래요?
+      </button>
+      <br><br>
+
       </div>
-    </header>
+    </div>
   </div>
 </template>
 
@@ -58,7 +66,8 @@ export default {
       isHitList: true,
       isLoading: true,
       articles: null,
-      displayRecvList: []
+      displayRecvList: [],
+      imageCandidate:'',
     }
   },
   computed: {
@@ -66,6 +75,15 @@ export default {
   },
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
+    selectPicture(){
+      var pizza = '../../assets/img/pizza.jpg'
+      var eclair = '../../assets/img/eclair.jpg'
+      var steak = '../../assets/img/steak.jpg'
+      var candidates=[];
+      candidates.push(pizza,eclair,steak)
+      this.imageCandidate = candidates[Math.floor(Math.random()*(2-0+1)) + 0]
+      console.log(this.imageCandidate)
+    },
     goRecommend() {
       this.$router.push('/post/kind')
     },
@@ -96,6 +114,7 @@ export default {
   created() {
   },
   mounted() {
+    this.selectPicture();
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
         .then(() => {
