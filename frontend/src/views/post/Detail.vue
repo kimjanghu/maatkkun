@@ -202,12 +202,16 @@ export default {
     },
     deleteArticle() {
       if (this.loginUser === this.article.userid) {
-        axios.delete(`${this.SERVER_URL}${SERVER.ROUTES.delete}?postId=${this.article.postId}`)
+        const check = confirm('게시글을 삭제하시겠습니까?')
+        if (check) {
+          axios.delete(`${this.SERVER_URL}${SERVER.ROUTES.delete}?postId=${this.article.postId}`)
           .then(() => {
+            alert('게시글이 삭제되었습니다.')
             this.$router.push({
               name: constants.URL_TYPE.POST.MAIN
             })
           })
+        }
       } else {
         alert('해당 게시글 작성자만 게시글을 삭제할 수 있습니다')
       }
