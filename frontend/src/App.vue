@@ -20,14 +20,11 @@ export default {
     Navbar,
     Main
   },
-  beforeCreate() {
-  },
-  created() {
-    this.connectWebsocket()
-    let url = this.$route.name
-    this.checkUrl(url)
-  },
-  mounted() {
+  data: function() {
+    return {
+      isNavbar: true,
+      constants
+    };
   },
   computed: {
   },
@@ -37,7 +34,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['connectWebsocket', 'sendPostId']),
+    ...mapActions(['connectWebsocket', 'sendPostId', 'getArticles']),
     checkUrl(url) {
       let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
 
@@ -48,12 +45,14 @@ export default {
       this.isNavbar = isNavbar;
     }
   },
-  data: function() {
-    return {
-      isNavbar: true,
-      constants
-    };
-  }
+  created() {
+    this.connectWebsocket()
+    let url = this.$route.name
+    this.checkUrl(url)
+    // this.getArticles()
+  },
+  mounted() {
+  },
 };
 </script>
 

@@ -137,12 +137,20 @@ body {
 }
 
 .wrapB {
-  width: 80%;
+  width: 60%;
   margin: 0 auto;
+}
+@media(max-width:1295px){
+  .wrapB{
+    width:70%;
+  margin:0 auto;
+
+  }
+  
 }
 
 .wrapC {
-  width: 750px;
+  width: 100%;
   margin: 0 auto;
 }
 

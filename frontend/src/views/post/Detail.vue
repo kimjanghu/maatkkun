@@ -27,10 +27,18 @@
         <p class="content-text">Content</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content != null" :initialValue="content" />
+            <Viewer v-if="content[0] != null" :initialValue="content[0]" />
           </p>
         </div>
         
+        <hr>
+        <p class="content-text">Menu</p>
+        <div style="margin-top:3px;">
+          <p style="text-align:center;">
+            <Viewer v-if="content[1] != null" :initialValue="content[1]" />
+          </p>
+        </div>
+
         <hr>
         <div class="location-title">
           <p class="content-text">Location</p>
@@ -43,10 +51,12 @@
         <button class="update-post-button" @click.prevent="goupdateArticle()">수정</button>
         <button class="update-post-button delete-button" @click.prevent="deleteArticle()">삭제</button>
       </div>
-      
-      <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
-        <p class="tag-btn">#{{ tag }}</p>
+      <div class="tag-area">
+        <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
+          <p class="tag-btn">#{{ tag }}</p>
+        </div>
       </div>
+      
       <!-- <div class="box" style="font-weight:bold;"> {{ article.hashtag }}</div> -->
       <hr>
       <Comment :article="article" />
@@ -192,12 +202,16 @@ export default {
     },
     deleteArticle() {
       if (this.loginUser === this.article.userid) {
-        axios.delete(`${this.SERVER_URL}${SERVER.ROUTES.delete}?postId=${this.article.postId}`)
+        const check = confirm('게시글을 삭제하시겠습니까?')
+        if (check) {
+          axios.delete(`${this.SERVER_URL}${SERVER.ROUTES.delete}?postId=${this.article.postId}`)
           .then(() => {
+            alert('게시글이 삭제되었습니다.')
             this.$router.push({
               name: constants.URL_TYPE.POST.MAIN
             })
           })
+        }
       } else {
         alert('해당 게시글 작성자만 게시글을 삭제할 수 있습니다')
       }
@@ -206,6 +220,9 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
+          this.content = this.article.content.split('=/.=/.')
+          // console.log(this.content)
+          console.log(this.content.split('=/.=/.'))
           // console.log(res.data)
         })
         .catch(err => console.log(err))
@@ -251,7 +268,6 @@ export default {
     });
   },
   updated() {
-    this.content = this.article.content
     this.loginUser = parseInt(this.$cookies.get('auth-token'))
 
     if (window.kakao && window.kakao.maps) {
@@ -348,6 +364,10 @@ export default {
 
 hr {
   margin: 2rem 0;
+}
+
+.tag-area {
+  display: flex;
 }
 
 .tag {

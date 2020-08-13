@@ -5,6 +5,7 @@
   margin: 0 auto;
 }
 
+
 .post h2 {
   margin-top: 80px;
   font-weight: 600;
@@ -12,34 +13,28 @@
   font-size: 1.875em;
 }
 
-.post .post-list {
-  width: 100%;
-  margin-top: 15px;
-  
-}
-
-@media(min-width:458px) {
-
-  .post .post-list>div {
-    float: left;
-
-    margin-right: 20px;
-    margin-bottom: 30px;
-    width: 30%;
-  }
-}
-
-@media(max-width:457px) {
-  .post .post-list>div {
-    float: left;
-    margin-right: 30px;
-    margin-bottom: 30px;
+@media(min-width:792px)  {
+  .post .post-list {
     width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+
   }
 }
 
-.post .post-list>div:nth-child(3n) {
-  margin-right: 0;
+@media(min-width:548px) and (max-width:791px) {
+  .post .post-list {
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+
+  }
 }
 
 .post .post-list>div .post-card {
