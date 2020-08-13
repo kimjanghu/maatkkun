@@ -13,7 +13,7 @@
   font-size: 1.875em;
 }
 
-@media(min-width:792px)  {
+@media(min-width:1100px)  {
   .post .post-list {
     width: 100%;
     margin-top: 15px;
@@ -25,13 +25,25 @@
   }
 }
 
-@media(min-width:548px) and (max-width:791px) {
+@media(min-width:630px) and (max-width:1100px) {
   .post .post-list {
     width: 100%;
     margin-top: 15px;
     align-items: center;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+
+  }
+}
+
+@media(max-width:630px) {
+  .post .post-list {
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
     grid-gap: 20px;
 
   }
