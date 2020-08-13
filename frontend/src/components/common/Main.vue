@@ -11,7 +11,7 @@
         <Loading />
       </div>
     </div>
-    <div class="wrapB">
+    <div class="wrapB picture">
       <button class="create_button" @click="goRecommend">
         추천 받아보실래요?
       </button>
@@ -177,5 +177,12 @@ export default {
   margin-top: 4rem;
   display: flex;
   justify-content: center;
+}
+.picture{
+  background-image: url('../../assets/img/eclair.jpg');
+  background-size:cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height:100%;
 }
 </style>
