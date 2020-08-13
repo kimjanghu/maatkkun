@@ -11,7 +11,9 @@
         <Loading />
       </div>
     </div>
-    <div class="wrapB picture">
+
+    <header class="picture" >
+    <div>
       <button class="create_button" @click="goRecommend">
         추천 받아보실래요?
       </button>
@@ -30,7 +32,8 @@
           <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
         </div>
       </div> -->
-    </div>
+      </div>
+    </header>
   </div>
 </template>
 
@@ -38,6 +41,7 @@
 import { mapActions, mapState } from 'vuex'
 import constants from '@/lib/constants.js'
 import Loading from '@/components/common/Loading.vue'
+import '@/assets/css/style.css'
 
 
 export default {
@@ -178,11 +182,35 @@ export default {
   display: flex;
   justify-content: center;
 }
-.picture{
-  background-image: url('../../assets/img/eclair.jpg');
-  background-size:cover;
-  background-repeat: no-repeat;
-  width: 100%;
-  height:100%;
+header{
+  display: block;
 }
+
+.picture{
+  background-image: url('../../assets/img/pizza.jpg');
+  overflow:hidden;
+
+  position: relative;
+background-position: center;
+  background-size:cover;
+
+  padding-top:300px;
+
+
+
+ 
+
+}
+.picture:before{
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+
+    width: 100%;
+}
+
 </style>
