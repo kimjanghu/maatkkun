@@ -1,16 +1,28 @@
 <template>
   <div v-if="isMain">
-    <div class="best-post">
-      <h3 class="best-post-main">MAAT KKUN Best</h3>
-      <hr>
-      
-      <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
-        <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+    
+    <div class="best-post-area" @mouseover="changeDisplay()" @mouseout="changeDisplay()">
+      <div>
+        <i 
+          class="fas fa-chevron-circle-up fa-2x arrow" 
+          :class="{ active: isArrow }" 
+        ></i>
       </div>
-      <div v-if="isLoading" class="main-loading">
-        <Loading />
+      <div 
+        class="best-post" 
+        id="best-post"
+        :class="{ active: isBestPost }">
+        <h3 class="best-post-main">MAAT KKUN Best</h3>
+        <hr>
+        <div class="tmp" v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+          <p class="best-post-index">{{ index+1 }}</p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ recv[0].title }}</router-link>
+        </div>
+        <div v-if="isLoading" class="main-loading">
+          <Loading />
+        </div>
       </div>
     </div>
+
 
     <div style="position:relative;">
 
@@ -65,6 +77,8 @@ export default {
       isLikeList: true,
       isHitList: true,
       isLoading: true,
+      isArrow: false,
+      isBestPost: false,
       articles: null,
       displayRecvList: [],
       imageCandidate:'',
@@ -83,6 +97,15 @@ export default {
       candidates.push(pizza,eclair,steak)
       this.imageCandidate = candidates[Math.floor(Math.random()*(2-0+1)) + 0]
       console.log(this.imageCandidate)
+    },
+    changeDisplay(){
+      if (!this.isArrow) {
+        this.isArrow = true,
+        this.isBestPost = true
+      } else {
+        this.isArrow = false,
+        this.isBestPost = false
+      }
     },
     goRecommend() {
       this.$router.push('/post/kind')
@@ -122,7 +145,7 @@ export default {
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
-          }, 100)
+          }, 300)
         })
     }, 200)
   },
@@ -132,17 +155,58 @@ export default {
 </script>
 
 <style scoped>
-.best-post {
+.best-post-area {
+  z-index: 100;
   position: fixed;
-  top: 20%;
+  bottom: 12%;
   right: 5%;
-  display: flex;
-  flex-direction: column;
-  width: 200px;
+  width: 350px;
 }
-@media(max-width:1300px){
-  .best-post{
-    display:none;
+/* 
+.best-post-area:hover {
+  
+} */
+
+.tmp {
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transition: transform .3s ease-in;
+}
+
+.arrow.active {
+  transform: rotate(-90deg)
+}
+
+.best-post {
+  /* display: flex; */
+  display: none;
+  width: 300px;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.best-post.active {
+  display: flex;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s;
+  -webkit-animation: fadein 1s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -150,12 +214,19 @@ export default {
   margin: 1rem auto;
   font-size: 20px;
   color: var(--primary-color);
+  text-shadow: 1px 2px 2px var(--secondary-color);
 }
 
 .best-post div p {
   word-break: normal;
   margin: 7px 1rem;
   font-size: 13px;
+}
+
+.best-post-title {
+  /* font-weight: bold; */
+  /* text-shadow: 1px 1px 1px var(--primary-color); */
+  text-shadow: 1px 1px 1px gray;
 }
 
 .best-post-title:hover {
@@ -165,6 +236,14 @@ export default {
 .best-post hr {
   width: 100%;
   margin-bottom: 5px;
+  border-bottom: 2px solid rgba(200, 200, 200, 0.4);
+}
+
+.best-post-index {
+  border: 2px solid var(--primary-color);
+  padding: 2px;
+  font-weight: bold;
+  /* color: var(--primary-color) */
 }
 
 .post-list-link {

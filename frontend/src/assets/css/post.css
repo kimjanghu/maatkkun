@@ -5,7 +5,6 @@
   margin: 0 auto;
 }
 
-
 .post h2 {
   margin-top: 80px;
   font-weight: 600;
@@ -13,7 +12,7 @@
   font-size: 1.875em;
 }
 
-@media(min-width:792px)  {
+@media(min-width: 1100px)  {
   .post .post-list {
     width: 100%;
     margin-top: 15px;
@@ -25,7 +24,7 @@
   }
 }
 
-@media(min-width:548px) and (max-width:791px) {
+@media(min-width: 630px) and (max-width: 1100px) {
   .post .post-list {
     width: 100%;
     margin-top: 15px;
@@ -33,12 +32,23 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
+  }
+}
 
+@media(max-width: 630px) {
+  .post .post-list {
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 20px;
   }
 }
 
 .post .post-list>div .post-card {
   /* border: 2px solid var(--secondary-color); */
+  margin: 1rem 0;
   border-radius: 10px;
   width: 100%;
   float: left;
