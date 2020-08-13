@@ -63,8 +63,8 @@ export default {
       userId: {
         uid: JSON.parse(window.localStorage.getItem('userInfo')).uid
       },
-      userPostList: null,
-      userPostLikedList: null,
+      userPostList: [],
+      userPostLikedList: [],
       userInfo: null,
       isArticleList: false,
       isLikeList: true
@@ -131,6 +131,7 @@ export default {
   mounted() {
   },
   created() {
+    console.log(this.clickUserId)
     this.getUserInfo()
     this.getUserPost()
     this.getUserLikedPost()

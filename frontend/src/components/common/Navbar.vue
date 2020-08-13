@@ -46,6 +46,7 @@ export default {
   },
   created() {
     // console.log(JSON.parse(window.localStorage.getItem('userInfo')))
+    console.log(this.loginId)
   },
   
   mounted() {
