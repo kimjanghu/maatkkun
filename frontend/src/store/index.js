@@ -24,12 +24,14 @@ export default new Vuex.Store({
     isMain: true
   },
   getters: {
+    
     isLoggedIn: state => !!state.authToken,
     config: state => ({
       headers: {
         Authorization: `Token ${state.authToken}`
-      }
+      },
     })
+    
   },
   mutations: {
     SET_TOKEN(state, token) {
