@@ -102,16 +102,16 @@ public class PostController {
 
 
     //window 환경
-    // final String path = "C:\\Users\\images\\";
+    final String path = "C:\\Users\\images\\";
     //ec2 환경
-    final String path = "/home/ubuntu/images/";
+    // final String path = "/home/ubuntu/images/";
 
     
     final String WEB_DRIVER_ID = "webdriver.chrome.driver";
     // window 환경
-    // final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
+    final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
     // ec2 환경
-    final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
+    // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
     
     // @ApiOperation(value = "업데이트", notes = "회원정보 업데이트 API")
     // @ApiImplicitParams({
@@ -140,18 +140,41 @@ public class PostController {
             // String pp = post.getPostId()+"";
             // vop.set(pp, 0);
 
-            final Document doc = Jsoup.parseBodyFragment(post.getContent());
-            final Elements dd = doc.select("img");
+            if(post.getContent() != null){
+                System.out.println("11111111111");
+                final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                final Elements dd = doc.select("img");
+                
+
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    post.setContent(idParseImage(id));       
+                }
+                else{
+                    post.setContent(null);
+                }
+            }
             
 
-            if(dd.size() > 0){
-                final Element element = dd.get(0);
-                final String id = element.attr("id");
-                post.setContent(idParseImage(id));       
-            }
-            else{
-                post.setContent(null);
-            }
+
+            int i = ((int)(Math.random()*1000)+1);
+            post.setHits(i);
+            i = ((int)(Math.random()*100)+1);
+            post.setLikes(i);
+
+            int a = ((int)(Math.random()*5)+1);
+            post.setPrice(a+"");
+            int b = ((int)(Math.random()*5)+1);
+            post.setAtmosphere(b+"");
+            int c = ((int)(Math.random()*5)+1);
+            post.setTaste(c+"");
+
+            double d = ( a+b+c)/3 ;
+            
+            post.setStarpoint((Math.round(d*10)/10.0)+"");
+
+            service.modify(post);
         }
         
         hm.put("comment", commentList);
@@ -295,44 +318,48 @@ public class PostController {
         final Post post = service.showArticle(postId);
         service.upHit(postId);
 
-        final Document doc = Jsoup.parseBodyFragment(post.getContent());
-        final Element body = doc.body();
-        final Elements dd = doc.select("img");
-        
-        for(int i = 0;i < dd.size() ; i++){
-            final Element element = dd.get(i);
-            final String id = element.attr("id");
+        if(post.getContent() != null){
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
             
-            final File imagePath = new File(path+id+".jpg");
-            
-            FileInputStream fis = null;
-            
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            
-            
+            for(int i = 0;i < dd.size() ; i++){
+                final Element element = dd.get(i);
+                final String id = element.attr("id");
+                
+                final File imagePath = new File(path+id+".jpg");
+                
+                FileInputStream fis = null;
+                
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                
+                
 
-            int len = 0;
-            final byte[] buf = new byte[1024];
+                int len = 0;
+                final byte[] buf = new byte[1024];
 
-            try{
-                fis = new FileInputStream(imagePath);
+                try{
+                    fis = new FileInputStream(imagePath);
 
-                while((len = fis.read(buf)) != -1){
-                    baos.write(buf,0,len);
+                    while((len = fis.read(buf)) != -1){
+                        baos.write(buf,0,len);
+                    }
+
+                    final byte[] fileArray = baos.toByteArray();
+                    final byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+                    element.attr("src","data:image/jpeg;base64, "+new String(baseIncodingBytes));
+
+                    baos.close();
+                    fis.close();
                 }
-
-                final byte[] fileArray = baos.toByteArray();
-                final byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
-                element.attr("src","data:image/jpeg;base64, "+new String(baseIncodingBytes));
-
-                baos.close();
-                fis.close();
+                catch(final Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
-            catch(final Exception e){
-                System.out.println(e.getMessage());
-            }
+            post.setContent(body.html());
         }
-        post.setContent(body.html());
+        
+        
         final Optional<Post> optPost = Optional.of(post);
 
         if(optPost.isPresent()){
