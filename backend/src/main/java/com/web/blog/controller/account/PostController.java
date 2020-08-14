@@ -163,30 +163,17 @@ public class PostController {
     @ApiOperation(value = "글 작성", notes = "글 작성 API")
     @PostMapping(value="/articles/register")
     @ApiImplicitParams({
-                // @ApiImplicitParam(name = "uid", value = "식별자", required = true, dataType = "string" ),
-                // @ApiImplicitParam(name = "password", value = "비밀번호", dataType = "string"),
-                // @ApiImplicitParam(name = "email", value = "이메일" , dataType = "string"),
-                // @ApiImplicitParam(name = "nickname", value = "별칭", dataType = "string"),
-                // @ApiImplicitParam(name = "content", value = "자기소개", dataType = "string"),
-                // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
-        })
+
+    })
     public ResponseEntity<Object> register(@Valid @RequestBody final Post post){
-        System.out.println("================================");
-
-        System.out.println(post.getTaste());
-        System.out.println(post.getAtmosphere());
-        System.out.println(post.getPrice());
-        
-
        
         double starAvg = (Double.parseDouble(post.getTaste()) + 
                         Double.parseDouble(post.getAtmosphere()) + 
                         Double.parseDouble(post.getPrice()))/3;
         
 
-        System.out.println("================================");
-        
         HashMap<String,String> hm = crawling(post.getUrl());
+
         post.setStarpoint((Math.round(starAvg*10)/10.0)+"");
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
@@ -212,7 +199,10 @@ public class PostController {
             element.attr("id",filename);
 
         }
-        post.setContent(body.html() +"=/.=/."+hm.get("menu"));
+        post.setContent(body.html());
+        post.setMenu(hm.get("menu"));
+
+        System.out.println(post.getMenu());
 
         if(service.register(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
@@ -572,6 +562,43 @@ public class PostController {
         final HashMap<String,Object> hm = new HashMap<>();
         
         final List<Post> postList = service.getPostedListByHits();
+        final List<Integer> commentList = new ArrayList<>();
+        
+        for(final Post post : postList){
+            commentList.add(commentservice.countComment(post.getPostId()));
+
+
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
+            
+
+            if(dd.size() > 0){
+                final Element element = dd.get(0);
+                final String id = element.attr("id");
+                
+                
+                post.setContent(idParseImage(id));
+            }
+            else{
+                post.setContent(null);
+            }
+        }
+        
+        hm.put("comment", commentList);
+        hm.put("list", postList);
+
+        return new ResponseEntity<>(hm,HttpStatus.OK) ;
+    }
+
+    @ApiOperation(value = "작성 게시물 리스트 별점순", notes = "작성 게시물 리스트 별점순 API")
+    @GetMapping(value="/articles/postedListByStarpoint")
+    @ApiImplicitParams({
+    })
+    public ResponseEntity<Object> getPostedListByStarpoint(){
+        final HashMap<String,Object> hm = new HashMap<>();
+        
+        final List<Post> postList = service.getPostedListByStarpoint();
         final List<Integer> commentList = new ArrayList<>();
         
         for(final Post post : postList){

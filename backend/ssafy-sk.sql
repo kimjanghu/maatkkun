@@ -123,5 +123,6 @@ DELIMITER;
 alter table post add price varchar(10) default "0.0";
 alter table post add taste varchar(10) default "0.0";
 alter table post add atmosphere varchar(10) default "0.0";
+alter table post add menu varchar(5000) default "null";
 
 

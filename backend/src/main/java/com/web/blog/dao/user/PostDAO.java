@@ -9,6 +9,7 @@ public interface PostDAO {
     List<Post> getList();
     List<Post> getPostedListByLikes();
     List<Post> getPostedListByHits();
+    List<Post> getPostedListByStarpoint();
     int register(Post post);
     int modify(Post post);
     int deletePost(int postId);

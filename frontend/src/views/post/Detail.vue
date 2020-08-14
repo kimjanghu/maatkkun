@@ -47,7 +47,7 @@
         <p class="content-text">Content</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content[0] != null" :initialValue="content[0]" />
+            <Viewer v-if="content != null" :initialValue="content" />
           </p>
         </div>
         
@@ -55,7 +55,7 @@
         <p class="content-text">Menu</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content[1] != null" :initialValue="content[1]" />
+            <Viewer v-if="menu != null" :initialValue="menu" />
           </p>
         </div>
 
@@ -108,6 +108,7 @@ export default {
     return {
       SERVER_URL: process.env.VUE_APP_API_URL,
       content: null,
+      menu:null,
       loginUser: '',
       articleId: this.$route.params.id,
       article: null,
@@ -240,7 +241,8 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
-          this.content = this.article.content.split('=/.=/.')
+          this.content = this.article.content
+          this.menu = this.article.menu
           // console.log(this.content)
           console.log(this.content.split('=/.=/.'))
           // console.log(res.data)

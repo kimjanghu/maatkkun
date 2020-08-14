@@ -29,4 +29,5 @@ public class Post {
     private String price;
     private String taste;
     private String atmosphere;
+    private String menu;
 }
