@@ -5,7 +5,7 @@
     <div class="user-info">
       <div class="profile">
         <div class="profile-picture"></div>
-        <router-link v-if="clickUserId === userId.uid" class="edit-user-btn" :to="{ name: constants.URL_TYPE.USER.EDIT }">회원정보 수정</router-link>
+        <router-link v-if="clickUserId === userId" class="edit-user-btn" :to="{ name: constants.URL_TYPE.USER.EDIT }">회원정보 수정</router-link>
       </div>
       
       <div v-if="userInfo" class="user-detail-info">
@@ -60,9 +60,10 @@ export default {
       constants,
       SERVER_URL: process.env.VUE_APP_API_URL,
       clickUserId: this.$route.params.id,
-      userId: {
-        uid: JSON.parse(window.localStorage.getItem('userInfo')).uid
-      },
+      // userId: {
+      //   uid: JSON.parse(window.localStorage.getItem('userInfo')).uid
+      // },
+      userId: null,
       userPostList: [],
       userPostLikedList: [],
       userInfo: null,
@@ -130,15 +131,22 @@ export default {
     changeLikeList() {
       this.isArticleList = true
       this.isLikeList = false
+    },
+    setNickname() {
+      const userId = JSON.parse(window.localStorage.getItem('userInfo'))
+      if (userId) {
+        this.userId = userId.uid
+      }
     }
-  },
-  mounted() {
   },
   created() {
     this.getUserInfo()
     this.getUserPost()
     this.getUserLikedPost()
+    this.setNickname()
     this.changeMain(false)
+  },
+  mounted() {
   },
 }
 </script>
