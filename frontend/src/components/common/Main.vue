@@ -127,7 +127,6 @@ export default {
     }
   },
   created() {
-    // this.setImage()
     this.selectImage()
   },
   mounted() {
@@ -140,7 +139,7 @@ export default {
             this.sortRecvList()
           }, 300)
         })
-    }, 200)
+    }, 300)
   },
   updated() {
   },
