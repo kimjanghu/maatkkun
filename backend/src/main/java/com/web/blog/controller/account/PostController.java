@@ -158,25 +158,25 @@ public class PostController {
             
 
 
-            int i = ((int)(Math.random()*1000)+1);
-            post.setHits(i);
-            i = ((int)(Math.random()*100)+1);
-            post.setLikes(i);
+            // int i = ((int)(Math.random()*1000)+1);
+            // post.setHits(i);
+            // i = ((int)(Math.random()*100)+1);
+            // post.setLikes(i);
 
-            double[] arr = {0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0};
+            // double[] arr = {0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0};
 
-            int a = ((int)(Math.random()*arr.length));
-            post.setPrice(arr[a]+"");
-            int b = ((int)(Math.random()*arr.length));
-            post.setPrice(arr[b]+"");
-            int c = ((int)(Math.random()*arr.length));
-            post.setPrice(arr[c]+"");
+            // int a = ((int)(Math.random()*arr.length));
+            // post.setPrice(arr[a]+"");
+            // int b = ((int)(Math.random()*arr.length));
+            // post.setPrice(arr[b]+"");
+            // int c = ((int)(Math.random()*arr.length));
+            // post.setPrice(arr[c]+"");
 
-            double d = ( arr[a] + arr[b] + arr[c])/3 ;
+            // double d = ( arr[a] + arr[b] + arr[c])/3 ;
             
-            post.setStarpoint((Math.round(d*10)/10.0)+"");
+            // post.setStarpoint((Math.round(d*10)/10.0)+"");
 
-            service.modify(post);
+            // service.modify(post);
         }
         
         hm.put("comment", commentList);
