@@ -158,23 +158,23 @@ public class PostController {
             
 
 
-            int i = ((int)(Math.random()*1000)+1);
-            post.setHits(i);
-            i = ((int)(Math.random()*100)+1);
-            post.setLikes(i);
+            // int i = ((int)(Math.random()*1000)+1);
+            // post.setHits(i);
+            // i = ((int)(Math.random()*100)+1);
+            // post.setLikes(i);
 
-            int a = ((int)(Math.random()*5)+1);
-            post.setPrice(a+"");
-            int b = ((int)(Math.random()*5)+1);
-            post.setAtmosphere(b+"");
-            int c = ((int)(Math.random()*5)+1);
-            post.setTaste(c+"");
+            // int a = ((int)(Math.random()*5)+1);
+            // post.setPrice(a+"");
+            // int b = ((int)(Math.random()*5)+1);
+            // post.setAtmosphere(b+"");
+            // int c = ((int)(Math.random()*5)+1);
+            // post.setTaste(c+"");
 
-            double d = ( a+b+c)/3 ;
+            // double d = ( a+b+c)/3 ;
             
-            post.setStarpoint((Math.round(d*10)/10.0)+"");
+            // post.setStarpoint((Math.round(d*10)/10.0)+"");
 
-            service.modify(post);
+            // service.modify(post);
         }
         
         hm.put("comment", commentList);
