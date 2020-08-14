@@ -26,4 +26,8 @@ public class Post {
     private String url;
     private String starpoint;
     private String placename;
+    private String price;
+    private String taste;
+    private String atmosphere;
+    private String menu;
 }

@@ -581,6 +581,24 @@
 
 
 
+### 	2.13 좋아요순 글 리스트 GET /articles/postedListByStarpoint
+
+별점순으로 글의 리스트를 리턴해주는 API 입니다.
+
+
+​	`Response(Success)`
+
+| Field           | Type          | Description        |
+| --------------- | ------------- | ------------------ |
+| result.comment             | List<Integer>        |댓글수의 리스트|
+| result.list             | List<Post>        |전체 글의 리스트|
+
+
+
+
+
+
+
 ## 3.글 임시저장  API
 
 | Members                     | Descriptions     |
