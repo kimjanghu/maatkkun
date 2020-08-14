@@ -1,6 +1,5 @@
 <template>
-  <div v-if="isMain">
-    
+  <div style="padding-top: 0;" v-if="isMain">
     <div class="best-post-area" @mouseover="changeDisplay()" @mouseout="changeDisplay()">
       <div>
         <i 
@@ -23,35 +22,25 @@
       </div>
     </div>
 
-
-    <div style="position:relative;">
-
-  <img
-    :src="imageCandidate"
-    alt="Food"
-    style="width:100%; height:400px;"
-  />
-
-    <div style="position:absolute;left:15%;bottom: 40%;width: 70%;">
-      
-      <input type="text" v-model="searchKeyword" id="myInput" @keyup.enter="moveSearchPage(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
-      <br>
-      <!-- <div class="post-list-link">
-        <div class="main-link" :class="{ active: isRecentList }" @click.prevent="changeMainRecentList">
-          <router-link :to="{ name: constants.URL_TYPE.POST.MAIN }"><i class="far fa-clock fa-lg" style="margin-right: 5px;"></i>최신순</router-link>
+    <div class="wrapB">
+      <div id="main-food-area" class="main-food-area" ref="why">
+        <img :src="require(`../../assets/img/${foodImg}`)" alt="food-image" />
+        <div>
+          <input 
+            type="text" 
+            v-model="searchKeyword" 
+            class="myInput" 
+            id="myInput"
+            @keyup.enter="moveSearchPage(searchKeyword)" 
+            placeholder="#태그 #제목 #내용" 
+            title="Type in a name" 
+          />
+          <i class="fas fa-search fa-2x search-icon"></i>
         </div>
-        <div class="main-link" :class="{ active: isLikeList }" @click.prevent="changeMainLikeList">
-          <router-link :to="{ name: constants.URL_TYPE.POST.LIKE }"><i class="far fa-heart fa-lg" style="margin-right: 5px;"></i>좋아요</router-link>
-        </div>
-        <div class="main-link" :class="{ active: isHitList }" @click.prevent="changeMainHitList">
-          <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
-        </div>
-      </div> -->
-      <button class="create_button" @click="goRecommend">
-        추천 받아보실래요?
-      </button>
-      <br><br>
-
+  
+        <button class="recommend-button" @click="goRecommend">
+          Let's Go MAAT KKUN
+        </button>
       </div>
     </div>
   </div>
@@ -61,7 +50,6 @@
 import { mapActions, mapState } from 'vuex'
 import constants from '@/lib/constants.js'
 import Loading from '@/components/common/Loading.vue'
-import '@/assets/css/style.css'
 
 
 export default {
@@ -79,9 +67,9 @@ export default {
       isLoading: true,
       isArrow: false,
       isBestPost: false,
+      foodImg: '',
       articles: null,
-      displayRecvList: [],
-      imageCandidate:'',
+      displayRecvList: []
     }
   },
   computed: {
@@ -89,16 +77,7 @@ export default {
   },
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
-    selectPicture(){
-      var pizza = '../../assets/img/pizza.jpg'
-      var eclair = '../../assets/img/eclair.jpg'
-      var steak = '../../assets/img/steak.jpg'
-      var candidates=[];
-      candidates.push(pizza,eclair,steak)
-      this.imageCandidate = candidates[Math.floor(Math.random()*(2-0+1)) + 0]
-      console.log(this.imageCandidate)
-    },
-    changeDisplay(){
+    changeDisplay() {
       if (!this.isArrow) {
         this.isArrow = true,
         this.isBestPost = true
@@ -133,11 +112,25 @@ export default {
       })
       this.filterRecvList(tmpSortRecvList)
     },
+    selectImage() {
+      const imgArray = [
+        'steak.jpg',
+        'pizza.jpg',
+        'eclair.jpg'
+      ]
+      const image = imgArray[Math.floor(Math.random() * imgArray.length)];
+      this.setImage(image)
+    },
+    setImage(image) {
+      this.foodImg = ''
+      this.foodImg = image
+    }
   },
   created() {
+    // this.setImage()
+    this.selectImage()
   },
   mounted() {
-    this.selectPicture();
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
         .then(() => {
@@ -155,6 +148,70 @@ export default {
 </script>
 
 <style scoped>
+.main-food-area {
+  /* z-index: -1; */
+  display: block;
+  position: relative;
+  /* background-image: url("../../assets/img/pizza.jpg"); */
+  /* background-image: none; */
+  /* background-size: cover;
+  width: 100%;
+  height: 500px; */
+}
+
+.main-food-area img {
+  background-size: cover;
+  width: 100%;
+  height: 500px;
+  border-bottom-left-radius : 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.main-food-area::after {
+  /* z-index: 0; */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-bottom-left-radius : 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.recommend-button {
+  z-index: 1;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  position: absolute;
+}
+
+.myInput {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  transform: translateX(-50%);
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 60%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 2px solid var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.search-icon {
+  position: absolute;
+  z-index: 3;
+  top: 51.5%;
+  right: 23%;
+  color: var(--secondary-color);
+}
+
 .best-post-area {
   z-index: 100;
   position: fixed;
@@ -162,10 +219,6 @@ export default {
   right: 5%;
   width: 350px;
 }
-/* 
-.best-post-area:hover {
-  
-} */
 
 .tmp {
   display: flex;
@@ -264,15 +317,7 @@ export default {
 }
 
 #myInput {
-  box-sizing: border-box;
-  background-image: url('/css/searchicon.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  width: 100%;
-  font-size: 16px;
-  padding: 12px 20px 12px 40px;
-  border: 2px solid var(--primary-color);
-  margin-bottom: 12px;
+  
 }
 
 .main-loading {
@@ -280,35 +325,4 @@ export default {
   display: flex;
   justify-content: center;
 }
-header{
-  display: block;
-}
-
-.picture{
-  background-image: url('../../assets/img/pizza.jpg');
-  overflow:hidden;
-
-  position: relative;
-background-position: center;
-  background-size:cover;
-
-  padding-top:300px;
-
-
-
- 
-
-}
-.picture:before{
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 0;
-
-    width: 100%;
-}
-
 </style>
