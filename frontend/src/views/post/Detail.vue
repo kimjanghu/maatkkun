@@ -4,30 +4,29 @@
       <p class="main-detail-page">MAAT GGUN Page</p>
       <div class="post-title">
         <p class="post-title-text">{{ article.title }}</p>
+        <p class="post-nickname">by <router-link :to="{ name: constants.URL_TYPE.USER.MYPAGE, params:{ id: article.userid }}">{{ article.nickname }}</router-link></p>
       </div>
       <div class="box-container">
         <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
         <Like :article="article" />
-        <div style='display:flex;  justify-content:flex-start;align-items:center;'>
-
-      <h3>맛</h3>
-      <star-rating v-model="article.taste" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
-        :rounded-corners="true" :read-only="true" v-bind:star-size="40">
-      </star-rating>
-    </div>
-    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
-
-      <h3>분위기</h3>
-      <star-rating v-model="article.atmosphere" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
-        :rounded-corners="true" :read-only="true" v-bind:star-size="40">
-      </star-rating>
-    </div>
-    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
-      <h3>가격</h3>
-      <star-rating v-model="article.price" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
-        :rounded-corners="true"  :read-only="true" v-bind:star-size="40">
-      </star-rating>
-    </div>
+        <div class="star-point">
+          <p class="star-title">맛</p>
+          <star-rating v-model="article.taste" :increment="0.5" :max-rating="5" active-color="#F2E205"
+            :rounded-corners="true" :read-only="true" :star-size="20">
+          </star-rating>
+        </div>
+        <div class="star-point" style='display:flex;  justify-content:flex-start;align-items:center;'>
+          <p class="star-title">분위기</p>
+          <star-rating v-model="article.atmosphere" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#F2E205"
+            :rounded-corners="true" :read-only="true" v-bind:star-size="20">
+          </star-rating>
+        </div>
+        <div class="star-point" style='display:flex;  justify-content:flex-start;align-items:center;'>
+          <p class="star-title">가격</p>
+          <star-rating v-model="article.price" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#F2E205"
+            :rounded-corners="true"  :read-only="true" v-bind:star-size="20">
+          </star-rating>
+        </div>
         <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>  
         <p class="post-date">{{ article.createDate }}</p>
         <!-- <div v-if="isLoggedIn" class="post-like-wrap">
@@ -47,7 +46,7 @@
         <p class="content-text">Content</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content != null" :initialValue="content" />
+            <Viewer v-if="article.content != null" :initialValue="article.content" />
           </p>
         </div>
         
@@ -55,14 +54,14 @@
         <p class="content-text">Menu</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="menu != null" :initialValue="menu" />
+            <Viewer v-if="article.menu != null" :initialValue="article.menu" />
           </p>
         </div>
 
         <hr>
         <div class="location-title">
           <p class="content-text">Location</p>
-          <p class="store-name">{{article.placename}}</p>
+          <p class="store-name">{{ article.placename }}</p>
         </div>
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
@@ -108,6 +107,7 @@ export default {
   },
   data() {
     return {
+      constants,
       SERVER_URL: process.env.VUE_APP_API_URL,
       content: null,
       menu:null,
@@ -243,10 +243,13 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
-          this.content = this.article.content
-          this.menu = this.article.menu
+          this.article.taste = +this.article.taste
+          this.article.price = +this.article.price
+          this.article.atmosphere = +this.article.atmosphere
+          // this.content = this.article.content
+          // this.menu = this.article.menu
           // console.log(this.content)
-          console.log(this.content.split('=/.=/.'))
+          // console.log(this.content.split('=/.=/.'))
           // console.log(res.data)
         })
         .catch(err => console.log(err))
@@ -316,7 +319,7 @@ export default {
 }
 
 .main-detail-page {
-  font-size: 13px;
+  font-size: 16px;
   opacity: 0.5;
 }
 
@@ -329,19 +332,23 @@ export default {
 
 .content-text {
   margin: 0 0 1rem 1rem;
-  font-size: 13px;
+  font-size: 16px;
   opacity: 0.5;
 }
 
 .post-title {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .post-title-text {
   font-weight: bold;
   font-size: 50px;
   margin: 2rem 0 0 1rem;
+}
+
+.post-nickname {
+  margin: 0 0 1rem 1rem;
 }
 
 .post-date {
@@ -357,6 +364,7 @@ export default {
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
+  margin-top: 5px;
 }
 
 .location-title {
@@ -405,6 +413,16 @@ hr {
   text-align: center;
   border-radius: 3px;
   color: #fff;
+}
+
+.star-point {
+  display: flex; 
+  align-items:center;
+}
+
+.star-title {
+  padding-top: 7px;
+  margin-right: 5px;
 }
 
 @media(min-width:560px) {
