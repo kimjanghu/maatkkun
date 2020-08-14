@@ -647,6 +647,18 @@
           return false
         }
       },
+      isNotPng(){
+        var content2 = this.$refs.toastuiEditor.invoke('getHtml');
+        if(content2.includes('.PNG')){
+          alert('png형식의 파일은 지원하지 않습니다.')
+          return false;
+        }
+        else{
+          
+          return true;
+        }
+     
+      },
     },
     created() {
       // 수정하러 왔으면 이전 데이터로 덮어 씌움
