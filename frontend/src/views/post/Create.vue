@@ -63,9 +63,9 @@
 
     <div v-show="isModal" class="modal-container" id="modal">
       <div class="modal">
-      <br>
+        <br>
         <h2 class="modaltitle">역삼동 음식점만 가능합니다!</h2>
-      <br>
+        <br>
         <div class="map_wrap">
           <div id="map" class="modal" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
           <div id="menu_wrap" class="bg_white">
@@ -82,7 +82,7 @@
             <div id="pagination"></div>
           </div>
         </div>
-      
+
       </div>
     </div>
 
@@ -128,8 +128,27 @@
 
     </div>
     <br>
+    <h2>평점을 남겨주세요!</h2>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
 
+      <h3>맛</h3>
+      <star-rating v-model="articleData.taste" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
 
+      <h3>분위기</h3>
+      <star-rating v-model="articleData.atmosphere" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+      <h3>가격</h3>
+      <star-rating v-model="articleData.price" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
     <br><br>
     <div class="twobuttons">
       <button class="create_button" style="margin-right:2px;" v-if="!isUpdate || isTemporary"
@@ -157,12 +176,14 @@
   // import Map from '@/components/common/Map.vue'
   import '@/assets/css/modal.css'
   import '@/assets/css/checkbox.css'
+  import StarRating from 'vue-star-rating'
 
 
   export default {
     name: 'Create',
     components: {
       Editor,
+      StarRating,
       // Map
     },
     data() {
@@ -178,6 +199,9 @@
           userid: this.$cookies.get('auth-token'),
           url: '',
           placename: '',
+          price: 0,
+          taste: 0,
+          atmosphere: 0,
         },
         hashtags: [],
 
@@ -196,7 +220,7 @@
         isTemporaryModal: false,
         subarticles: [],
 
-        coordinate:'',
+        coordinate: '',
 
       }
     },
@@ -274,11 +298,11 @@
         this.ps = new kakao.maps.services.Places();
 
         console.log(this.map.getCenter());
-       
-        
 
 
-        
+
+
+
       },
 
 
@@ -609,7 +633,7 @@
         // else{
         //   alert('음식점 위치 안찍으면 죽는다')
         // }
-        
+
 
 
 
@@ -701,25 +725,26 @@
         console.log("쒸")
         // this.map.relayout() ;
         this.initMap();
-         (function (abc){
+        (function (abc) {
           kakao.maps.event.addListener(abc.map, 'center_changed', function () {
-          
 
 
-          // 지도의 중심좌표를 얻어옵니다 
-          var latlng = abc.map.getCenter();
-          console.log(latlng)
-          if(latlng.getLat()>=37.51 || latlng.getLat()<=37.4 || latlng.getLng()<=127.01 || latlng.getLng()>=127.06){
-            alert("역삼동을 벗어났습니다.")
-            abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
 
-          }
+            // 지도의 중심좌표를 얻어옵니다 
+            var latlng = abc.map.getCenter();
+            console.log(latlng)
+            if (latlng.getLat() >= 37.51 || latlng.getLat() <= 37.4 || latlng.getLng() <= 127.01 || latlng
+              .getLng() >= 127.06) {
+              alert("역삼동을 벗어났습니다.")
+              abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
+
+            }
 
 
-        });
+          });
 
         })(this)
-        
+
       }
     },
   }
@@ -813,8 +838,9 @@
     font-weight: bold;
     padding-left: .5em;
   }
-  .modaltitle{
-    text-align:center;
+
+  .modaltitle {
+    text-align: center;
 
   }
 
