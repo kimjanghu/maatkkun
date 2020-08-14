@@ -102,16 +102,16 @@ public class PostController {
 
 
     //window 환경
-    // final String path = "C:\\Users\\images\\";
+    final String path = "C:\\Users\\images\\";
     //ec2 환경
-    final String path = "/home/ubuntu/images/";
+    // final String path = "/home/ubuntu/images/";
 
     
     final String WEB_DRIVER_ID = "webdriver.chrome.driver";
     // window 환경
-    // final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
+    final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
     // ec2 환경
-    final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
+    // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
     
     // @ApiOperation(value = "업데이트", notes = "회원정보 업데이트 API")
     // @ApiImplicitParams({
@@ -171,18 +171,30 @@ public class PostController {
                 // @ApiImplicitParam(name = "createDate", value = "생성일", dataType = "Date", defaultValue = "현재시간"),
         })
     public ResponseEntity<Object> register(@Valid @RequestBody final Post post){
+        System.out.println("================================");
 
+        System.out.println(post.getTaste());
+        System.out.println(post.getAtmosphere());
+        System.out.println(post.getPrice());
+        
+
+       
+        double starAvg = (Double.parseDouble(post.getTaste()) + 
+                        Double.parseDouble(post.getAtmosphere()) + 
+                        Double.parseDouble(post.getPrice()))/3;
+        
+
+        System.out.println("================================");
+        
         HashMap<String,String> hm = crawling(post.getUrl());
-
-        post.setStarpoint(hm.get("star"));
+        post.setStarpoint((Math.round(starAvg*10)/10.0)+"");
         post.setNickname(userService.getUser(post.getUserid()).getNickname());
 
         ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
         
-        System.out.println("================================");
+        
         String s = service.getTopNum()+"";
         vop.set(s, 0);
-        System.out.println("================================");
 
         final ArrayList<String> srcAr = new ArrayList<String>();
 
@@ -201,7 +213,6 @@ public class PostController {
 
         }
         post.setContent(body.html() +"=/.=/."+hm.get("menu"));
-        System.out.println(post.getContent());
 
         if(service.register(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
