@@ -46,17 +46,14 @@ public class SocketController {
         String status = socketVO.getStatus();
 
         if(status.equals("in")){
-            System.out.println("in");
             vop.set(postid, vop.get(postid) + 1);
         }
         else if(status.equals("out")){
-            System.out.println("out");
             if(vop.get(postid) > 0){
                 vop.set(postid, vop.get(postid) - 1);
             }
         }
         else if(status.equals("list")){
-            System.out.println("list");
         }
         HashMap<String,Integer> hm = new HashMap<>();
 

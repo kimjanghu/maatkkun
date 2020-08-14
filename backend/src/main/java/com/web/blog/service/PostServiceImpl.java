@@ -79,5 +79,11 @@ public class PostServiceImpl implements PostService {
         postdao.upHit(postId);
     }
 
+    @Override
+    public List<Post> getPostedListByStarpoint() {
+        // TODO Auto-generated method stub
+        return postdao.getPostedListByStarpoint();
+    }
+
     
 }

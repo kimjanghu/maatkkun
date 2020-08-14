@@ -18,5 +18,6 @@ public interface PostService {
     List<Post> getPostedList(int userId);
     List<Post> getPostedListByLikes();
     List<Post> getPostedListByHits();
+    List<Post> getPostedListByStarpoint();
     void upHit(int postId);
 }   

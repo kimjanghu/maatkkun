@@ -8,7 +8,27 @@
       <div class="box-container">
         <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
         <Like :article="article" />
-        <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>
+        <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+
+      <h3>맛</h3>
+      <star-rating v-model="article.taste" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" :read-only="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+
+      <h3>분위기</h3>
+      <star-rating v-model="article.atmosphere" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" :read-only="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+      <h3>가격</h3>
+      <star-rating v-model="article.price" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true"  :read-only="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+        <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>  
         <p class="post-date">{{ article.createDate }}</p>
         <!-- <div v-if="isLoggedIn" class="post-like-wrap">
           <i ref="postId" v-if="included" @click="change(); checkLike(article);"
@@ -27,7 +47,7 @@
         <p class="content-text">Content</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content[0] != null" :initialValue="content[0]" />
+            <Viewer v-if="content != null" :initialValue="content" />
           </p>
         </div>
         
@@ -35,7 +55,7 @@
         <p class="content-text">Menu</p>
         <div style="margin-top:3px;">
           <p style="text-align:center;">
-            <Viewer v-if="content[1] != null" :initialValue="content[1]" />
+            <Viewer v-if="menu != null" :initialValue="menu" />
           </p>
         </div>
 
@@ -75,6 +95,7 @@ import SERVER from '@/api/drf'
 import Comment from '@/components/common/Comment.vue'
 import Like from '@/components/common/Like.vue'
 import '@/assets/css/modal.css'
+import StarRating from 'vue-star-rating'
 
 
 export default {
@@ -82,12 +103,14 @@ export default {
   components: {
     Viewer,
     Comment,
-    Like
+    Like,
+    StarRating,
   },
   data() {
     return {
       SERVER_URL: process.env.VUE_APP_API_URL,
       content: null,
+      menu:null,
       loginUser: '',
       articleId: this.$route.params.id,
       article: null,
@@ -220,7 +243,8 @@ export default {
       axios.get(this.SERVER_URL + `${SERVER.ROUTES.detail}?postId=${+this.articleId}`)
         .then(res => {
           this.article = res.data
-          this.content = this.article.content.split('=/.=/.')
+          this.content = this.article.content
+          this.menu = this.article.menu
           // console.log(this.content)
           console.log(this.content.split('=/.=/.'))
           // console.log(res.data)

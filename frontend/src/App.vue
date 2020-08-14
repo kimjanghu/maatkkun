@@ -49,7 +49,7 @@ export default {
     this.connectWebsocket()
     let url = this.$route.name
     this.checkUrl(url)
-    // this.getArticles()
+    this.getArticles()
   },
   mounted() {
   },

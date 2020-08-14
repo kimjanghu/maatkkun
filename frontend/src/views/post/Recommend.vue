@@ -265,6 +265,8 @@
             },
             initTmap() {
                 this.select();
+                this.directions=[];
+                this.listnumber=0;
                 var container = document.getElementById('mapmap')
                 container.innerHTML= null;
                
