@@ -134,11 +134,11 @@ public class PostController {
         final List<Integer> commentList = new ArrayList<>();
         
         
-        ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        // ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
-            String pp = post.getPostId()+"";
-            vop.set(pp, 0);
+            // String pp = post.getPostId()+"";
+            // vop.set(pp, 0);
 
             final Document doc = Jsoup.parseBodyFragment(post.getContent());
             final Elements dd = doc.select("img");
