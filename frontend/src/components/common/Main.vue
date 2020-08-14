@@ -23,12 +23,17 @@
       </div>
     </div>
 
-    <div class="wrapB">
-      <button class="create_button" @click="goRecommend">
-        추천 받아보실래요?
-      </button>
-      <br><br>
 
+    <div style="position:relative;">
+
+  <img
+    :src="imageCandidate"
+    alt="Food"
+    style="width:100%; height:400px;"
+  />
+
+    <div style="position:absolute;left:15%;bottom: 40%;width: 70%;">
+      
       <input type="text" v-model="searchKeyword" id="myInput" @keyup.enter="moveSearchPage(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
       <br>
       <!-- <div class="post-list-link">
@@ -42,6 +47,12 @@
           <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
         </div>
       </div> -->
+      <button class="create_button" @click="goRecommend">
+        추천 받아보실래요?
+      </button>
+      <br><br>
+
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +61,7 @@
 import { mapActions, mapState } from 'vuex'
 import constants from '@/lib/constants.js'
 import Loading from '@/components/common/Loading.vue'
+import '@/assets/css/style.css'
 
 
 export default {
@@ -68,7 +80,8 @@ export default {
       isArrow: false,
       isBestPost: false,
       articles: null,
-      displayRecvList: []
+      displayRecvList: [],
+      imageCandidate:'',
     }
   },
   computed: {
@@ -76,7 +89,16 @@ export default {
   },
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
-    changeDisplay() {
+    selectPicture(){
+      var pizza = '../../assets/img/pizza.jpg'
+      var eclair = '../../assets/img/eclair.jpg'
+      var steak = '../../assets/img/steak.jpg'
+      var candidates=[];
+      candidates.push(pizza,eclair,steak)
+      this.imageCandidate = candidates[Math.floor(Math.random()*(2-0+1)) + 0]
+      console.log(this.imageCandidate)
+    },
+    changeDisplay(){
       if (!this.isArrow) {
         this.isArrow = true,
         this.isBestPost = true
@@ -115,6 +137,7 @@ export default {
   created() {
   },
   mounted() {
+    this.selectPicture();
     setTimeout(() => {
       this.sendPostId({ articleId: null, status: 'list' })
         .then(() => {
@@ -257,4 +280,35 @@ export default {
   display: flex;
   justify-content: center;
 }
+header{
+  display: block;
+}
+
+.picture{
+  background-image: url('../../assets/img/pizza.jpg');
+  overflow:hidden;
+
+  position: relative;
+background-position: center;
+  background-size:cover;
+
+  padding-top:300px;
+
+
+
+ 
+
+}
+.picture:before{
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+
+    width: 100%;
+}
+
 </style>

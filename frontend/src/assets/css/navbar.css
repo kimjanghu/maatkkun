@@ -120,7 +120,4 @@
 #navbar .right .login-component .profile .menu li:last-of-type {
   border-bottom: none;
 }
-
-#navbar + div {
-  padding-top: 30px;
-}
+  
