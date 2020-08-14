@@ -691,6 +691,9 @@
         this.articleData.userid = this.preArticleData.userid
         this.articleData.url = this.preArticleData.url
         this.articleData.placename = this.preArticleData.placename
+        this.articleData.price = this.preArticleData.price
+        this.articleData.atmosphere = this.preArticleData.atmosphere
+        this.articleData.taste = this.preArticleData.taste
       }
       this.changeMain(false)
     },

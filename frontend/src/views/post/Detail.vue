@@ -8,7 +8,27 @@
       <div class="box-container">
         <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
         <Like :article="article" />
-        <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>
+        <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+
+      <h3>맛</h3>
+      <star-rating v-model="article.taste" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+
+      <h3>분위기</h3>
+      <star-rating v-model="article.atmosphere" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
+      <h3>가격</h3>
+      <star-rating v-model="article.price" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
+        :rounded-corners="true" v-bind:star-size="40">
+      </star-rating>
+    </div>
+        <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>  
         <p class="post-date">{{ article.createDate }}</p>
         <!-- <div v-if="isLoggedIn" class="post-like-wrap">
           <i ref="postId" v-if="included" @click="change(); checkLike(article);"
