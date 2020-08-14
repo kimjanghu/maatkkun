@@ -1,7 +1,6 @@
 <template>
   <div id="navbar" v-if="isNavbar">
     <h1>
-      <!-- <router-link @click.native="changeMain(true)" :to="{ name: constants.URL_TYPE.POST.MAIN }">MAAT KKUN</router-link> -->
       <a href="/">MAAT KKUN</a>
     </h1>
     <div class="right">
@@ -30,23 +29,29 @@ export default {
       type: Boolean
     }
   },
+  data() {
+    return {
+      constants,
+      loginId: this.$cookies.get('auth-token'),
+      nickname: null
+    }
+  },
   computed: {
     ...mapGetters(['isLoggedIn'])
   },
   watch: {},
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
-  },
-  data() {
-    return {
-      constants,
-      loginId: this.$cookies.get('auth-token'),
-      nickname: JSON.parse(window.localStorage.getItem('userInfo')).nickname
+    setNickname() {
+      const nickname = JSON.parse(window.localStorage.getItem('userInfo'))
+      if (nickname) {
+        this.nickname = nickname.nickname
+      }
     }
   },
   created() {
+    this.setNickname()
   },
-  
   mounted() {
   },
   updated() {
