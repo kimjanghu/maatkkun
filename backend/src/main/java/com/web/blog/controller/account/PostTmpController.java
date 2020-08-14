@@ -66,9 +66,9 @@ import javax.xml.bind.DatatypeConverter;
 public class PostTmpController {
     
     //window 환경
-    final String path = "C:\\Users\\images\\";
+    // final String path = "C:\\Users\\images\\";
     //ec2 환경
-    // final String path = "/home/ubuntu/images/";
+    final String path = "/home/ubuntu/images/";
 
     @Autowired
     PostTmpServiceImpl service;
