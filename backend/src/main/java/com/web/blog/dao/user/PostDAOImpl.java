@@ -85,5 +85,10 @@ public class PostDAOImpl implements PostDAO {
         sqlSession.update("postMapper.upHit",postId);
     }
 
+    @Override
+    public List<Post> getPostedListByStarpoint() {
+        return sqlSession.selectList("postMapper.getPostedListByStrapoint");
+    }
+
     
 }

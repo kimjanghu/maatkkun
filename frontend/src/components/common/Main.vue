@@ -1,35 +1,47 @@
 <template>
-  <div v-if="isMain">
-    <div class="best-post">
-      <h3 class="best-post-main">MAAT KKUN Best</h3>
-      <hr>
-      
-      <div v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
-        <p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ index+1 }}. {{ recv[0].title }}</router-link></p>
+  <div style="padding-top: 0;" v-if="isMain">
+    <div class="best-post-area" @mouseover="changeDisplay()" @mouseout="changeDisplay()">
+      <div>
+        <i 
+          class="fas fa-chevron-circle-up fa-2x arrow" 
+          :class="{ active: isArrow }" 
+        ></i>
       </div>
-      <div v-if="isLoading" class="main-loading">
-        <Loading />
+      <div 
+        class="best-post" 
+        id="best-post"
+        :class="{ active: isBestPost }">
+        <h3 class="best-post-main">MAAT KKUN Best</h3>
+        <hr>
+        <div class="tmp" v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
+          <p class="best-post-index">{{ index+1 }}</p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ recv[0].title }}</router-link>
+        </div>
+        <div v-if="isLoading" class="main-loading">
+          <Loading />
+        </div>
       </div>
     </div>
-    <div class="wrapB">
-      <button class="create_button" @click="goRecommend">
-        추천 받아보실래요?
-      </button>
-      <br><br>
 
-      <input type="text" v-model="searchKeyword" id="myInput" @keyup.enter="moveSearchPage(searchKeyword)" placeholder="#태그 #제목 #내용" title="Type in a name">
-      <br>
-      <!-- <div class="post-list-link">
-        <div class="main-link" :class="{ active: isRecentList }" @click.prevent="changeMainRecentList">
-          <router-link :to="{ name: constants.URL_TYPE.POST.MAIN }"><i class="far fa-clock fa-lg" style="margin-right: 5px;"></i>최신순</router-link>
+    <div class="wrapB">
+      <div id="main-food-area" class="main-food-area" ref="why">
+        <img :src="require(`../../assets/img/${foodImg}`)" alt="food-image" />
+        <div>
+          <input 
+            type="text" 
+            v-model="searchKeyword" 
+            class="myInput" 
+            id="myInput"
+            @keyup.enter="moveSearchPage(searchKeyword)" 
+            placeholder="#태그 #제목 #내용" 
+            title="Type in a name" 
+          />
+          <i class="fas fa-search fa-2x search-icon"></i>
         </div>
-        <div class="main-link" :class="{ active: isLikeList }" @click.prevent="changeMainLikeList">
-          <router-link :to="{ name: constants.URL_TYPE.POST.LIKE }"><i class="far fa-heart fa-lg" style="margin-right: 5px;"></i>좋아요</router-link>
-        </div>
-        <div class="main-link" :class="{ active: isHitList }" @click.prevent="changeMainHitList">
-          <router-link :to="{ name: constants.URL_TYPE.POST.VIEWS }"><i class="fas fa-fire-alt fa-lg" style="margin-right: 5px;"></i>조회순</router-link>
-        </div>
-      </div> -->
+  
+        <button class="recommend-button" @click="goRecommend">
+          Let's Go MAAT KKUN
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +65,9 @@ export default {
       isLikeList: true,
       isHitList: true,
       isLoading: true,
+      isArrow: false,
+      isBestPost: false,
+      foodImg: '',
       articles: null,
       displayRecvList: []
     }
@@ -62,6 +77,15 @@ export default {
   },
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
+    changeDisplay() {
+      if (!this.isArrow) {
+        this.isArrow = true,
+        this.isBestPost = true
+      } else {
+        this.isArrow = false,
+        this.isBestPost = false
+      }
+    },
     goRecommend() {
       this.$router.push('/post/kind')
     },
@@ -88,8 +112,23 @@ export default {
       })
       this.filterRecvList(tmpSortRecvList)
     },
+    selectImage() {
+      const imgArray = [
+        'steak.jpg',
+        'pizza.jpg',
+        'eclair.jpg'
+      ]
+      const image = imgArray[Math.floor(Math.random() * imgArray.length)];
+      this.setImage(image)
+    },
+    setImage(image) {
+      this.foodImg = ''
+      this.foodImg = image
+    }
   },
   created() {
+    // this.setImage()
+    this.selectImage()
   },
   mounted() {
     setTimeout(() => {
@@ -99,7 +138,7 @@ export default {
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
-          }, 100)
+          }, 300)
         })
     }, 200)
   },
@@ -109,17 +148,118 @@ export default {
 </script>
 
 <style scoped>
-.best-post {
-  position: fixed;
-  top: 20%;
-  right: 5%;
-  display: flex;
-  flex-direction: column;
-  width: 200px;
+.main-food-area {
+  /* z-index: -1; */
+  display: block;
+  position: relative;
+  /* background-image: url("../../assets/img/pizza.jpg"); */
+  /* background-image: none; */
+  /* background-size: cover;
+  width: 100%;
+  height: 500px; */
 }
-@media(max-width:1300px){
-  .best-post{
-    display:none;
+
+.main-food-area img {
+  background-size: cover;
+  width: 100%;
+  height: 500px;
+  border-bottom-left-radius : 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.main-food-area::after {
+  /* z-index: 0; */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-bottom-left-radius : 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.recommend-button {
+  z-index: 1;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  position: absolute;
+}
+
+.myInput {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  transform: translateX(-50%);
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 60%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 2px solid var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.search-icon {
+  position: absolute;
+  z-index: 3;
+  top: 51.5%;
+  right: 23%;
+  color: var(--secondary-color);
+}
+
+.best-post-area {
+  z-index: 100;
+  position: fixed;
+  bottom: 12%;
+  right: 5%;
+  width: 350px;
+}
+
+.tmp {
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transition: transform .3s ease-in;
+}
+
+.arrow.active {
+  transform: rotate(-90deg)
+}
+
+.best-post {
+  /* display: flex; */
+  display: none;
+  width: 300px;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.best-post.active {
+  display: flex;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s;
+  -webkit-animation: fadein 1s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -127,12 +267,19 @@ export default {
   margin: 1rem auto;
   font-size: 20px;
   color: var(--primary-color);
+  text-shadow: 1px 2px 2px var(--secondary-color);
 }
 
 .best-post div p {
   word-break: normal;
   margin: 7px 1rem;
   font-size: 13px;
+}
+
+.best-post-title {
+  /* font-weight: bold; */
+  /* text-shadow: 1px 1px 1px var(--primary-color); */
+  text-shadow: 1px 1px 1px gray;
 }
 
 .best-post-title:hover {
@@ -142,6 +289,14 @@ export default {
 .best-post hr {
   width: 100%;
   margin-bottom: 5px;
+  border-bottom: 2px solid rgba(200, 200, 200, 0.4);
+}
+
+.best-post-index {
+  border: 2px solid var(--primary-color);
+  padding: 2px;
+  font-weight: bold;
+  /* color: var(--primary-color) */
 }
 
 .post-list-link {
@@ -162,15 +317,7 @@ export default {
 }
 
 #myInput {
-  box-sizing: border-box;
-  background-image: url('/css/searchicon.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  width: 100%;
-  font-size: 16px;
-  padding: 12px 20px 12px 40px;
-  border: 2px solid var(--primary-color);
-  margin-bottom: 12px;
+  
 }
 
 .main-loading {
