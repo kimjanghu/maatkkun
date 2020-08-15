@@ -52,7 +52,7 @@ export default {
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  color: #fff;
+  color: black;
   margin-left:5px;
   width:10%;
 }

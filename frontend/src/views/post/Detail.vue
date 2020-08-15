@@ -380,6 +380,7 @@ export default {
   padding: 5px 7px;
   background-color: var(--primary-color);
   border: none;
+  color:black;
 }
 
 .delete-button {

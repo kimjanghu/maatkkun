@@ -185,6 +185,7 @@ export default {
   bottom: 2.5rem;
   right: 2.5rem;
   position: absolute;
+  color:black;
 }
 
 .myInput {

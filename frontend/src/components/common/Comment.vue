@@ -149,7 +149,7 @@ export default {
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  color: #fff;
+  color: black;
   padding: 5px 7px;
 }
 .comment {
