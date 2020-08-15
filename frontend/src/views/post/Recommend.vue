@@ -10,7 +10,7 @@
         <div v-if="!isSeveral" id="map" style="width:100%;height:350px;"></div>
 
         <br />
-        <div class="post">
+        <div v-if="Object.keys(this.recommendList).length==1" class="post">
             <div class="wrapB">
                 <section class="recommend-list">
                     <div v-for="recommend in recommendList" :key="recommend.id">
@@ -49,6 +49,85 @@
                 </section>
             </div>
         </div>
+        <div v-if="Object.keys(this.recommendList).length==2" class="post">
+            <div class="wrapB">
+                <section class="second-list">
+                    <div v-for="recommend in recommendList" :key="recommend.id">
+                        <div class="post-card"> 
+                            <a @click="detailPage(recommend.postId)">
+                                <img :src="recommend.content"
+                                    :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
+                                    class="post-img" />
+                                <div class="contents">
+                                    <h3>{{recommend.title}}</h3>
+                                    <br>
+                                    <span class="date"><i class="far fa-user"></i> {{recommend.nickname}}</span>
+                                    <br>
+                                    <span class="date"><i class="far fa-clock"></i> {{recommend.createDate}}</span>
+                                    <br>
+                                    <span class="date"><i class="far fa-eye"></i> {{ recommend.hits }}</span>
+                                    <br>
+                                    <span class="date"><i class="fas fa-star"></i> {{ recommend.starpoint }}</span>
+                                    <br>
+                                    <div class="tag" v-for="(tag, index) in recommend.hashtag.split(',')"
+                                        :key="`hash_${index}`">
+                                        <span class="tag-btn"># {{ tag }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="writer-wrap">
+
+                                <div class="comment-like-wrap">
+                                    <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
+                                    <p style="margin-left: 5px;">{{ recommend.likes }} likes</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+            </div>
+        <div v-if="Object.keys(this.recommendList).length==3" class="post">
+            <div class="wrapB">
+                <section class="post-list">
+                    <div v-for="recommend in recommendList" :key="recommend.id">
+                        <div class="post-card"> 
+                            <a @click="detailPage(recommend.postId)">
+                                <img :src="recommend.content"
+                                    :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
+                                    class="post-img" />
+                                <div class="contents">
+                                    <h3>{{recommend.title}}</h3>
+                                    <br>
+                                    <span class="date"><i class="far fa-user"></i> {{recommend.nickname}}</span>
+                                    <br>
+                                    <span class="date"><i class="far fa-clock"></i> {{recommend.createDate}}</span>
+                                    <br>
+                                    <span class="date"><i class="far fa-eye"></i> {{ recommend.hits }}</span>
+                                    <br>
+                                    <span class="date"><i class="fas fa-star"></i> {{ recommend.starpoint }}</span>
+                                    <br>
+                                    <div class="tag" v-for="(tag, index) in recommend.hashtag.split(',')"
+                                        :key="`hash_${index}`">
+                                        <span class="tag-btn"># {{ tag }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="writer-wrap">
+
+                                <div class="comment-like-wrap">
+                                    <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
+                                    <p style="margin-left: 5px;">{{ recommend.likes }} likes</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+        
 
         <button class="create_button" style="margin-top:2px;" @click.prevent="recommendToMe();initTmap();">다른
             메뉴를 추천해주세요!</button>
@@ -642,5 +721,99 @@
   box-sizing: border-box;
   border-top: none;
 }
+.post .second-list {
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+  @media(max-width:745px){
+      .post .second-list{
+           width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 20px;
+      }
+  }
+   .post .second-list>div .post-card {
+  /* border: 2px solid var(--secondary-color); */
+  margin:0 auto;
+  margin-bottom:15px;
+  border-radius: 10px;
+  width: 100%;
+  float: center;
+}
 
+.post .second-list>div .post-card:hover {
+  box-shadow: 0 0 7px 3px var(--primary-color);
+  transition: transform 0.3s ease-in;
+  transform: translateY(-7px);
+}
+
+.post .second-list>div .post-card .post-img {
+  width: 100%;
+  float: left;
+  border-radius: 10px 10px 0 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* border: 1px solid #000; */
+  height: 200px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.post .second-list>div .post-card .contents {
+  width: 100%;
+  float: left;
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  border-top: none;
+}
+
+.post .second-list>div .post-card .contents h3 {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  word-wrap: normal;
+  font-size: 1em;
+  font-weight: 600;
+  height: 1.5em;
+}
+
+.post .second-list>div .post-card .contents p.content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.813em;
+  height: 3.5em;
+}
+
+.post .second-list>div .post-card .contents span {
+  float: right;
+  font-size: 0.813em;
+  margin-top: 2px;
+  margin-left: 5px;
+}
+
+.post .second-list>div .post-card .writer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid #000;
+  border-radius: 0 0 10px 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-top: none;
+}
 </style>
