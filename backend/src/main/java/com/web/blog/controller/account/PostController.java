@@ -102,16 +102,16 @@ public class PostController {
 
 
     //window 환경
-    // final String path = "C:\\Users\\images\\";
+    final String path = "C:\\Users\\images\\";
     //ec2 환경
-    final String path = "/home/ubuntu/images/";
+    // final String path = "/home/ubuntu/images/";
 
     
     final String WEB_DRIVER_ID = "webdriver.chrome.driver";
     // window 환경
-    // final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
+    final String WEB_DRIVER_PATH = "C:\\Users\\multicampus\\Desktop\\sel\\chromedriver.exe";
     // ec2 환경
-    final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
+    // final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
     
     // @ApiOperation(value = "업데이트", notes = "회원정보 업데이트 API")
     // @ApiImplicitParams({

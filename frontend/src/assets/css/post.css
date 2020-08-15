@@ -128,20 +128,6 @@
   align-items: center;
 }
 
-/* .post .post-list > div .post-card .writer-wrap * {
-  font-size: 1em;
-  cursor: pointer;
-}
-.post .post-list > div .post-card .writer-wrap div {
-  height:0px;
-}
-.post .post-list > div .post-card .writer-wrap a {
-  float: left;
-}
-
-.post .post-list > div .post-card .writer-wrap span {
-  float: right;
-} */
 
 .post.post-temporary {
   margin-left: 0;

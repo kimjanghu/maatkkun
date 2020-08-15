@@ -49,7 +49,7 @@
     <br>
 
     <div>
-      <Editor ref="toastuiEditor" :initialValue="articleData.content" />
+      <Editor ref="toastuiEditor" :initialValue="articleData.content" initialEditType="wysiwyg" />
     </div>
 
     <!-- <Map /> -->
@@ -554,7 +554,10 @@
           alert('내용을 입력해주세요')
         } else if (!this.articleData.lat || !this.articleData.lon) {
           alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
-        } else {
+        } else if(!this.isNotPng()){
+          alert("PNG형식은 지원하지 않습니다.")
+        }
+        else {
           const check = confirm('글을 제출하시겠습니까?')
           if (check) {
             const config = {

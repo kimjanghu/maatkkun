@@ -12,9 +12,9 @@
         <br />
         <div class="post">
             <div class="wrapB">
-                <section class="post-list">
+                <section class="recommend-list">
                     <div v-for="recommend in recommendList" :key="recommend.id">
-                        <div class="post-card">
+                        <div class="post-card"> 
                             <a @click="detailPage(recommend.postId)">
                                 <img :src="recommend.content"
                                     :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
@@ -556,4 +556,91 @@
         border-radius: 10px;
         color: #000000;
     }
+    .post .recomend-list {
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+    display: grid;
+    
+    grid-gap: 30px;
+
+  }
+  .post .recommend-list>div .post-card {
+  /* border: 2px solid var(--secondary-color); */
+  margin:0 auto;
+  margin-bottom:15px;
+  border-radius: 10px;
+  width: 80%;
+  float: center;
+}
+
+.post .recommend-list>div .post-card:hover {
+  box-shadow: 0 0 7px 3px var(--primary-color);
+  transition: transform 0.3s ease-in;
+  transform: translateY(-7px);
+}
+
+.post .recommend-list>div .post-card .post-img {
+  width: 100%;
+  float: left;
+  border-radius: 10px 10px 0 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* border: 1px solid #000; */
+  height: 200px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.post .recommend-list>div .post-card .contents {
+  width: 100%;
+  float: left;
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  border-top: none;
+}
+
+.post .recommend-list>div .post-card .contents h3 {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  word-wrap: normal;
+  font-size: 1em;
+  font-weight: 600;
+  height: 1.5em;
+}
+
+.post .recommend-list>div .post-card .contents p.content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.813em;
+  height: 3.5em;
+}
+
+.post .recommend-list>div .post-card .contents span {
+  float: right;
+  font-size: 0.813em;
+  margin-top: 2px;
+  margin-left: 5px;
+}
+
+.post .recommend-list>div .post-card .writer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid #000;
+  border-radius: 0 0 10px 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-top: none;
+}
+
 </style>
