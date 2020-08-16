@@ -5,7 +5,7 @@ import cookies from 'vue-cookies'
 import router from '@/router'
 import axios from 'axios'
 import SERVER from '@/api/drf'
-// import constants from '@/lib/constants'
+import constants from '@/lib/constants'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
@@ -13,6 +13,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    constants,
     authToken: cookies.get('auth-token'),
     articles: [],
     likeArticles: [],
@@ -21,17 +22,16 @@ export default new Vuex.Store({
     recvList: [],
     socketStatus: null,
     postInfo: null,
-    isMain: true
+    isMain: true,
+    isSignup: false
   },
   getters: {
-    
     isLoggedIn: state => !!state.authToken,
     config: state => ({
       headers: {
         Authorization: `Token ${state.authToken}`
       },
     })
-    
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -41,6 +41,9 @@ export default new Vuex.Store({
     SET_USERINFO(state, userInfo) {
       state.userInfo = userInfo
       window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
+    },
+    SET_SIGNUP(state, check) {
+      state.isSignup = check
     },
 
 
@@ -70,8 +73,7 @@ export default new Vuex.Store({
     },
     SET_POSTINFO(state, post) {
       state.post = post
-    },
-    
+    }, 
   },
   actions: {
     // User
@@ -92,10 +94,11 @@ export default new Vuex.Store({
         alert('인증번호를 다시 확인해주세요');
       } else {
         axios.post(process.env.VUE_APP_API_URL + SERVER.ROUTES.signup, signupInfo.signupData)
-          .then(res => {
-            commit('SET_TOKEN', res.data.uid)
-            alert('Welcome blog MAAT KKUN');
-            router.push('/');
+          .then(() => {
+            commit('SET_TOKEN', null)
+            cookies.remove('auth-token')
+            alert('Welcome blog MAAT KKUN')
+            router.push({ name: constants.URL_TYPE.USER.LOGIN })
           })
           .catch(err => alert(err));
       }
