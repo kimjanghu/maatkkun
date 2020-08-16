@@ -140,26 +140,29 @@ export default {
       }
     },
     emitEditUser() {
-      if (this.changeData.changePassword !== this.changeData.confirmPassword) {
-        alert('비밀번호를 확인해주세요')
-        return;
-      }
-      if (!this.changeData.changePassword.trim()) {
-        this.changeData.changePassword = this.userInfo.password
-        this.changeData.confirmPassword = this.userInfo.passwordConfirm
-      } 
-      if (!this.changeData.changeNickname.trim()) {
-        this.changeData.changeNickname = this.userInfo.nickname
-      }
-      if (!this.changeData.introduction.trim()) {
-        this.changeData.introduction = this.userInfo.content
-      }
-      if (
-        this.changeData.introduction ||
-        this.changeData.changePassword ||
-        this.changeData.changeNickname
-      ) {
-        this.$emit('edit-user-data', this.changeData)
+      const check = confirm('정말 수정하시겠습니까?')
+      if (check) {
+        if (this.changeData.changePassword !== this.changeData.confirmPassword) {
+          alert('비밀번호를 확인해주세요')
+          return;
+        }
+        if (!this.changeData.changePassword.trim()) {
+          this.changeData.changePassword = this.userInfo.password
+          this.changeData.confirmPassword = this.userInfo.passwordConfirm
+        } 
+        if (!this.changeData.changeNickname.trim()) {
+          this.changeData.changeNickname = this.userInfo.nickname
+        }
+        if (!this.changeData.introduction.trim()) {
+          this.changeData.introduction = this.userInfo.content
+        }
+        if (
+          this.changeData.introduction ||
+          this.changeData.changePassword ||
+          this.changeData.changeNickname
+        ) {
+          this.$emit('edit-user-data', this.changeData)
+        }
       }
     },
     dropUser(){

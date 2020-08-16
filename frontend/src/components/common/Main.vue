@@ -14,7 +14,12 @@
         <h3 class="best-post-main">MAAT KKUN Best</h3>
         <hr>
         <div class="tmp" v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
-          <p class="best-post-index">{{ index+1 }}</p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ recv[0].title }}</router-link>
+          <p class="best-post-index">{{ index+1 }}</p>
+          <router-link 
+            class="best-post-title" 
+            :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }"
+          >{{ recv[0].title }} <span class="realtime-count">{{ recvList[recv[0].postId] }}</span>
+          </router-link>
         </div>
         <div v-if="isLoading" class="main-loading">
           <Loading />
@@ -127,7 +132,6 @@ export default {
     }
   },
   created() {
-    // this.setImage()
     this.selectImage()
   },
   mounted() {
@@ -140,7 +144,7 @@ export default {
             this.sortRecvList()
           }, 300)
         })
-    }, 200)
+    }, 300)
   },
   updated() {
   },
@@ -299,6 +303,10 @@ export default {
   /* color: var(--primary-color) */
 }
 
+.realtime-count {
+  color: var(--third-color);
+}
+
 .post-list-link {
   margin-top: 1rem;
   display: flex;
@@ -314,10 +322,6 @@ export default {
 .main-link.active {
   border: none;
   opacity: 0.2;
-}
-
-#myInput {
-  
 }
 
 .main-loading {

@@ -70,6 +70,7 @@ export default {
             "uid": this.$cookies.get(`auth-token`),
             "nickname": this.userInfo.nickname
           }))
+          alert('회원 정보가 수정되었습니다.')
           this.$router.push('/')
         })
         .catch(err => console.log(err))

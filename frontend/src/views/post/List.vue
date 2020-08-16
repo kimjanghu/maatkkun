@@ -21,7 +21,7 @@
                 <br>
                 <span class="date"><i class="far fa-eye"></i> {{ article.hits }}</span>
                 <br>
-                <span class="date"><i class="fas fa-star"></i> {{ article.starpoint }}</span>
+                <span class="date"><i class="fas fa-star" style="color: #F2E205;"></i> {{ article.starpoint }}</span>
                 <br>
                 <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
                   <span class="tag-btn"># {{ tag }}</span>

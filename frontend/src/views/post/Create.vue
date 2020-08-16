@@ -5,8 +5,8 @@
     <table class="table table-bordered">
       <tbody>
         <tr>
-          <th>제목</th>
-          <td><input type="text" v-model="articleData.title" placeholder="제목을 입력하세요. " name="subject" /></td>
+          <th><h3>제목</h3></th>
+          <td><input style="padding: 10px 1rem;" type="text" v-model="articleData.title" placeholder="제목을 입력하세요. " name="subject" /></td>
         </tr>
 
 
@@ -29,10 +29,10 @@
             </thead>
             <tbody>
               <tr v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
-                <th>{{subarticle.id}}</th>
-                <td>{{subarticle.title}}</td>
-                <td>{{subarticle.createDate}}</td>
-                <td>{{subarticle.nickname}}</td>
+                <th>{{ subarticle.id }}</th>
+                <td>{{ subarticle.title }}</td>
+                <td>{{ subarticle.createDate }}</td>
+                <td>{{ subarticle.nickname }}</td>
               </tr>
 
             </tbody>
@@ -88,19 +88,13 @@
 
 
     <div id="restaurant" class="form-group d-flex mt-3">
-      음식점 주소 <br>
       {{articleData.address}}
     </div>
     <div id="restaurant_name" class="form-group d-flex mt-3">
-      음식점 이름 <br>
       {{articleData.placename}}
     </div>
     <br>
     <br>
-
-
-
-
 
     <div class="checkbox-container" id="cook">
 
@@ -129,24 +123,22 @@
     </div>
     <br>
     <h2>평점을 남겨주세요!</h2>
-    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
-
-      <h3>맛</h3>
-      <star-rating v-model="articleData.taste" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
-        :rounded-corners="true" v-bind:star-size="40">
+    <div class="star-point">
+      <p class="star-title">맛</p>
+      <star-rating v-model="articleData.taste" :increment="0.5" :max-rating="5" active-color="#F2E205"
+        :rounded-corners="true" :star-size="20">
       </star-rating>
     </div>
-    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
-
-      <h3>분위기</h3>
-      <star-rating v-model="articleData.atmosphere" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
-        :rounded-corners="true" v-bind:star-size="40">
+    <div class="star-point">
+      <p class="star-title">분위기</p>
+      <star-rating v-model="articleData.atmosphere" :increment="0.5" :max-rating="5" active-color="#F2E205"
+        :rounded-corners="true" :star-size="20">
       </star-rating>
     </div>
-    <div style='display:flex;  justify-content:flex-start;align-items:center;'>
-      <h3>가격</h3>
-      <star-rating v-model="articleData.price" v-bind:increment="0.5" v-bind:max-rating="5" active-color="#ffd732"
-        :rounded-corners="true" v-bind:star-size="40">
+    <div class="star-point">
+      <p class="star-title">가격</p>
+      <star-rating v-model="articleData.price" :increment="0.5" :max-rating="5" active-color="#F2E205"
+        :rounded-corners="true" :star-size="20">
       </star-rating>
     </div>
     <br><br>
@@ -204,7 +196,6 @@
           atmosphere: 0,
         },
         hashtags: [],
-
         preArticleData: this.$route.params.articleData,
         newImgSrc: '',
         searchKeyword: "",
@@ -554,6 +545,12 @@
           alert('내용을 입력해주세요')
         } else if (!this.articleData.lat || !this.articleData.lon) {
           alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
+        } else if (!this.articleData.taste) {
+          alert('맛 별점을 체크해주세요.')
+        } else if (!this.articleData.atmosphere) {
+          alert('분위기 별점을 체크해주세요.')
+        } else if (!this.articleData.price) {
+          alert('가격 별점을 체크해주세요.')
         } else {
           const check = confirm('글을 제출하시겠습니까?')
           if (check) {
@@ -581,9 +578,15 @@
         if (!this.articleData.title) {
           alert('제목은 필수 항목입니다.')
         } else if (!this.articleData.content) {
-          alert('내용을 입력해주세요')
+          alert('내용을 입력해주세요.')
         } else if (!this.articleData.lat || !this.articleData.lon) {
           alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
+        } else if (!this.articleData.taste) {
+          alert('맛 별점을 체크해주세요.')
+        } else if (!this.articleData.atmosphere) {
+          alert('분위기 별점을 체크해주세요.')
+        } else if (!this.articleData.price) {
+          alert('가격 별점을 체크해주세요.')
         } else {
           const check = confirm('글을 제출하시겠습니까?')
           if (check) {
@@ -754,285 +757,295 @@
 </script>
 
 <style>
+.main-wrapper {
+  position: relative;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.main-wrapper:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.create_button {
+
+  border: none;
+  font-size: 1em;
+  font-weight: 400;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: #000000;
+}
+
+.twobuttons {
+  text-align: center;
+}
+
+ul,
+li {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+#mainWrapper {
+  margin: 0 auto;
+}
+
+#mainWrapper>table {
+  font: 100%;
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+#demo-table>caption {
+  text-align: center;
+  font-weight: bold;
+  font-size: 150%;
+  padding-bottom: 10px;
+  border-bottom: .1em solid #000;
+  margin-top: 10px;
+
+}
+
+#demo-table thead {
+  background-color: #FFD732;
+}
+
+
+/* basic shared rules */
+#demo-table th,
+#demo-table td {
+  text-align: center;
+  padding-right: .5em;
+}
+
+#demo-table tr {
+  border: 1px solid black;
+  height: 30px;
+}
+
+#demo-table th {
+  font-weight: bold;
+  padding-left: .5em;
+}
+
+.modaltitle {
+  text-align: center;
+
+}
+
+
+
+
+.map_wrap,
+.map_wrap * {
+  margin: 0;
+  padding: 0;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  font-size: 12px;
+}
+
+.map_wrap a,
+.map_wrap a:hover,
+.map_wrap a:active {
+  color: #000;
+  text-decoration: none;
+}
+
+.map_wrap {
+  position: relative;
+  width: 100%;
+  height: 500px;
+}
+
+#menu_wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  margin: 10px 0 30px 10px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  font-size: 12px;
+  border-radius: 10px;
+}
+
+.bg_white {
+  background: #fff;
+}
+
+#menu_wrap hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5F5F5F;
+  margin: 3px 0;
+}
+
+#menu_wrap .option {
+  text-align: center;
+}
+
+#menu_wrap .option p {
+  margin: 10px 0;
+}
+
+#menu_wrap .option button {
+  margin-left: 5px;
+}
+
+#placesList li {
+  list-style: none;
+}
+
+#placesList .item {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+}
+
+#placesList .item span {
+  display: block;
+  margin-top: 4px;
+}
+
+#placesList .item h5,
+#placesList .item .info {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#placesList .item .info {
+  padding: 10px 0 10px 55px;
+}
+
+#placesList .info .gray {
+  color: #8a8a8a;
+}
+
+#placesList .info .jibun {
+  padding-left: 26px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+}
+
+#placesList .info .tel {
+  color: #009900;
+}
+
+#placesList .item .markerbg {
+  float: left;
+  position: absolute;
+  width: 36px;
+  height: 37px;
+  margin: 10px 0 0 10px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+}
+
+#placesList .item .marker_1 {
+  background-position: 0 -10px;
+}
+
+#placesList .item .marker_2 {
+  background-position: 0 -56px;
+}
+
+#placesList .item .marker_3 {
+  background-position: 0 -102px
+}
+
+#placesList .item .marker_4 {
+  background-position: 0 -148px;
+}
+
+#placesList .item .marker_5 {
+  background-position: 0 -194px;
+}
+
+#placesList .item .marker_6 {
+  background-position: 0 -240px;
+}
+
+#placesList .item .marker_7 {
+  background-position: 0 -286px;
+}
+
+#placesList .item .marker_8 {
+  background-position: 0 -332px;
+}
+
+#placesList .item .marker_9 {
+  background-position: 0 -378px;
+}
+
+#placesList .item .marker_10 {
+  background-position: 0 -423px;
+}
+
+#placesList .item .marker_11 {
+  background-position: 0 -470px;
+}
+
+#placesList .item .marker_12 {
+  background-position: 0 -516px;
+}
+
+#placesList .item .marker_13 {
+  background-position: 0 -562px;
+}
+
+#placesList .item .marker_14 {
+  background-position: 0 -608px;
+}
+
+#placesList .item .marker_15 {
+  background-position: 0 -654px;
+}
+
+#pagination {
+  margin: 10px auto;
+  text-align: center;
+}
+
+#pagination a {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#pagination .on {
+  font-weight: bold;
+  cursor: default;
+  color: #777;
+}
+
+.star-point {
+  display: flex; 
+  align-items:center;
+}
+
+.star-title {
+  padding-top: 7px;
+  margin-right: 5px;
+}
+
+@media(min-width:560px) {
   .main-wrapper {
     position: relative;
     align-items: center;
-    width: 100%;
+    width: 60%;
     margin: 0 auto;
   }
-
-  @media(min-width:560px) {
-    .main-wrapper {
-      position: relative;
-      align-items: center;
-      width: 60%;
-      margin: 0 auto;
-    }
-  }
-
-  .main-wrapper:after {
-    content: "";
-    display: block;
-    padding-bottom: 100%;
-  }
-
-  .create_button {
-
-    border: none;
-    font-size: 1em;
-    font-weight: 400;
-    cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    color: #000000;
-  }
-
-  .twobuttons {
-    text-align: center;
-  }
-
-  ul,
-  li {
-    list-style: none;
-    text-align: center;
-    padding: 0;
-    margin: 0;
-  }
-
-  #mainWrapper {
-    margin: 0 auto;
-  }
-
-  #mainWrapper>table {
-    font: 100%;
-    width: 100%;
-
-    border-collapse: collapse;
-  }
-
-  #demo-table>caption {
-    text-align: center;
-    font-weight: bold;
-    font-size: 150%;
-    padding-bottom: 10px;
-    border-bottom: .1em solid #000;
-    margin-top: 10px;
-
-  }
-
-  #demo-table thead {
-    background-color: #FFD732;
-  }
-
-
-  /* basic shared rules */
-  #demo-table th,
-  #demo-table td {
-    text-align: center;
-    padding-right: .5em;
-  }
-
-  #demo-table tr {
-    border: 1px solid black;
-    height: 30px;
-  }
-
-  #demo-table th {
-    font-weight: bold;
-    padding-left: .5em;
-  }
-
-  .modaltitle {
-    text-align: center;
-
-  }
-
-
-
-
-  .map_wrap,
-  .map_wrap * {
-    margin: 0;
-    padding: 0;
-    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
-    font-size: 12px;
-  }
-
-  .map_wrap a,
-  .map_wrap a:hover,
-  .map_wrap a:active {
-    color: #000;
-    text-decoration: none;
-  }
-
-  .map_wrap {
-    position: relative;
-    width: 100%;
-    height: 500px;
-  }
-
-  #menu_wrap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 250px;
-    margin: 10px 0 30px 10px;
-    padding: 5px;
-    overflow-y: auto;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 1;
-    font-size: 12px;
-    border-radius: 10px;
-  }
-
-  .bg_white {
-    background: #fff;
-  }
-
-  #menu_wrap hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 2px solid #5F5F5F;
-    margin: 3px 0;
-  }
-
-  #menu_wrap .option {
-    text-align: center;
-  }
-
-  #menu_wrap .option p {
-    margin: 10px 0;
-  }
-
-  #menu_wrap .option button {
-    margin-left: 5px;
-  }
-
-  #placesList li {
-    list-style: none;
-  }
-
-  #placesList .item {
-    position: relative;
-    border-bottom: 1px solid #888;
-    overflow: hidden;
-    cursor: pointer;
-    min-height: 65px;
-  }
-
-  #placesList .item span {
-    display: block;
-    margin-top: 4px;
-  }
-
-  #placesList .item h5,
-  #placesList .item .info {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  #placesList .item .info {
-    padding: 10px 0 10px 55px;
-  }
-
-  #placesList .info .gray {
-    color: #8a8a8a;
-  }
-
-  #placesList .info .jibun {
-    padding-left: 26px;
-    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
-  }
-
-  #placesList .info .tel {
-    color: #009900;
-  }
-
-  #placesList .item .markerbg {
-    float: left;
-    position: absolute;
-    width: 36px;
-    height: 37px;
-    margin: 10px 0 0 10px;
-    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
-  }
-
-  #placesList .item .marker_1 {
-    background-position: 0 -10px;
-  }
-
-  #placesList .item .marker_2 {
-    background-position: 0 -56px;
-  }
-
-  #placesList .item .marker_3 {
-    background-position: 0 -102px
-  }
-
-  #placesList .item .marker_4 {
-    background-position: 0 -148px;
-  }
-
-  #placesList .item .marker_5 {
-    background-position: 0 -194px;
-  }
-
-  #placesList .item .marker_6 {
-    background-position: 0 -240px;
-  }
-
-  #placesList .item .marker_7 {
-    background-position: 0 -286px;
-  }
-
-  #placesList .item .marker_8 {
-    background-position: 0 -332px;
-  }
-
-  #placesList .item .marker_9 {
-    background-position: 0 -378px;
-  }
-
-  #placesList .item .marker_10 {
-    background-position: 0 -423px;
-  }
-
-  #placesList .item .marker_11 {
-    background-position: 0 -470px;
-  }
-
-  #placesList .item .marker_12 {
-    background-position: 0 -516px;
-  }
-
-  #placesList .item .marker_13 {
-    background-position: 0 -562px;
-  }
-
-  #placesList .item .marker_14 {
-    background-position: 0 -608px;
-  }
-
-  #placesList .item .marker_15 {
-    background-position: 0 -654px;
-  }
-
-  #pagination {
-    margin: 10px auto;
-    text-align: center;
-  }
-
-  #pagination a {
-    display: inline-block;
-    margin-right: 10px;
-  }
-
-  #pagination .on {
-    font-weight: bold;
-    cursor: default;
-    color: #777;
-  }
+}
 </style>
