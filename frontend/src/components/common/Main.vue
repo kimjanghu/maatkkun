@@ -14,7 +14,12 @@
         <h3 class="best-post-main">MAAT KKUN Best</h3>
         <hr>
         <div class="tmp" v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
-          <p class="best-post-index">{{ index+1 }}</p><router-link class="best-post-title" :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }">{{ recv[0].title }}</router-link>
+          <p class="best-post-index">{{ index+1 }}</p>
+          <router-link 
+            class="best-post-title" 
+            :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }"
+          >{{ recv[0].title }}  {{ recvList[recv[0].postId] }}
+          </router-link>
         </div>
         <div v-if="isLoading" class="main-loading">
           <Loading />
