@@ -4,7 +4,7 @@
       <p class="main-detail-page">MAAT GGUN Page</p>
       <div class="post-title">
         <p class="post-title-text">{{ article.title }}</p>
-        <p class="post-nickname">by <router-link :to="{ name: constants.URL_TYPE.USER.MYPAGE, params:{ id: article.userid }}">{{ article.nickname }}</router-link></p>
+        <p class="post-nickname">by <router-link class="nickname" :to="{ name: constants.URL_TYPE.USER.MYPAGE, params:{ id: article.userid }}">{{ article.nickname }}</router-link></p>
       </div>
       <div class="box-container">
         <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
@@ -349,6 +349,10 @@ export default {
 
 .post-nickname {
   margin: 0 0 1rem 1rem;
+}
+
+.post-nickname .nickname:hover {
+  color: var(--primary-color)
 }
 
 .post-date {
