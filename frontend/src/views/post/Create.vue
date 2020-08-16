@@ -1,6 +1,6 @@
 <template>
   <div class="main-wrapper">
-    <button class="create_button" @click.prevent="changeTemoporaryModal();getSubArticles()">임시저장 목록 가져오기</button>
+    <button class="create-btn" @click.prevent="changeTemoporaryModal(); getSubArticles();">임시저장 목록 가져오기</button>
     <br><br><br>
     <table class="table table-bordered">
       <tbody>
@@ -8,12 +8,10 @@
           <th><h3>제목</h3></th>
           <td><input style="padding: 10px 1rem;" type="text" v-model="articleData.title" placeholder="제목을 입력하세요. " name="subject" /></td>
         </tr>
-
-
       </tbody>
-
     </table>
-    <div v-show="isTemporaryModal" class="modal-container" id="temporaryModal">
+
+    <!-- <div v-show="isTemporaryModal" class="modal-container" id="temporaryModal">
       <div class="modal">
         <div class="modal" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         <div id="mainWrapper">
@@ -34,19 +32,31 @@
                 <td>{{ subarticle.createDate }}</td>
                 <td>{{ subarticle.nickname }}</td>
               </tr>
-
             </tbody>
           </table>
-
-
-
-
         </div>
+      </div>
+    </div> -->
+    <br>
 
-
+    <div v-show="isTemporaryModal" class="tmp-list">
+      <div class="tmp-list-title">
+        <i @click.prevent="changeTemoporaryModal()" class="fas fa-times fa-lg close"></i>
+        <p >임시저장 목록</p>
+      </div>
+      <hr>
+      <div class="tmp-list-content">
+        <div v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
+          <div class="tmp-list-info">
+            <p class="tmp-list-info-title" @click="detailPage(subarticle)">{{ subarticle.title }}</p>
+            <p>{{ subarticle.createDate }}</p>
+          </div>
+          <hr>
+        </div>
       </div>
     </div>
-    <br>
+
+    
 
     <div>
       <Editor ref="toastuiEditor" :initialValue="articleData.content" />
@@ -54,7 +64,7 @@
 
     <!-- <Map /> -->
     <br>
-    <button class="create_button" @click.prevent="changeModal">
+    <button class="create-btn" @click.prevent="changeModal">
       음식점 위치가 어디인가요?
     </button>
     <br>
@@ -143,10 +153,10 @@
     </div>
     <br><br>
     <div class="twobuttons">
-      <button class="create_button" style="margin-right:2px;" v-if="!isUpdate || isTemporary"
+      <button class="create-btn" style="margin-right:2px;" v-if="!isUpdate || isTemporary"
         @click="createArticle">작성하기</button>
-      <button class="create_button" v-if="!isUpdate && !isTemporary" @click="goTemporary">임시저장</button>
-      <button class="create_button" v-if="isUpdate" @click="updateArticle">수정하기</button>
+      <button class="create-btn" v-if="!isUpdate && !isTemporary" @click="goTemporary">임시저장</button>
+      <button class="create-btn" v-if="isUpdate" @click="updateArticle">수정하기</button>
     </div>
   </div>
 
@@ -770,7 +780,7 @@
   padding-bottom: 100%;
 }
 
-.create_button {
+.create-btn {
 
   border: none;
   font-size: 1em;
@@ -783,6 +793,63 @@
 
 .twobuttons {
   text-align: center;
+}
+
+.tmp-list {
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 10px;
+  width: 50%;
+  height: 60%;
+  overflow: auto;
+}
+
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.tmp-list-title {
+  margin: 1rem 0;
+}
+
+.tmp-list-title p {
+  text-align: center;
+  font-size: 20px;
+}
+
+.tmp-list hr {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  width: 97%;
+  margin: 0 auto;
+}
+
+.tmp-list-content div hr {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  width: 95%;
+  margin: 0 auto;
+}
+
+.tmp-list-info {
+  margin: 13px 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tmp-list-info p {
+  margin: 0 2rem;
+}
+
+.tmp-list-info-title:hover {
+  cursor: pointer;
+  color: var(--primary-color);
 }
 
 ul,
