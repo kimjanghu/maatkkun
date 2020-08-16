@@ -18,7 +18,7 @@
           <router-link 
             class="best-post-title" 
             :to="{ name: constants.URL_TYPE.POST.DETAIL, params:{ id: recv[0].postId } }"
-          >{{ recv[0].title }}  {{ recvList[recv[0].postId] }}
+          >{{ recv[0].title }} <span class="realtime-count">{{ recvList[recv[0].postId] }}</span>
           </router-link>
         </div>
         <div v-if="isLoading" class="main-loading">
@@ -303,6 +303,10 @@ export default {
   /* color: var(--primary-color) */
 }
 
+.realtime-count {
+  color: var(--third-color);
+}
+
 .post-list-link {
   margin-top: 1rem;
   display: flex;
@@ -318,10 +322,6 @@ export default {
 .main-link.active {
   border: none;
   opacity: 0.2;
-}
-
-#myInput {
-  
 }
 
 .main-loading {
