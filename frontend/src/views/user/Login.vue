@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="login-container">
-      <router-link @click.native="changeMain(true)" class="logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAAK KUUN</router-link>
+      <router-link @click.native="changeMain(true)" class="main-title logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAATKKUN</router-link>
       <div class="login">
         <div class="login-header">
           <h3 style="text-align: center;">login</h3>
@@ -92,7 +92,9 @@ export default {
   left: 50%;
   top: 10%;
   transform: translateX(-50%);
+  font-size: 3rem;
   cursor: pointer;
+  color: var(--primary-color);
 }
 
 .login-btn {
