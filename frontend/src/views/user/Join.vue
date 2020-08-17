@@ -67,7 +67,7 @@
             </div>
             
           
-            <input @click.prevent="signup(signupInfo)" type="submit" class="submit-btn" />
+            <input @click.prevent="signup(signupInfo)" type="submit" style="color:#000;" class="submit-btn" />
           </form>
         </div>
       </div>
@@ -283,7 +283,7 @@ input {
 
 .join-header {
   background: var(--primary-color);
-  color: #fff;
+  color: #000;
   padding: 10px;
 }
 
@@ -314,6 +314,7 @@ input {
   position: absolute;
   right: -2px;
   top: 0;
+  color:#000;
 }
 
 .form-control span {
