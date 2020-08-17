@@ -84,7 +84,8 @@ export default {
       listStatus: {
         isRecentList: false,
         isLikeList: true,
-        isHitList: true
+        isHitList: true,
+        isStarList: true
       }
     };
   },
@@ -154,9 +155,11 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: articleId }})
     },
     checkLikeList(res) {
-      const liked_list = res.data.likedpost.split(',').map(i=>parseInt(i))
-      const result = liked_list.slice(0,-1)
-      this.likedposts = result
+      if (res.data.likedpost) {
+        const liked_list = res.data.likedpost.split(',').map(i=>parseInt(i))
+        const result = liked_list.slice(0,-1)
+        this.likedposts = result
+      }
     },
     // connect() {
     //   const serverURL = "http://localhost:8080"
