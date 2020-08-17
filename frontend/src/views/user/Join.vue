@@ -1,7 +1,7 @@
 <template>
   <div id="join">
     <div class="join-container">
-      <router-link @click.native="changeMain(true)" class="logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAAK KUUN</router-link>
+      <router-link @click.native="changeMain(true)" class="main-title signup-logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAATKKUN</router-link>
       <div class="join">
         <div class="join-header">
           <h3 style="text-align: center;">회원가입</h3>
@@ -214,13 +214,15 @@ export default {
 </script>
 
 <style scope>
-.logo {
+.signup-logo {
   text-align: center;
   position: absolute;
   left: 50%;
   top: 10%;
   transform: translateX(-50%);
   cursor: pointer;
+  font-size: 3rem;
+  color: var(--primary-color) !important;
 }
 
 .join-btn {
@@ -247,34 +249,13 @@ input {
   width: 100%;
 }
 
-
-/* .form-control.success input {
-  border-color: var(--success-color);
-}
-
-.form-control.error input {
-  border-color: var(--error-color);
-}
-
-.form-control small {
-  color: var(--error-color);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  visibility: hidden;
-}
-
-.form-control.error small {
-  visibility: visible;
-} */
-
 .join-container .join {
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   position: absolute;
   overflow: hidden;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 100%;
@@ -289,7 +270,6 @@ input {
 
 .join-header h3 {
   margin: 0;
-
 }
 
 .join-content {
