@@ -16,11 +16,22 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
+  metaInfo() {
+    return { 
+      title: 'Hello, MAAK KKUN',
+      meta: [
+        { property: 'og:description', content: 'Hello, MAKK KKUN' },
+        { property: 'og:title', content: 'MAKK KKUN' },
+        { property: 'og:url', content: 'http://i3a609.p.ssafy.io/' },
+        { property: 'og:type', content: 'website' }
+      ]
+    }
+  },
   components: {
     Navbar,
     Main
   },
-  data: function() {
+  data() {
     return {
       isNavbar: true,
       constants

@@ -9,7 +9,9 @@ import PrettyCheckbox from 'pretty-checkbox-vue'
 import cors from 'cors'
 import VueMq from 'vue-mq'
 import ajax from 'vuejs-ajax'
+import VueMeta from 'vue-meta'
 
+Vue.use(VueMeta)
 Vue.use(VueCookies)
 Vue.use(ajax)
 Vue.use(cors)
