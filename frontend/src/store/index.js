@@ -18,6 +18,7 @@ export default new Vuex.Store({
     articles: [],
     likeArticles: [],
     hitArticles: [],
+    starArticles: [],
     searchArticles: [],
     recvList: [],
     socketStatus: null,
@@ -67,6 +68,9 @@ export default new Vuex.Store({
     },
     SET_HIT_ARTICLES(state, hitArticles) {
       state.hitArticles = hitArticles
+    },
+    SET_STAR_ARTICLES(state, starArticles) {
+      state.starArticles = starArticles
     },
     SET_SEARCH_ARTICLES(state, searchArticles) {
       state.searchArticles = searchArticles
@@ -149,6 +153,13 @@ export default new Vuex.Store({
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.hitList)
         .then(res => {
           commit('SET_HIT_ARTICLES', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    getStarArticles({ commit }) {
+      axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.starList)
+        .then(res => {
+          commit('SET_STAR_ARTICLES', res.data)
         })
         .catch(err => console.log(err))
     },
