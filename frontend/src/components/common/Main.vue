@@ -189,7 +189,10 @@ export default {
   bottom: 2.5rem;
   right: 2.5rem;
   position: absolute;
-  color:black;
+  color:#fff;
+  text-shadow: 3px 3px 3px var(--secondary-color);
+  /* color: var(--secondary-color); */
+  /* text-shadow: 3px 3px 3px var(--third-color); */
 }
 
 .myInput {
