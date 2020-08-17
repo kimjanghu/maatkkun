@@ -28,7 +28,8 @@
     </div>
 
     <div class="wrapB">
-      <div id="main-food-area" class="main-food-area" ref="why">
+      <div id="main-food-area" class="main-food-area">
+        <p class="main-title main-page-logo">MAATKKUN</p>
         <img :src="require(`../../assets/img/${foodImg}`)" alt="food-image" />
         <div>
           <input 
@@ -44,7 +45,7 @@
         </div>
   
         <button class="recommend-button" @click="goRecommend">
-          Let's Go MAAT KKUN
+          Let's Go MAATKKUN
         </button>
       </div>
     </div>
@@ -153,14 +154,19 @@ export default {
 
 <style scoped>
 .main-food-area {
-  /* z-index: -1; */
   display: block;
   position: relative;
-  /* background-image: url("../../assets/img/pizza.jpg"); */
-  /* background-image: none; */
-  /* background-size: cover;
-  width: 100%;
-  height: 500px; */
+}
+
+.main-page-logo {
+  z-index: 3;
+  position: absolute;
+  font-size: 4rem;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--primary-color);
+  /* text-shadow: 3px 4px 4px #fff; */
 }
 
 .main-food-area img {
@@ -172,7 +178,6 @@ export default {
 }
 
 .main-food-area::after {
-  /* z-index: 0; */
   content: '';
   position: absolute;
   top: 0;
@@ -199,7 +204,7 @@ export default {
   position: absolute;
   box-sizing: border-box;
   z-index: 2;
-  top: 50%;
+  top: 60%;
   left: 50%;
   width: 60%;
   transform: translateX(-50%);
@@ -215,7 +220,7 @@ export default {
 .search-icon {
   position: absolute;
   z-index: 3;
-  top: 51.5%;
+  top: 61.5%;
   right: 23%;
   color: var(--secondary-color);
 }
