@@ -103,6 +103,7 @@
 			content = #{content},
 			hashtag = #{hashtag},
 			address = #{address},
+			hits = #{hits},
 			likes = #{likes},
 			nickname = #{nickname},
 			create_data = default,

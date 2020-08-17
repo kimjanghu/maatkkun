@@ -23,7 +23,7 @@
               <label for="password">Password</label>
               <input type="password" id="password" v-model="loginData.password" placeholder="영문, 숫자 혼용 8자 이상" />
             </div>
-            <input @click.prevent="login(loginData)" type="submit" class="submit-btn" />
+            <input @click.prevent="login(loginData)" type="submit" class="submit-btn" style="color:#000;" />
           </form>
           <div class="add-option">
             <div class="wrap">
@@ -135,7 +135,7 @@ input {
 
 .login-header {
   background: var(--primary-color);
-  color: #fff;
+  color: #000;
   padding: 10px;
 }
 

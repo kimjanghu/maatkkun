@@ -140,18 +140,43 @@ public class PostController {
             // String pp = post.getPostId()+"";
             // vop.set(pp, 0);
 
-            final Document doc = Jsoup.parseBodyFragment(post.getContent());
-            final Elements dd = doc.select("img");
+            if(post.getContent() != null){
+                System.out.println("11111111111");
+                final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                final Elements dd = doc.select("img");
+                
+
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    post.setContent(idParseImage(id));       
+                }
+                else{
+                    post.setContent(null);
+                }
+            }
             
 
-            if(dd.size() > 0){
-                final Element element = dd.get(0);
-                final String id = element.attr("id");
-                post.setContent(idParseImage(id));       
-            }
-            else{
-                post.setContent(null);
-            }
+
+            // int i = ((int)(Math.random()*1000)+1);
+            // post.setHits(i);
+            // i = ((int)(Math.random()*100)+1);
+            // post.setLikes(i);
+
+            // double[] arr = {0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0};
+
+            // int a = ((int)(Math.random()*arr.length));
+            // post.setPrice(arr[a]+"");
+            // int b = ((int)(Math.random()*arr.length));
+            // post.setPrice(arr[b]+"");
+            // int c = ((int)(Math.random()*arr.length));
+            // post.setPrice(arr[c]+"");
+
+            // double d = ( arr[a] + arr[b] + arr[c])/3 ;
+            
+            // post.setStarpoint((Math.round(d*10)/10.0)+"");
+
+            // service.modify(post);
         }
         
         hm.put("comment", commentList);
@@ -248,17 +273,20 @@ public class PostController {
     public ResponseEntity<Object> modify(@Valid @RequestBody final Post post){
         final int topNum = post.getPostId();
         final ArrayList<String> srcAr = new ArrayList<String>();
-        final Document doc = Jsoup.parseBodyFragment(post.getContent());
-        final Element body = doc.body();
-        final Elements dd = doc.select("img");
-        for(int i = 0;i < dd.size() ; i++){
-            final Element element = dd.get(i);
-            final String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
-            srcAr.add(element.attr("src"));
-            element.attr("src","");
-            element.attr("id",filename);
+
+        if(post.getContent() != null){
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
+            for(int i = 0;i < dd.size() ; i++){
+                final Element element = dd.get(i);
+                final String filename = Integer.toString(topNum)+Integer.toString(post.getUserid())+Integer.toString(i);
+                srcAr.add(element.attr("src"));
+                element.attr("src","");
+                element.attr("id",filename);
+            }
+            post.setContent(body.html());
         }
-        post.setContent(body.html());
 
         if(service.modify(post)>0){
             for(int i = 0;i < srcAr.size() ; i++){
@@ -295,44 +323,48 @@ public class PostController {
         final Post post = service.showArticle(postId);
         service.upHit(postId);
 
-        final Document doc = Jsoup.parseBodyFragment(post.getContent());
-        final Element body = doc.body();
-        final Elements dd = doc.select("img");
-        
-        for(int i = 0;i < dd.size() ; i++){
-            final Element element = dd.get(i);
-            final String id = element.attr("id");
+        if(post.getContent() != null){
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
             
-            final File imagePath = new File(path+id+".jpg");
-            
-            FileInputStream fis = null;
-            
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            
-            
+            for(int i = 0;i < dd.size() ; i++){
+                final Element element = dd.get(i);
+                final String id = element.attr("id");
+                
+                final File imagePath = new File(path+id+".jpg");
+                
+                FileInputStream fis = null;
+                
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                
+                
 
-            int len = 0;
-            final byte[] buf = new byte[1024];
+                int len = 0;
+                final byte[] buf = new byte[1024];
 
-            try{
-                fis = new FileInputStream(imagePath);
+                try{
+                    fis = new FileInputStream(imagePath);
 
-                while((len = fis.read(buf)) != -1){
-                    baos.write(buf,0,len);
+                    while((len = fis.read(buf)) != -1){
+                        baos.write(buf,0,len);
+                    }
+
+                    final byte[] fileArray = baos.toByteArray();
+                    final byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
+                    element.attr("src","data:image/jpeg;base64, "+new String(baseIncodingBytes));
+
+                    baos.close();
+                    fis.close();
                 }
-
-                final byte[] fileArray = baos.toByteArray();
-                final byte[] baseIncodingBytes = Base64.encodeBase64(fileArray);
-                element.attr("src","data:image/jpeg;base64, "+new String(baseIncodingBytes));
-
-                baos.close();
-                fis.close();
+                catch(final Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
-            catch(final Exception e){
-                System.out.println(e.getMessage());
-            }
+            post.setContent(body.html());
         }
-        post.setContent(body.html());
+        
+        
         final Optional<Post> optPost = Optional.of(post);
 
         if(optPost.isPresent()){
@@ -360,40 +392,45 @@ public class PostController {
         ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
         redisTemplate.delete(postId+"");
         System.out.println("======================");
-        final Document doc = Jsoup.parseBodyFragment(post.getContent());
-        final Element body = doc.body();
-        final Elements dd = doc.select("img");
-        
-        for(int i = 0;i < dd.size() ; i++){
-            final Element element = dd.get(i);
-            final String id = element.attr("id");
-            final File imagePath = new File(path+id+".jpg");
-            imagePath.setReadable(false);
-            System.out.println(imagePath);
-            System.out.println(imagePath.canWrite());
+
+        if(post.getContent() != null){
+            final Document doc = Jsoup.parseBodyFragment(post.getContent());
+            final Element body = doc.body();
+            final Elements dd = doc.select("img");
             
-            if(imagePath.exists()){
-
-                if(imagePath.isDirectory()){
-                    System.out.println("디렉토리 입니다.");
+            for(int i = 0;i < dd.size() ; i++){
+                final Element element = dd.get(i);
+                final String id = element.attr("id");
+                final File imagePath = new File(path+id+".jpg");
+                imagePath.setReadable(false);
+                System.out.println(imagePath);
+                System.out.println(imagePath.canWrite());
+                
+                if(imagePath.exists()){
+    
+                    if(imagePath.isDirectory()){
+                        System.out.println("디렉토리 입니다.");
+                    }
+                    else{
+                        System.out.println("디렉토리가 아닙니다..");
+                    }
+    
+                    System.out.println("파일이 존재합니다.");
+                    if(imagePath.delete()){
+                        System.out.println("파일삭제 성공"); 
+                    }
+                    else{
+                        System.out.println("파일삭제 실패"); 
+                        } 
+                    }
+                else
+                {
+                    System.out.println("파일이 존재하지 않습니다."); 
                 }
-                else{
-                    System.out.println("디렉토리가 아닙니다..");
-                }
-
-                System.out.println("파일이 존재합니다.");
-                if(imagePath.delete()){
-                    System.out.println("파일삭제 성공"); 
-                }
-                else{
-                    System.out.println("파일삭제 실패"); 
-                    } 
-                }
-            else
-            {
-                System.out.println("파일이 존재하지 않습니다."); 
             }
         }
+
+       
 
         if(service.deletePost(postId)>0){
             
@@ -526,19 +563,22 @@ public class PostController {
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
 
+            if(post.getContent() != null){
 
-            final Document doc = Jsoup.parseBodyFragment(post.getContent());
-            final Element body = doc.body();
-            final Elements dd = doc.select("img");
             
+                final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                final Element body = doc.body();
+                final Elements dd = doc.select("img");
+                
 
-            if(dd.size() > 0){
-                final Element element = dd.get(0);
-                final String id = element.attr("id");
-                post.setContent(idParseImage(id));
-            }
-            else{
-                post.setContent(null);
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    post.setContent(idParseImage(id));
+                }
+                else{
+                    post.setContent(null);
+                }
             }
         }
         
@@ -567,21 +607,24 @@ public class PostController {
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
 
+            if(post.getContent() != null){
 
-            final Document doc = Jsoup.parseBodyFragment(post.getContent());
-            final Element body = doc.body();
-            final Elements dd = doc.select("img");
             
+                final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                final Element body = doc.body();
+                final Elements dd = doc.select("img");
+                
 
-            if(dd.size() > 0){
-                final Element element = dd.get(0);
-                final String id = element.attr("id");
-                
-                
-                post.setContent(idParseImage(id));
-            }
-            else{
-                post.setContent(null);
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    
+                    
+                    post.setContent(idParseImage(id));
+                }
+                else{
+                    post.setContent(null);
+                }
             }
         }
         
@@ -604,22 +647,24 @@ public class PostController {
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
 
+            if(post.getContent() != null){
+                final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                final Element body = doc.body();
+                final Elements dd = doc.select("img");
+                
 
-            final Document doc = Jsoup.parseBodyFragment(post.getContent());
-            final Element body = doc.body();
-            final Elements dd = doc.select("img");
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    
+                    
+                    post.setContent(idParseImage(id));
+                }
+                else{
+                    post.setContent(null);
+                }
+            }
             
-
-            if(dd.size() > 0){
-                final Element element = dd.get(0);
-                final String id = element.attr("id");
-                
-                
-                post.setContent(idParseImage(id));
-            }
-            else{
-                post.setContent(null);
-            }
         }
         
         hm.put("comment", commentList);
@@ -643,13 +688,15 @@ public class PostController {
 
                 commentList.add(commentservice.countComment(post.getPostId()));
 
-                final Document doc = Jsoup.parseBodyFragment(post.getContent());
-                final Elements dd = doc.select("img");
-                
-                if(dd.size() > 0){
-                    final Element element = dd.get(0);
-                    final String id = element.attr("id");
-                    post.setContent(idParseImage(id));
+                if(post.getContent() != null){
+                    final Document doc = Jsoup.parseBodyFragment(post.getContent());
+                    final Elements dd = doc.select("img");
+                    
+                    if(dd.size() > 0){
+                        final Element element = dd.get(0);
+                        final String id = element.attr("id");
+                        post.setContent(idParseImage(id));
+                    }
                 }
             }
             hm.put("comment", commentList);
