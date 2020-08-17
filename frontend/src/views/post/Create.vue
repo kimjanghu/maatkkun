@@ -49,8 +49,10 @@
     <br>
 
     <div>
-      <Editor ref="toastuiEditor" :initialValue="articleData.content" initialEditType="wysiwyg" />
+      <Editor ref="toastuiEditor" :initialValue="articleData.content" initialEditType="wysiwyg"/>
     </div>
+    <button @click="createAction1">TNleod</button>
+    <p>{{checkPng}}</p>
 
     <!-- <Map /> -->
     <br>
@@ -258,9 +260,21 @@
       createAction() {
         // var content = this.$refs.toastuiEditor.invoke('getMarkdown');
         var content2 = this.$refs.toastuiEditor.invoke('getHtml');
-        // console.log(content)
         this.articleData.content = content2;
       },
+      createAction1() {
+        // var content = this.$refs.toastuiEditor.invoke('getMarkdown');
+        var content2 = this.$refs.toastuiEditor.invoke('getHtml');
+        
+        this.articleData.content = content2;
+        console.log(document.getElementsByClassName('te-ok-button')[1])
+        console.log(document.getElementsByClassName('te-image-file-input')[0]["value"])
+        document.getElementsByClassName('te-ok-button')[1].addEventListener('click',
+          alert('png형식의 파일은 지원하지 않습니다.'))
+        },
+        
+       
+    
       initMap() {
         var container = document.getElementById('map')
         var mapOption = {
@@ -674,18 +688,8 @@
           return false
         }
       },
-      isNotPng(){
-        var content2 = this.$refs.toastuiEditor.invoke('getHtml');
-        if(content2.includes('.PNG')){
-          alert('png형식의 파일은 지원하지 않습니다.')
-          return false;
-        }
-        else{
-          
-          return true;
-        }
-     
-      },
+      
+       
     },
     created() {
       // 수정하러 왔으면 이전 데이터로 덮어 씌움
@@ -736,8 +740,10 @@
         const modal = document.getElementById("temporaryModal");
         e.target === modal ? (this.isTemporaryModal = false) : false;
       });
-
-    },
+      
+      },
+  
+    
     updated() {
       if (this.isModal) {
         console.log("쒸")
@@ -764,6 +770,9 @@
         })(this)
 
       }
+     
+      
+     
     },
   }
 </script>
