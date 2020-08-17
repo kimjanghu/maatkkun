@@ -61,8 +61,6 @@
     <div>
       <Editor ref="toastuiEditor" :initialValue="articleData.content" initialEditType="wysiwyg"/>
     </div>
-    <button @click="createAction1">TNleod</button>
-    <p>{{checkPng}}</p>
 
     <!-- <Map /> -->
     <br>
