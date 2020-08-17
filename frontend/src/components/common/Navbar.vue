@@ -1,7 +1,7 @@
 <template>
   <div id="navbar" v-if="isNavbar">
     <h1>
-      <a href="/">MAAT KKUN</a>
+      <a class="main-title" href="/">MAATKKUN</a>
     </h1>
     <div class="right">
       <div v-if="!isLoggedIn">
