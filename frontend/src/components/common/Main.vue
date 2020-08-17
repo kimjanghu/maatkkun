@@ -11,7 +11,7 @@
         class="best-post" 
         id="best-post"
         :class="{ active: isBestPost }">
-        <h3 class="best-post-main">MAAT KKUN Best</h3>
+        <h3 class="best-post-main">MAATKKUN Best</h3>
         <hr>
         <div class="tmp" v-show="!isLoading" v-for="(recv, index) in displayRecvList" :key="`recv_${recv[0].postId}`">
           <p class="best-post-index">{{ index+1 }}</p>
