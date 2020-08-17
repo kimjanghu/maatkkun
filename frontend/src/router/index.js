@@ -17,6 +17,7 @@ import testPage from '@/views/user/Test.vue'
 import List from '@/views/post/List.vue'
 import Like from '@/views/post/Like.vue'
 import Views from '@/views/post/Views.vue'
+import Star from '@/views/post/Star.vue'
 // import SearchPost from '@/views/post/SearchPost.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
@@ -78,6 +79,12 @@ const routes = [
     path: '/views',
     name: constants.URL_TYPE.POST.VIEWS,
     component: Views
+  },
+  // Star sorted post
+  {
+    path: '/stars',
+    name: constants.URL_TYPE.POST.STAR,
+    component: Star
   },
   // Create post
   {
