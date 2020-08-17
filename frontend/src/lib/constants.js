@@ -22,6 +22,7 @@ export default {
       MAIN: 'main',
       LIKE: 'like',
       VIEWS: 'views',
+      STAR: 'star',
       SEARCH: 'search',
       CREATE: 'create',
       DETAIL: 'detail',
