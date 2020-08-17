@@ -22,7 +22,7 @@ export default {
       meta: [
         { property: 'og:description', content: 'Hello, MAKK KKUN' },
         { property: 'og:title', content: 'MAKK KKUN' },
-        { property: 'og:url', content: 'http://i3a609.p.ssafy.io/' },
+        // { property: 'og:url', content: 'http://i3a609.p.ssafy.io/' },
         { property: 'og:type', content: 'website' }
       ]
     }
