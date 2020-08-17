@@ -1,6 +1,7 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"); */
-/* @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 
 * {
   /* font-family: 'Noto Sans KR', sans-serif; */
@@ -179,6 +180,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.main-title {
+  font-family: 'Black Han Sans', sans-serif;
 }
 
 
