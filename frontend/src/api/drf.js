@@ -9,6 +9,7 @@ export default{
     list: '/articles/list',
     likeList: '/articles/postedListByLikes',
     hitList: '/articles/postedListByHits',
+    starList: '/articles/postedListByStarpoint',
     detail: '/articles/showArticle',
     delete: '/articles/dropArticle',
     update: '/articles/modify',
