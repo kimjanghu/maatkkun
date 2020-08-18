@@ -164,7 +164,7 @@
     </div>
 
     <button
-      class="create_button"
+      class="create-button"
       style="margin-top:2px;"
       @click.prevent="recommendToMe();initTmap();"
     >
@@ -179,7 +179,7 @@
 
     <button
       v-if="!lowStar"
-      class="create_button"
+      class="create-button"
       style="margin-right:2px;"
       @click="handStar(); recommendToMe();initTmap();"
     >별점이 너무 낮아요!</button>
@@ -191,7 +191,7 @@
     >별점 피드백 적용 완료!</button>
     <button
       v-if="!lowWatch"
-      class="create_button"
+      class="create-button"
       style="margin-right:2px;"
       @click="handWatch(); recommendToMe(); initTmap();"
     >조회수가 너무 낮아요!</button>
@@ -203,7 +203,7 @@
     >조회수 피드백 적용 완료!</button>
     <button
       v-if="!lowLike"
-      class="create_button"
+      class="create-button"
       style="margin-right:2px;"
       @click="handLike(); recommendToMe(); initTmap();"
     >좋아요가 너무 낮아요!</button>
@@ -226,7 +226,7 @@
     <br />
 
 
-    <button class="create_button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">
+    <button class="create-button" style="margin-top:10px;" @click="fn_spread('hiddenContent02');">
       가는 길을 더 자세하게 알고
       싶어요!
     </button>
@@ -675,6 +675,10 @@ export default {
 .recommend-wrapper {
   width: 80%;
   margin: 0 auto;
+}
+
+.create-button {
+  color: var(--secondary-color);
 }
 
 .select_button {

@@ -161,7 +161,7 @@ export default {
             this.sortRecvList()
           }, 1000)
         })
-    }, 300)
+    }, 500)
     
   },
   updated() {
