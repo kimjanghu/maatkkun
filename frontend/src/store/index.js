@@ -135,13 +135,16 @@ export default new Vuex.Store({
         .catch(err=>console.log(err))
     },
     getArticles({ commit }) {
-      console.log(3)
+      console.log(1)
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.list)
         .then(res => {
           commit('SET_ARTICLES', res.data)
-          console.log(4)
         })
         .catch(err => console.log(err))
+    },
+    async sortArticles({ dispatch }) {
+      await dispatch('sendPostId', { articleId: null, status: 'list' })
+      await dispatch('getArticles')
     },
     getLikeArticles({ commit }) {
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.likeList)
@@ -168,6 +171,7 @@ export default new Vuex.Store({
       commit('SET_MAIN', main)
     },
     sendPostId({ commit }, articleData) {
+      console.log(2)
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
           postId: articleData.articleId,
@@ -175,7 +179,7 @@ export default new Vuex.Store({
         };
         commit('SET_SOCKET_IN', true)
         this.stompClient.send("/receive", JSON.stringify(msg), {});
-        // console.log(1)
+        console.log(5)
       }
     },
     connectWebsocket({ commit }) {

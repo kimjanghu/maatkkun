@@ -82,7 +82,7 @@ export default {
     ...mapState(['isMain', 'recvList', 'articles'])
   },
   methods: {
-    ...mapActions(['changeMain', 'sendPostId']),
+    ...mapActions(['changeMain', 'sendPostId', 'sortArticles']),
     changeDisplay() {
       if (!this.isArrow) {
         this.isArrow = true,
@@ -100,6 +100,8 @@ export default {
       this.searchKeyword = ''
     },
     filterRecvList(tmpSortRecvList) {
+      console.log(4)
+      console.log(tmpSortRecvList)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
         let tmp = this.mainArticle.list.filter(item => {
@@ -136,16 +138,29 @@ export default {
     this.selectImage()
   },
   mounted() {
+    
+    // setTimeout(() => {
+    //   this.mainArticle = this.articles
+    //   this.sendPostId({ articleId: null, status: 'list' })
+    //     .then(() => {
+    //       setTimeout(() => {
+    //         this.isLoading = false
+    //         this.sortRecvList()
+    //       }, 300)
+    //     })
+    // }, 500)
     setTimeout(() => {
-      this.mainArticle = this.articles
-      this.sendPostId({ articleId: null, status: 'list' })
+      this.sortArticles()
         .then(() => {
           setTimeout(() => {
+            this.mainArticle = this.articles
+            console.log(this.recvList)
             this.isLoading = false
             this.sortRecvList()
-          }, 300)
+          }, 500)
         })
     }, 500)
+    
   },
   updated() {
   },
