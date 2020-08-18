@@ -134,11 +134,13 @@ public class PostController {
         final List<Integer> commentList = new ArrayList<>();
         
         
-        // ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        
         for(final Post post : postList){
             commentList.add(commentservice.countComment(post.getPostId()));
-            // String pp = post.getPostId()+"";
-            // vop.set(pp, 0);
+            
+            ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+            String pp = post.getPostId()+"";
+            vop.set(pp, 0);
 
             if(post.getContent() != null){
                 System.out.println("11111111111");
