@@ -152,14 +152,14 @@ export default {
     setTimeout(() => {
       this.sortArticles()
         .then(() => {
+          this.mainArticle = this.articles
           setTimeout(() => {
-            this.mainArticle = this.articles
             console.log(this.recvList)
             this.isLoading = false
             this.sortRecvList()
-          }, 500)
+          }, 800)
         })
-    }, 500)
+    }, 300)
     
   },
   updated() {
