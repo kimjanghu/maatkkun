@@ -101,6 +101,7 @@ export default {
     },
     filterRecvList(tmpSortRecvList) {
       console.log(4)
+      console.log(this.articles)
       console.log(tmpSortRecvList)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
@@ -157,7 +158,7 @@ export default {
             console.log(this.recvList)
             this.isLoading = false
             this.sortRecvList()
-          }, 800)
+          }, 1000)
         })
     }, 300)
     
