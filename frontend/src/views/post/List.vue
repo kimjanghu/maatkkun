@@ -191,16 +191,13 @@ export default {
     // }
   },
   created() {
-    this.getArticles()
+    // this.getArticles()
     this.changeMain(true)
   },
   mounted(){
     if(this.$cookies.get('auth-token')){
       axios.post(`${this.SERVER_URL}/accounts/userDetail`,{"uid":this.$cookies.get('auth-token')})
         .then((res)=>{
-          // var liked_list = res.data.likedpost.split(',').map(i=>parseInt(i))
-          // var result = liked_list.slice(0,-1)
-          // this.likedposts = result
           this.checkLikeList(res)
         }
       )
