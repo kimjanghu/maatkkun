@@ -235,6 +235,9 @@
         <li style="text-align:left;">{{direction}}</li>
       </ul>
     </div>
+    <br><br>
+    <br><br>
+    <br><br>
   </div>
 </template>
 
