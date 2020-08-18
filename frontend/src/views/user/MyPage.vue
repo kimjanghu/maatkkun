@@ -48,7 +48,6 @@ import axios from 'axios'
 import SERVER from '@/api/drf'
 import constants from '@/lib/constants'
 import UserList from '@/components/common/UserList.vue'
-import { mapActions } from 'vuex'
 
 export default {
   name: 'Mypage',
@@ -72,7 +71,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['changeMain']),
     // Get user Information
     getUserInfo() {
       const config = {
@@ -144,7 +142,6 @@ export default {
     this.getUserPost()
     this.getUserLikedPost()
     this.setNickname()
-    this.changeMain(false)
   },
   mounted() {
   },

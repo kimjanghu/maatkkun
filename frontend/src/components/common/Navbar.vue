@@ -41,7 +41,7 @@ export default {
   },
   watch: {},
   methods: {
-    ...mapActions(['changeMain', 'sendPostId']),
+    ...mapActions(['sendPostId']),
     setNickname() {
       const nickname = JSON.parse(window.localStorage.getItem('userInfo'))
       if (nickname) {

@@ -173,10 +173,7 @@
   import '@toast-ui/editor/dist/toastui-editor.css';
   import {
     Editor
-  } from '@toast-ui/vue-editor';
-  import {
-    mapActions
-  } from 'vuex'
+  } from '@toast-ui/vue-editor'
   import SERVER from '@/api/drf'
   import constants from '@/lib/constants'
 
@@ -233,7 +230,6 @@
       }
     },
     methods: {
-      ...mapActions(['changeMain']),
       detailPage(one) {
         axios.get(`${this.SERVER_URL}/subarticles/detail/${one.postId}`)
           .then((res) => {
@@ -731,7 +727,6 @@
         this.articleData.atmosphere = this.preArticleData.atmosphere
         this.articleData.taste = this.preArticleData.taste
       }
-      this.changeMain(false)
     },
 
 

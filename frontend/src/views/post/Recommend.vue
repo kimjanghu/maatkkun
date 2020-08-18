@@ -243,7 +243,6 @@
 import "@/assets/css/post.css";
 import axios from "axios";
 import jQuery from "jquery";
-import { mapActions } from "vuex";
 import "@/assets/css/checkbox.css";
 import constants from "@/lib/constants";
 
@@ -300,7 +299,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(["changeMain"]),
     handLike() {
       this.lowLike = !this.lowLike;
       if (!this.lowLike) {
@@ -624,7 +622,6 @@ export default {
   },
 
   created() {
-    this.changeMain(false);
     if (Object.keys(this.recommendList).length >= 2) {
       this.isSeveral = true;
     } else {

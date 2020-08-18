@@ -63,6 +63,11 @@ export default {
   components: {
     Loading
   },
+  props: {
+    isMain: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       constants,
@@ -79,10 +84,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isMain', 'recvList', 'articles'])
+    ...mapState(['recvList', 'articles'])
   },
   methods: {
-    ...mapActions(['changeMain', 'sendPostId', 'sortArticles']),
+    ...mapActions(['sendPostId', 'sortArticles']),
     changeDisplay() {
       if (!this.isArrow) {
         this.isArrow = true,

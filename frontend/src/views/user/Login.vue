@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="login-container">
-      <router-link @click.native="changeMain(true)" class="main-title logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAATKKUN</router-link>
+      <router-link class="main-title logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAATKKUN</router-link>
       <div class="login">
         <div class="login-header">
           <h3 style="text-align: center;">login</h3>
@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['login', 'changeMain']),
+    ...mapActions(['login']),
     showError(value, message) {
       const control = document.getElementById(value);
       control.className = "form-control error";
@@ -77,7 +77,6 @@ export default {
     },
   },
   created() {
-    this.changeMain(false)
   },
   mounted() {
   },

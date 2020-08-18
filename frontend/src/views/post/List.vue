@@ -97,7 +97,7 @@ export default {
   watch: {},
   methods: {
     // ...mapActions(['getArticles', 'getLikeArticles', 'getHitArticles', 'searchResult']),
-    ...mapActions(['getArticles', 'changeMain', 'sendPostId']),
+    ...mapActions(['getArticles', 'sendPostId']),
     includes(one){
       // console.log(one)
       if(this.likedposts.includes(one.postId)){
@@ -192,7 +192,6 @@ export default {
   },
   created() {
     // this.getArticles()
-    this.changeMain(true)
   },
   mounted(){
     if(this.$cookies.get('auth-token')){

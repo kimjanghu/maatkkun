@@ -81,7 +81,6 @@
 
 <script>
 import axios from 'axios'
-import { mapActions } from 'vuex'
 import '@/assets/css/checkbox.css'
 import constants from '@/lib/constants'
 
@@ -109,7 +108,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['changeMain']),
     changeHashTag(food) {
       if (this.hashtags.includes(food)) {
         const idx = this.hashtags.indexOf(food)
@@ -184,7 +182,6 @@ export default {
     }
   },
   created() {
-    this.changeMain(false)  
   },
 }
 </script>

@@ -23,7 +23,6 @@ export default new Vuex.Store({
     recvList: [],
     socketStatus: null,
     postInfo: null,
-    isMain: true,
     isSignup: false
   },
   getters: {
@@ -48,9 +47,6 @@ export default new Vuex.Store({
     },
 
 
-    SET_MAIN(state, main) {
-      state.isMain = main
-    },
     SET_RECV_DATA(state, recvList) {
       state.recvList = recvList
     },
@@ -166,9 +162,6 @@ export default new Vuex.Store({
           commit('SET_STAR_ARTICLES', res.data)
         })
         .catch(err => console.log(err))
-    },
-    changeMain({ commit }, main) {
-      commit('SET_MAIN', main)
     },
     sendPostId({ commit }, articleData) {
       console.log(2)

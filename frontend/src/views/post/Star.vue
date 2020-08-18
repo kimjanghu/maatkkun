@@ -94,7 +94,7 @@ export default {
   },
   watch: {},
   methods: {
-    ...mapActions(['getStarArticles', 'changeMain', 'sendPostId']),
+    ...mapActions(['getStarArticles', 'sendPostId']),
     includes(one) {
       if(this.likedposts.includes(one.postId)){
         return true
@@ -127,7 +127,6 @@ export default {
   },
   created() {
     this.getStarArticles()
-    this.changeMain(true)
   },
   mounted(){
     if(this.$cookies.get('auth-token')){

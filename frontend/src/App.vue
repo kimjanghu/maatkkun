@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Navbar :isNavbar="isNavbar" />
-    <Main />
+    <Main :isMain="isMain" />
     <router-view />
   </div>
 </template>
@@ -34,6 +34,7 @@ export default {
   data() {
     return {
       isNavbar: true,
+      isMain: true,
       constants
     };
   },
@@ -47,13 +48,32 @@ export default {
   methods: {
     ...mapActions(['connectWebsocket', 'sendPostId', 'getArticles']),
     checkUrl(url) {
-      let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
+      let userArray = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN]
+      let mainArray = [
+        constants.URL_TYPE.USER.MYPAGE, 
+        constants.URL_TYPE.USER.EDIT,
+        constants.URL_TYPE.POST.CREATE,
+        constants.URL_TYPE.POST.DETAIL,
+        constants.URL_TYPE.POST.TEMPORARY,
+        constants.URL_TYPE.POST.RECOMMEND,
+        constants.URL_TYPE.POST.KIND
+      ]
 
-      let isNavbar = true;
-      array.map(path => {
-        if (url === path) isNavbar = false;
-      });
-      this.isNavbar = isNavbar;
+      let isNavbar = true
+      let isMain = true
+      userArray.map(path => {
+        if (url === path) {
+          isNavbar = false
+          isMain = false
+        }
+      })
+      mainArray.map(path => {
+        if (url === path) {
+          isMain = false
+        }
+      })
+      this.isNavbar = isNavbar
+      this.isMain = isMain
     }
   },
   created() {

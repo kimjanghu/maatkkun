@@ -1,7 +1,7 @@
 <template>
   <div id="join">
     <div class="join-container">
-      <router-link @click.native="changeMain(true)" class="main-title signup-logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAATKKUN</router-link>
+      <router-link class="main-title signup-logo" :to="{ name: constants.URL_TYPE.POST.MAIN}">MAATKKUN</router-link>
       <div class="join">
         <div class="join-header">
           <h3 style="text-align: center;">회원가입</h3>
@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     // bring signup method in store
-    ...mapActions(['signup', 'changeMain']),
+    ...mapActions(['signup']),
     // Show error message
     showError(value, message) {
       const control = document.getElementById(value);
@@ -208,7 +208,6 @@ export default {
     }
   },
   created() {
-    this.changeMain(false)
   },
 };
 </script>

@@ -127,7 +127,7 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   methods: {
-    ...mapActions(['changeMain', 'sendPostId']),
+    ...mapActions(['sendPostId']),
     initMap() {
       var container = document.getElementById('map')
       var options = {
@@ -266,7 +266,6 @@ export default {
       this.sendPostId({ articleId: this.articleId, status: 'in' })
     }, 250)
     this.detailPage()
-    this.changeMain(false)
     // if (this.$cookies.get('auth-token')) {
     //   axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
     //       "uid": this.$cookies.get('auth-token')
