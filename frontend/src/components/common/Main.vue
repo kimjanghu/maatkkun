@@ -100,7 +100,6 @@ export default {
       this.searchKeyword = ''
     },
     filterRecvList(tmpSortRecvList) {
-      // console.log(this.aaa.list)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
         let tmp = this.mainArticle.list.filter(item => {
@@ -146,7 +145,7 @@ export default {
             this.sortRecvList()
           }, 300)
         })
-    }, 300)
+    }, 500)
   },
   updated() {
   },
