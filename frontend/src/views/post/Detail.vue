@@ -29,17 +29,6 @@
         </div>
         <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>  
         <p class="post-date">{{ article.createDate }}</p>
-        <!-- <div v-if="isLoggedIn" class="post-like-wrap">
-          <i ref="postId" v-if="included" @click="change(); checkLike(article);"
-            class="fas fa-heart fa-lg animated delay-1s redheart" style="color: red;"></i>
-          <i ref="postId" v-if="!included" @click="change(); checkLike(article);"
-            class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" style="color: gray;"></i>
-          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
-        </div>
-        <div v-else class="post-like-wrap">
-          <i class="fas fa-heart fa-lg redheart" style="color: red;"></i>
-          <p style="margin-left: 5px;">{{ article.likes }} likes</p>
-        </div> -->
       </div>
       <hr>
       <div class="main-text-area">
@@ -75,8 +64,6 @@
           <p class="tag-btn">#{{ tag }}</p>
         </div>
       </div>
-      
-      <!-- <div class="box" style="font-weight:bold;"> {{ article.hashtag }}</div> -->
       <hr>
       <Comment :article="article" />
     </div>
@@ -127,7 +114,7 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   methods: {
-    ...mapActions(['changeMain', 'sendPostId']),
+    ...mapActions(['sendPostId']),
     initMap() {
       var container = document.getElementById('map')
       var options = {
@@ -171,29 +158,10 @@ export default {
         this.included = false;
       }
     },
-    change() {
-      var cl = this.$refs["postId"].getAttribute('class');
-      console.log(this.$refs["postId"].getAttribute('style'))
-
-      if (cl === "fas fa-heart fa-lg animated delay-1s" || cl === "fas fa-heart fa-lg animated delay-1s redheart") {
-        this.$refs["postId"].setAttribute("class", "far fa-heart fa-lg animated infinite bounce delay-1s");
-        this.$refs["postId"].setAttribute('style', "color:gray");
-        this.article.likes -= 1
-
-      } else {
-          this.$refs["postId"].setAttribute("class", "fas fa-heart fa-lg animated delay-1s");
-          this.$refs["postId"].setAttribute('style',"color:red");
-        this.article.likes += 1
-      }
-
-
-    },
     checkLike(one) {
       one.userid = this.$cookies.get('auth-token')
-      // console.log(one.userid)
       axios.post(`${this.SERVER_URL}/articles/like`, one)
         .then(() => {
-          // console.log(res)
           axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
               "uid": this.$cookies.get('auth-token')
             })
@@ -246,49 +214,24 @@ export default {
           this.article.taste = +this.article.taste
           this.article.price = +this.article.price
           this.article.atmosphere = +this.article.atmosphere
-          // this.content = this.article.content
-          // this.menu = this.article.menu
-          // console.log(this.content)
-          // console.log(this.content.split('=/.=/.'))
-          // console.log(res.data)
         })
         .catch(err => console.log(err))
     },
     disconnect(){
       this.sendPostId({ articleId: this.articleId, status: 'out' })
     }
-
   },
   
   created() {
-    // this.sendPostId({ articleId: this.articleId, status: 'in' })
     setTimeout(() => {
       this.sendPostId({ articleId: this.articleId, status: 'in' })
     }, 250)
     this.detailPage()
-    this.changeMain(false)
-    // if (this.$cookies.get('auth-token')) {
-    //   axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
-    //       "uid": this.$cookies.get('auth-token')
-    //     })
-    //     .then((res) => {
-    //       var liked_list = res.data.likedpost.split(',').map(i => parseInt(i))
-    //       var result = liked_list.slice(0, -1)
-    //       this.likedposts = result
-    //       if (this.likedposts.includes(this.articleId)) {
-    //         this.included = true;
-    //       } else {
-    //         this.included = false;
-    //       }
-
-    //     })
-    // }
     window.addEventListener('beforeunload', () => {
       this.sendPostId({ articleId: this.articleId, status: 'out' })
     })
   },
   mounted() {
-    console.log(this.recvList)
     window.addEventListener("click", e => {
       const modal = document.getElementById("modal");
       e.target === modal ? (this.isModal = false) : false;

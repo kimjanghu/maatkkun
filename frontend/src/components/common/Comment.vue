@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <br><h2>댓글</h2><br>
     <div class="comment" v-for="comment in comments" :key="`comment_${comment.commentid}`">
       <router-link
@@ -79,15 +78,9 @@ export default {
       this.updateCommentForm.commentid = comment.commentid
     },
     createComment(content) {
-      const config = {
-        headers: {
-          Authorization: `Token ${this.$cookies.get(`auth-token`)}`
-        }
-      }
       this.commentForm.content = content
-      axios.post(`${this.SERVER_URL}/comments/register`, this.commentForm, config)
+      axios.post(`${this.SERVER_URL}/comments/register`, this.commentForm)
         .then(() => {
-          // console.log(res.data)
           this.getCommentList()
         })
         .catch(err => console.log(err.response.data))
@@ -95,40 +88,23 @@ export default {
     getCommentList() {
       axios.get(`${this.SERVER_URL}/comments/list/${this.article.postId}`)
         .then((res) => {
-          // console.log(res)
           this.comments = res.data
-          // console.log(this.comments)
         })
         .catch(err => console.log(err.response.data))
     },
     updateComment(content) {
-      const config = {
-        headers: {
-          Authorization: `Token ${this.$cookies.get(`auth-token`)}`
-        }
-      }
       this.updateCommentForm.content = content
-      console.log(this.updateCommentForm)
-      axios.put(`${this.SERVER_URL}/comments/modify`, this.updateCommentForm, config)
+      axios.put(`${this.SERVER_URL}/comments/modify`, this.updateCommentForm)
         .then(() => {
-          // console.log(res.data)
           this.checkComment.isComment = false
           this.checkComment.commentId = null
           this.checkComment.commentValue = null
           this.getCommentList()
         })
-        .catch(err => {
-          // console.log(this.commentForm)
-          console.log(err)
-        })
+        .catch(err => console.log(err))
     },
     deleteComment(deleteCommentId) {
-      const config = {
-        headers: {
-          Authorization: `Token ${this.$cookies.get(`auth-token`)}`
-        }
-      }
-      axios.delete(`${this.SERVER_URL}/comments/dropComment?commentId=${deleteCommentId}`, config)
+      axios.delete(`${this.SERVER_URL}/comments/dropComment?commentId=${deleteCommentId}`)
         .then(() => {
           alert("댓글이 삭제되었습니다.")
           this.getCommentList()

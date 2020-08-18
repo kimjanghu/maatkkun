@@ -48,7 +48,6 @@ import axios from 'axios'
 import SERVER from '@/api/drf'
 import constants from '@/lib/constants'
 import UserList from '@/components/common/UserList.vue'
-import { mapActions } from 'vuex'
 
 export default {
   name: 'Mypage',
@@ -60,9 +59,6 @@ export default {
       constants,
       SERVER_URL: process.env.VUE_APP_API_URL,
       clickUserId: this.$route.params.id,
-      // userId: {
-      //   uid: JSON.parse(window.localStorage.getItem('userInfo')).uid
-      // },
       userId: null,
       userPostList: [],
       userPostLikedList: [],
@@ -72,15 +68,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['changeMain']),
     // Get user Information
     getUserInfo() {
-      const config = {
-        headers: {
-          Authorization: `Token ${this.$cookies.get(`auth-token`)}`
-        }
-      }
-      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userInfo}`, { 'uid': this.clickUserId }, config)
+      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userInfo}`, { 'uid': this.clickUserId })
         .then(res => {
           this.userInfo = res.data
         })
@@ -90,12 +80,7 @@ export default {
     },
     // Get user post list
     getUserPost() {
-      const config = {
-        headers: {
-          Authorization: `Token ${this.$cookies.get(`auth-token`)}`
-        }
-      }
-      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userPostList}`, { 'uid': +this.clickUserId }, config)
+      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userPostList}`, { 'uid': +this.clickUserId })
         .then(res => {
           if (res.data) {
             this.userPostList = res.data
@@ -107,12 +92,7 @@ export default {
     },
     // Get user liked post list
     getUserLikedPost() {
-      const config = {
-        headers: {
-          Authorization: `Token ${this.$cookies.get(`auth-token`)}`
-        }
-      }
-      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userLikeList}`, { 'uid': this.clickUserId }, config)
+      axios.post(`${this.SERVER_URL}${SERVER.ROUTES.userLikeList}`, { 'uid': this.clickUserId })
         .then(res => {
           if (res.data) {
             this.userPostLikedList = res.data
@@ -144,7 +124,6 @@ export default {
     this.getUserPost()
     this.getUserLikedPost()
     this.setNickname()
-    this.changeMain(false)
   },
   mounted() {
   },
@@ -224,7 +203,6 @@ export default {
   border: none;
   opacity: 0.2;
   box-shadow: none;
-  /* transition: transform 0.3s ease-in; */
 }
 
 .user-article-title,

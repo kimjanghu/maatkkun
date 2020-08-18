@@ -144,7 +144,7 @@ export default {
       if (check) {
         if (this.changeData.changePassword !== this.changeData.confirmPassword) {
           alert('비밀번호를 확인해주세요')
-          return;
+          return
         }
         if (!this.changeData.changePassword.trim()) {
           this.changeData.changePassword = this.userInfo.password

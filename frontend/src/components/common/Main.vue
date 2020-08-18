@@ -63,6 +63,11 @@ export default {
   components: {
     Loading
   },
+  props: {
+    isMain: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       constants,
@@ -79,10 +84,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isMain', 'recvList', 'articles'])
+    ...mapState(['recvList', 'articles'])
   },
   methods: {
-    ...mapActions(['changeMain', 'sendPostId', 'sortArticles']),
+    ...mapActions(['sendPostId', 'sortArticles']),
     changeDisplay() {
       if (!this.isArrow) {
         this.isArrow = true,
@@ -140,23 +145,11 @@ export default {
     this.selectImage()
   },
   mounted() {
-    
-    // setTimeout(() => {
-    //   this.mainArticle = this.articles
-    //   this.sendPostId({ articleId: null, status: 'list' })
-    //     .then(() => {
-    //       setTimeout(() => {
-    //         this.isLoading = false
-    //         this.sortRecvList()
-    //       }, 300)
-    //     })
-    // }, 500)
     setTimeout(() => {
       this.sortArticles()
         .then(() => {
           this.mainArticle = this.articles
           setTimeout(() => {
-            console.log(this.recvList)
             this.isLoading = false
             this.sortRecvList()
           }, 1000)
@@ -183,7 +176,6 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   color: var(--primary-color);
-  /* text-shadow: 3px 4px 4px #fff; */
 }
 
 .main-food-area img {
@@ -213,8 +205,6 @@ export default {
   position: absolute;
   color:#fff;
   text-shadow: 3px 3px 3px var(--secondary-color);
-  /* color: var(--secondary-color); */
-  /* text-shadow: 3px 3px 3px var(--third-color); */
 }
 
 .myInput {
@@ -267,7 +257,6 @@ export default {
 }
 
 .best-post {
-  /* display: flex; */
   display: none;
   width: 300px;
   flex-direction: column;
@@ -284,15 +273,6 @@ export default {
   -webkit-animation: fadein 1s;
 }
 
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .best-post-main {
   margin: 1rem auto;
   font-size: 20px;
@@ -307,8 +287,6 @@ export default {
 }
 
 .best-post-title {
-  /* font-weight: bold; */
-  /* text-shadow: 1px 1px 1px var(--primary-color); */
   text-shadow: 1px 1px 1px gray;
 }
 
@@ -326,7 +304,6 @@ export default {
   border: 2px solid var(--primary-color);
   padding: 2px;
   font-weight: bold;
-  /* color: var(--primary-color) */
 }
 
 .realtime-count {
@@ -354,5 +331,14 @@ export default {
   margin-top: 4rem;
   display: flex;
   justify-content: center;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

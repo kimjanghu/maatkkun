@@ -12,6 +12,11 @@
   font-size: 1.875em;
 }
 
+.post-navbar {
+  width: 80%;
+  margin: 0 auto;
+}
+
 @media(min-width: 1100px)  {
   .post .post-list {
     width: 100%;

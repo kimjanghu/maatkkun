@@ -10,15 +10,11 @@ import Logout from '@/views/user/Logout.vue'
 import Mypage from '@/views/user/MyPage.vue'
 import EditUserInfo from '@/views/user/EditUserInfo.vue'
 
-//testPage
-import testPage from '@/views/user/Test.vue'
-
 // 포스트
 import List from '@/views/post/List.vue'
 import Like from '@/views/post/Like.vue'
 import Views from '@/views/post/Views.vue'
 import Star from '@/views/post/Star.vue'
-// import SearchPost from '@/views/post/SearchPost.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
@@ -125,12 +121,6 @@ const routes = [
     path: '/error',
     name: constants.ERROR.FRONT_ERROR,
     component: Errorpage
-  },
-  // Test page
-  {
-    path: '/user/test',
-    name: constants.URL_TYPE.TEST,
-    component: testPage
   },
   // Page not found
   {

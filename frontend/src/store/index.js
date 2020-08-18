@@ -23,7 +23,6 @@ export default new Vuex.Store({
     recvList: [],
     socketStatus: null,
     postInfo: null,
-    isMain: true,
     isSignup: false
   },
   getters: {
@@ -48,9 +47,6 @@ export default new Vuex.Store({
     },
 
 
-    SET_MAIN(state, main) {
-      state.isMain = main
-    },
     SET_RECV_DATA(state, recvList) {
       state.recvList = recvList
     },
@@ -167,9 +163,6 @@ export default new Vuex.Store({
         })
         .catch(err => console.log(err))
     },
-    changeMain({ commit }, main) {
-      commit('SET_MAIN', main)
-    },
     sendPostId({ commit }, articleData) {
       console.log(2)
       if (this.stompClient && this.stompClient.connected) {
@@ -183,26 +176,17 @@ export default new Vuex.Store({
       }
     },
     connectWebsocket({ commit }) {
-      let socket = new SockJS(process.env.VUE_APP_API_URL);
-      this.stompClient = Stomp.over(socket);
-      // console.log(`소켓 연결을 시도합니다. 서버 주소: ${process.env.VUE_APP_API_URL}`)
+      let socket = new SockJS(process.env.VUE_APP_API_URL)
+      this.stompClient = Stomp.over(socket)
       this.stompClient.connect({}, () => {
         // 소켓 연결 성공
-        this.connected = true;
-        // console.log('소켓 연결 성공', frame);
-        // 서버의 메시지 전송 endpoint를 구독합니다.
-        // 이런형태를 pub sub 구조라고 합니다.
+        this.connected = true
         this.stompClient.subscribe("/send", res => {
-          // console.log(res);
-          // console.log('구독으로 받은 메시지 입니다.', res.body);
           // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
           commit('SET_RECV_DATA', JSON.parse(res.body))
-          // console.log(this.state.recvList)
-          // this.recvList.push(JSON.parse(res.body))
         });
       },
       error => {
-        // 소켓 연결 실패
         console.log('소켓 연결 실패', error);
         this.connected = false;
       });
