@@ -101,11 +101,12 @@ export default {
     },
     filterRecvList(tmpSortRecvList) {
       console.log(4)
-      console.log(this.articles)
       console.log(tmpSortRecvList)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
+      console.log(tmpFilterRecvList)
+      console.log(this.articles.list)
       tmpFilterRecvList.forEach(recv => {
-        let tmp = this.mainArticle.list.filter(item => {
+        let tmp = this.articles.list.filter(item => {
           return item.postId === +recv[0]
         })
         this.displayRecvList.push(tmp)
