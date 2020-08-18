@@ -16,17 +16,17 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  metaInfo() {
-    return { 
-      title: 'Hello, MAAK KKUN',
-      meta: [
-        { property: 'og:title', content: 'MAKK KKUN' },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:description', content: 'Hello, MAKK KKUN' }
-        // { property: 'og:url', content: 'http://i3a609.p.ssafy.io/' },
-      ]
-    }
-  },
+  // metaInfo() {
+  //   return { 
+  //     title: 'Hello, MAAK KKUN',
+  //     meta: [
+  //       { property: 'og:title', content: 'MAKK KKUN' },
+  //       { property: 'og:type', content: 'website' },
+  //       { property: 'og:description', content: 'Hello, MAKK KKUN' }
+  //       // { property: 'og:url', content: 'http://i3a609.p.ssafy.io/' },
+  //     ]
+  //   }
+  // },
   components: {
     Navbar,
     Main
