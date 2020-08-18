@@ -868,8 +868,19 @@ public class PostController {
             else{
                 random = (int)(Math.random()*3);
             }
-            
-            result.put("음식", service.getPost(li.get(random).getPostid()));
+
+            Post p = service.getPost(li.get(random).getPostid());
+            if(p.getContent() != null){
+                final Document doc = Jsoup.parseBodyFragment(p.getContent());
+                final Elements dd = doc.select("img");
+                
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    p.setContent(idParseImage(id));
+                }
+            }
+            result.put("음식", p);
         }
         if(iscafe){
             List<KeyValue> li = returnArr(cafeList,hitScore,likeScore,starScore);
@@ -881,7 +892,19 @@ public class PostController {
             else{
                 random = (int)(Math.random()*3);
             }
-            result.put("카페", service.getPost(li.get(random).getPostid()));
+            
+            Post p = service.getPost(li.get(random).getPostid());
+            if(p.getContent() != null){
+                final Document doc = Jsoup.parseBodyFragment(p.getContent());
+                final Elements dd = doc.select("img");
+                
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    p.setContent(idParseImage(id));
+                }
+            }
+            result.put("카페", p);
         }
         if(isdrink){
             List<KeyValue> li = returnArr(drinkList,hitScore,likeScore,starScore);
@@ -893,7 +916,19 @@ public class PostController {
             else{
                 random = (int)(Math.random()*3);
             }
-            result.put("술집", service.getPost(li.get(random).getPostid()));
+
+            Post p = service.getPost(li.get(random).getPostid());
+            if(p.getContent() != null){
+                final Document doc = Jsoup.parseBodyFragment(p.getContent());
+                final Elements dd = doc.select("img");
+                
+                if(dd.size() > 0){
+                    final Element element = dd.get(0);
+                    final String id = element.attr("id");
+                    p.setContent(idParseImage(id));
+                }
+            }
+            result.put("술집", p);
         }
         
         return new ResponseEntity<>(result, HttpStatus.OK);
