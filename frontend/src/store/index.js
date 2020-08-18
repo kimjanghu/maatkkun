@@ -61,7 +61,6 @@ export default new Vuex.Store({
     
     SET_ARTICLES(state, articles) {
       state.articles = articles
-      window.sessionStorage.setItem('articles', JSON.stringify(articles.list))
     },
     SET_LIKE_ARTICLES(state, likeArticles) {
       state.likeArticles = likeArticles
@@ -136,9 +135,11 @@ export default new Vuex.Store({
         .catch(err=>console.log(err))
     },
     getArticles({ commit }) {
+      console.log(3)
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.list)
         .then(res => {
           commit('SET_ARTICLES', res.data)
+          console.log(4)
         })
         .catch(err => console.log(err))
     },

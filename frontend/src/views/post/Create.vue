@@ -158,6 +158,11 @@
       <button class="create-btn" v-if="!isUpdate && !isTemporary" @click="goTemporary">임시저장</button>
       <button class="create-btn" v-if="isUpdate" @click="updateArticle">수정하기</button>
     </div>
+
+
+    <div v-show="isCreateLoading" class="create-loading">
+      <Loading />
+    </div>
   </div>
 
 </template>
@@ -179,6 +184,7 @@
   import '@/assets/css/modal.css'
   import '@/assets/css/checkbox.css'
   import StarRating from 'vue-star-rating'
+  import Loading from '@/components/common/Loading.vue'
 
 
   export default {
@@ -186,6 +192,7 @@
     components: {
       Editor,
       StarRating,
+      Loading
       // Map
     },
     data() {
@@ -215,7 +222,7 @@
         map: '',
         marker: '',
         ps: '',
-
+        isCreateLoading: false,
         placeDecision: "Choose your restaurant",
         isModal: false,
         isTemporaryModal: false,
@@ -576,6 +583,7 @@
         } else {
           const check = confirm('글을 제출하시겠습니까?')
           if (check) {
+            this.isCreateLoading = true
             const config = {
               headers: {
                 Authorization: `Token ${this.$cookies.get('auth-token')}`
@@ -588,6 +596,7 @@
                   axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
                 }
                 alert('작성이 완료되었습니다.')
+                this.isCreateLoading = false
                 // this.$router.push('/')
                 window.document.location.href = '/'
               })
@@ -1124,6 +1133,13 @@ li {
 .star-title {
   padding-top: 7px;
   margin-right: 5px;
+}
+
+.create-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @media(min-width:560px) {
