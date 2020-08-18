@@ -11,32 +11,6 @@
       </tbody>
     </table>
 
-    <!-- <div v-show="isTemporaryModal" class="modal-container" id="temporaryModal">
-      <div class="modal">
-        <div class="modal" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-        <div id="mainWrapper">
-          <table id="demo-table">
-            <caption>임시저장 목록</caption>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Title</th>
-                <th>작성일</th>
-                <th>작성자</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
-                <th>{{ subarticle.id }}</th>
-                <td>{{ subarticle.title }}</td>
-                <td>{{ subarticle.createDate }}</td>
-                <td>{{ subarticle.nickname }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div> -->
     <br>
 
     <div v-show="isTemporaryModal" class="tmp-list">
@@ -56,20 +30,16 @@
       </div>
     </div>
 
-    
-
     <div>
       <Editor ref="toastuiEditor" :initialValue="articleData.content" initialEditType="wysiwyg"/>
     </div>
 
-    <!-- <Map /> -->
     <br>
     <button class="create-btn" @click.prevent="changeModal">
       음식점 위치가 어디인가요?
     </button>
     <br>
     <br>
-
 
     <div v-show="isModal" class="modal-container" id="modal">
       <div class="modal">
@@ -92,10 +62,8 @@
             <div id="pagination"></div>
           </div>
         </div>
-
       </div>
     </div>
-
 
     <div id="restaurant" class="form-group d-flex mt-3">
       {{articleData.address}}
@@ -129,8 +97,8 @@
       <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
       <label for="Soju">술집</label>
 
-
     </div>
+
     <br>
     <h2>평점을 남겨주세요!</h2>
     <div class="star-point">
@@ -168,625 +136,530 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import 'codemirror/lib/codemirror.css';
-  import '@toast-ui/editor/dist/toastui-editor.css';
-  import {
-    Editor
-  } from '@toast-ui/vue-editor'
-  import SERVER from '@/api/drf'
-  import constants from '@/lib/constants'
-
-  // import Map from '@/components/common/Map.vue'
-  import '@/assets/css/modal.css'
-  import '@/assets/css/checkbox.css'
-  import StarRating from 'vue-star-rating'
-  import Loading from '@/components/common/Loading.vue'
+import axios from 'axios'
+import { Editor } from '@toast-ui/vue-editor'
+import SERVER from '@/api/drf'
+import constants from '@/lib/constants'
+import StarRating from 'vue-star-rating'
+import Loading from '@/components/common/Loading.vue'
+import '@/assets/css/modal.css'
+import '@/assets/css/checkbox.css'
+import 'codemirror/lib/codemirror.css';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 
-  export default {
-    name: 'Create',
-    components: {
-      Editor,
-      StarRating,
-      Loading
-      // Map
+export default {
+  name: 'Create',
+  components: {
+    Editor,
+    StarRating,
+    Loading
+  },
+  data() {
+    return {
+      SERVER_URL: process.env.VUE_APP_API_URL,
+      articleData: {
+        title: null,
+        content: null,
+        address: '',
+        hashtag: '',
+        lat: '',
+        lon: '',
+        userid: this.$cookies.get('auth-token'),
+        url: '',
+        placename: '',
+        price: 0,
+        taste: 0,
+        atmosphere: 0,
+      },
+      hashtags: [],
+      preArticleData: this.$route.params.articleData,
+      newImgSrc: '',
+      searchKeyword: "",
+      markers: [],
+      container: '',
+      options: '',
+      map: '',
+      marker: '',
+      ps: '',
+      isCreateLoading: false,
+      placeDecision: "Choose your restaurant",
+      isModal: false,
+      isTemporaryModal: false,
+      subarticles: [],
+      coordinate: ''
+    }
+  },
+  methods: {
+    detailPage(one) {
+      axios.get(`${this.SERVER_URL}/subarticles/detail/${one.postId}`)
+        .then((res) => {
+          this.$router.push({
+            name: constants.URL_TYPE.POST.TEMPORARY,
+            params: {
+              articleData: res.data
+            }
+          })
+        })
+        .catch(err => console.log(err))
     },
-    data() {
-      return {
-        SERVER_URL: process.env.VUE_APP_API_URL,
-        articleData: {
-          title: null,
-          content: null,
-          address: '',
-          hashtag: '',
-          lat: '',
-          lon: '',
-          userid: this.$cookies.get('auth-token'),
-          url: '',
-          placename: '',
-          price: 0,
-          taste: 0,
-          atmosphere: 0,
-        },
-        hashtags: [],
-        preArticleData: this.$route.params.articleData,
-        newImgSrc: '',
-        searchKeyword: "",
-        markers: [],
-        container: '',
-        options: '',
-        map: '',
-        marker: '',
-        ps: '',
-        isCreateLoading: false,
-        placeDecision: "Choose your restaurant",
-        isModal: false,
-        isTemporaryModal: false,
-        subarticles: [],
+    getSubArticles() {
+      const user = parseInt(this.$cookies.get('auth-token'))
+      axios.get(`${this.SERVER_URL}/subarticles/list/${user}`)
+        .then((res) => {
+          this.subarticles = res.data
+        })
+        .catch(err => console.log(err))
+    },
+    changeTemoporaryModal() {
+      this.isTemporaryModal = !this.isTemporaryModal
+    },
+    changeModal() {
+      this.isModal = !this.isModal
+    },
+    createAction() {
+      const content = this.$refs.toastuiEditor.invoke('getHtml');
+      this.articleData.content = content;
+    },
+    createActionTwo() {
+      const contentTwo = this.$refs.toastuiEditor.invoke('getHtml'); 
+      this.articleData.content = contentTwo;
+      // console.log(document.getElementsByClassName('te-ok-button')[1])
+      // console.log(document.getElementsByClassName('te-image-file-input')[0]["value"])
+      document.getElementsByClassName('te-ok-button')[1].addEventListener('click',
+        alert('png형식의 파일은 지원하지 않습니다.'))
+      },
+    initMap() {
+      var container = document.getElementById('map')
+      var mapOption = {
+        center: new kakao.maps.LatLng(37.500649, 127.036530),
+        level: 5
+      }
+      this.map = new kakao.maps.Map(container, mapOption) //마커추가하려면 객체를 아래와 같이 하나 만든다. 
+      this.marker = new kakao.maps.Marker({
+        position: this.map.getCenter()
+      })
+      this.marker.setMap(this.map);
+      // 다각형을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 다각형을 표시합니다
+      var polygonPath = [
+        new kakao.maps.LatLng(37.504432, 127.0222243),
+        new kakao.maps.LatLng(37.510435, 127.043856),
+        new kakao.maps.LatLng(37.496263, 127.052837),
+        new kakao.maps.LatLng(37.489680, 127.031581),
+      ];
+      // 지도에 표시할 다각형을 생성합니다
+      var polygon = new kakao.maps.Polygon({
+        path: polygonPath, // 그려질 다각형의 좌표 배열입니다
+        strokeWeight: 3, // 선의 두께입니다
+        strokeColor: "#D96523", // 선의 색깔입니다
+        strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        strokeStyle: 'solid', // 선의 스타일입니다
+        fillColor: '#fff', // 채우기 색깔입니다
+        fillOpacity: 0.1 // 채우기 불투명도 입니다
+      });
+      // 지도에 다각형을 표시합니다
+      polygon.setMap(this.map);
+      this.ps = new kakao.maps.services.Places();
+      // console.log(this.map.getCenter());
+    },
+    // 키워드 검색을 요청하는 함수입니다
+    searchPlaces() {
+      var keyword = "역삼동" + document.getElementById('keyword').value;
+      if (!keyword.replace(/^\s+|\s+$/g, '')) {
+        alert('키워드를 입력해주세요!');
+        return false;
+      }
+      // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+      this.ps.keywordSearch(keyword, this.placesSearchCB);
+    },
+    // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+    placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+        // console.log(data)
 
-        coordinate: '',
+
+        // 정상적으로 검색이 완료됐으면
+        // 검색 목록과 마커를 표출합니다
+        this.displayPlaces(data);
+
+        // 페이지 번호를 표출합니다
+        this.displayPagination(pagination);
+
+      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+        alert('검색 결과가 존재하지 않습니다.');
+        return;
+
+      } else if (status === kakao.maps.services.Status.ERROR) {
+
+        alert('검색 결과 중 오류가 발생했습니다.');
+        return;
 
       }
     },
-    methods: {
-      detailPage(one) {
-        axios.get(`${this.SERVER_URL}/subarticles/detail/${one.postId}`)
-          .then((res) => {
-            console.log(res)
-            this.$router.push({
-              name: constants.URL_TYPE.POST.TEMPORARY,
-              params: {
-                articleData: res.data
-              }
+
+    // 검색 결과 목록과 마커를 표출하는 함수입니다
+    displayPlaces(places) {
+      var listEl = document.getElementById('placesList'),
+        menuEl = document.getElementById('menu_wrap'),
+        fragment = document.createDocumentFragment(),
+        bounds = new kakao.maps.LatLngBounds();
+
+
+      // 검색 결과 목록에 추가된 항목들을 제거합니다
+      this.removeAllChildNods(listEl);
+
+
+      // 지도에 표시되고 있는 마커를 제거합니다
+      this.removeMarker();
+
+      for (var i = 0; i < places.length; i++) {
+
+        // 마커를 생성하고 지도에 표시합니다
+        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+          marker = this.addMarker(placePosition, i),
+          itemEl = this.getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+        var title = places[i].place_name;
+        var address = places[i].address_name;
+        var placeurl = places[i].place_url;
+
+        var lat = places[i].y;
+        var lon = places[i].x;
+        // console.log(address.includes("역삼동"))
+
+        if (address.includes("역삼동")) {
+          // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+          // LatLngBounds 객체에 좌표를 추가합니다
+          bounds.extend(placePosition);
+          var map = this.map;
+          // console.log(places[i]);
+
+          (function (marker, title, abc, address, placeurl, lat, lon) {
+            var infowindow = new kakao.maps.InfoWindow({
+              content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
+              removable: true
             })
-          })
-          .catch(err => console.log(err))
-      },
-      getSubArticles() {
-        const user = parseInt(this.$cookies.get('auth-token'))
-        axios.get(`${this.SERVER_URL}/subarticles/list/${user}`)
-          .then((res) => {
-            console.log(res.data)
-            this.subarticles = res.data
-          })
-          .catch(err => console.log(err))
+            kakao.maps.event.addListener(marker, 'mouseover', function () {
+              infowindow.open(map, marker);
+            });
+            kakao.maps.event.addListener(marker, 'mouseout', function () {
+              infowindow.close();
+            });
+            kakao.maps.event.addListener(marker, 'click', function () {
+              var a = confirm("이 식당이 맞습니까?")
+              if (a) {
+                abc.articleData.lat = lat;
+                abc.articleData.lon = lon;
+                abc.articleData.address = address;
+                abc.articleData.url = placeurl;
+                abc.articleData.placename = title;
+                abc.isModal = !abc.isModal;
+                // console.log(abc.articleData.lat)
 
-      },
-      changeTemoporaryModal() {
-        this.isTemporaryModal = !this.isTemporaryModal
-      },
-      changeModal() {
-        this.isModal = !this.isModal
-      },
-      createAction() {
-        // var content = this.$refs.toastuiEditor.invoke('getMarkdown');
-        var content2 = this.$refs.toastuiEditor.invoke('getHtml');
-        this.articleData.content = content2;
-      },
-      createAction1() {
-        // var content = this.$refs.toastuiEditor.invoke('getMarkdown');
-        var content2 = this.$refs.toastuiEditor.invoke('getHtml');
-        
-        this.articleData.content = content2;
-        console.log(document.getElementsByClassName('te-ok-button')[1])
-        console.log(document.getElementsByClassName('te-image-file-input')[0]["value"])
-        document.getElementsByClassName('te-ok-button')[1].addEventListener('click',
-          alert('png형식의 파일은 지원하지 않습니다.'))
-        },
-        
-       
-    
-      initMap() {
-        var container = document.getElementById('map')
-        var mapOption = {
-          center: new kakao.maps.LatLng(37.500649, 127.036530),
-          level: 5
+              }
+            });
+
+            itemEl.onmouseover = function () {
+              infowindow.open(map, marker);
+            }
+
+            itemEl.onmouseout = function () {
+              infowindow.close();
+            };
+            itemEl.onclick = function () {
+              var a = confirm("이 식당이 맞습니까?")
+              if (a) {
+                abc.articleData.lat = lat;
+                abc.articleData.lon = lon;
+                abc.articleData.address = address;
+                abc.articleData.url = placeurl;
+                abc.articleData.placename = title;
+                abc.isModal = !abc.isModal;
+              }
+            }
+
+          })(marker, title, this, address, placeurl, lat, lon);
+
+
+
+
+          fragment.appendChild(itemEl);
+
         }
-        this.map = new kakao.maps.Map(container, mapOption) //마커추가하려면 객체를 아래와 같이 하나 만든다. 
-        this.marker = new kakao.maps.Marker({
-          position: this.map.getCenter()
-        })
-        this.marker.setMap(this.map);
-        // 다각형을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 다각형을 표시합니다
-        var polygonPath = [
-          new kakao.maps.LatLng(37.504432, 127.0222243),
 
-          new kakao.maps.LatLng(37.510435, 127.043856),
 
-          new kakao.maps.LatLng(37.496263, 127.052837),
-          new kakao.maps.LatLng(37.489680, 127.031581),
-        ];
 
-        // 지도에 표시할 다각형을 생성합니다
-        var polygon = new kakao.maps.Polygon({
-          path: polygonPath, // 그려질 다각형의 좌표 배열입니다
-          strokeWeight: 3, // 선의 두께입니다
-          strokeColor: "#D96523", // 선의 색깔입니다
-          strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid', // 선의 스타일입니다
-          fillColor: '#fff', // 채우기 색깔입니다
-          fillOpacity: 0.1 // 채우기 불투명도 입니다
+
+      }
+
+
+      // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
+      listEl.appendChild(fragment);
+      menuEl.scrollTop = 0;
+
+      // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+      this.map.setBounds(bounds);
+    },
+
+    // 검색결과 항목을 Element로 반환하는 함수입니다
+    getListItem(index, places) {
+
+      var el = document.createElement('li'),
+        itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
+        '<div class="info">' +
+        '   <h5>' + places.place_name + '</h5>';
+
+      if (places.road_address_name) {
+        itemStr += '    <span>' + places.road_address_name + '</span>' +
+          '   <span class="jibun gray">' + places.address_name + '</span>';
+      } else {
+        itemStr += '    <span>' + places.address_name + '</span>';
+      }
+
+      itemStr += '  <span class="tel">' + places.phone + '</span>' +
+        '</div>';
+
+      el.innerHTML = itemStr;
+      el.className = 'item';
+
+      return el;
+    },
+    // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+    addMarker(position, idx) {
+      var imageSrc =
+        'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(36, 37), // 마커 이미지의 크기
+        imgOptions = {
+          spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+          spriteOrigin: new kakao.maps.Point(0, (idx * 46) + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+          offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+        },
+        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+        marker = new kakao.maps.Marker({
+          position: position, // 마커의 위치
+          image: markerImage
         });
 
-        // 지도에 다각형을 표시합니다
-        polygon.setMap(this.map);
-        this.ps = new kakao.maps.services.Places();
+      marker.setMap(this.map); // 지도 위에 마커를 표출합니다
+      this.markers.push(marker); // 배열에 생성된 마커를 추가합니다
 
-        console.log(this.map.getCenter());
-
-
-
-
-
-      },
-
-
-
-      // 지도를 표시할 div 
-
-
-      // 키워드 검색을 요청하는 함수입니다
-      searchPlaces() {
-
-        var keyword = "역삼동" + document.getElementById('keyword').value;
-
-        if (!keyword.replace(/^\s+|\s+$/g, '')) {
-          alert('키워드를 입력해주세요!');
-          return false;
-        }
-
-        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-        this.ps.keywordSearch(keyword, this.placesSearchCB);
-
-      },
-
-      // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-      placesSearchCB(data, status, pagination) {
-        if (status === kakao.maps.services.Status.OK) {
-          console.log(data)
-
-
-          // 정상적으로 검색이 완료됐으면
-          // 검색 목록과 마커를 표출합니다
-          this.displayPlaces(data);
-
-          // 페이지 번호를 표출합니다
-          this.displayPagination(pagination);
-
-        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-          alert('검색 결과가 존재하지 않습니다.');
-          return;
-
-        } else if (status === kakao.maps.services.Status.ERROR) {
-
-          alert('검색 결과 중 오류가 발생했습니다.');
-          return;
-
-        }
-      },
-
-      // 검색 결과 목록과 마커를 표출하는 함수입니다
-      displayPlaces(places) {
-        var listEl = document.getElementById('placesList'),
-          menuEl = document.getElementById('menu_wrap'),
-          fragment = document.createDocumentFragment(),
-          bounds = new kakao.maps.LatLngBounds();
-
-
-        // 검색 결과 목록에 추가된 항목들을 제거합니다
-        this.removeAllChildNods(listEl);
-
-
-        // 지도에 표시되고 있는 마커를 제거합니다
-        this.removeMarker();
-
-        for (var i = 0; i < places.length; i++) {
-
-          // 마커를 생성하고 지도에 표시합니다
-          var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-            marker = this.addMarker(placePosition, i),
-            itemEl = this.getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-          var title = places[i].place_name;
-          var address = places[i].address_name;
-          var placeurl = places[i].place_url;
-
-          var lat = places[i].y;
-          var lon = places[i].x;
-          // console.log(address.includes("역삼동"))
-
-          if (address.includes("역삼동")) {
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-            // LatLngBounds 객체에 좌표를 추가합니다
-            bounds.extend(placePosition);
-            var map = this.map;
-            // console.log(places[i]);
-
-            (function (marker, title, abc, address, placeurl, lat, lon) {
-              var infowindow = new kakao.maps.InfoWindow({
-                content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
-                removable: true
-              })
-              kakao.maps.event.addListener(marker, 'mouseover', function () {
-                infowindow.open(map, marker);
-              });
-              kakao.maps.event.addListener(marker, 'mouseout', function () {
-                infowindow.close();
-              });
-              kakao.maps.event.addListener(marker, 'click', function () {
-                var a = confirm("이 식당이 맞습니까?")
-                if (a) {
-                  // abc.placeDecision = title
-                  abc.articleData.lat = lat;
-                  abc.articleData.lon = lon;
-                  abc.articleData.address = address;
-                  abc.articleData.url = placeurl;
-                  abc.articleData.placename = title;
-                  abc.isModal = !abc.isModal;
-                  console.log(abc.articleData.lat)
-
-                }
-              });
-
-              itemEl.onmouseover = function () {
-                infowindow.open(map, marker);
-              }
-
-              itemEl.onmouseout = function () {
-                infowindow.close();
-              };
-              itemEl.onclick = function () {
-                var a = confirm("이 식당이 맞습니까?")
-                if (a) {
-                  // abc.articleData.address = title
-                  abc.articleData.lat = lat;
-                  abc.articleData.lon = lon;
-                  abc.articleData.address = address;
-                  abc.articleData.url = placeurl;
-                  abc.articleData.placename = title;
-                  abc.isModal = !abc.isModal;
-                }
-              }
-
-            })(marker, title, this, address, placeurl, lat, lon);
+      return marker;
+    },
+    // 지도 위에 표시되고 있는 마커를 모두 제거합니다
+    removeMarker() {
+      for (var i = 0; i < this.markers.length; i++) {
+        this.markers[i].setMap(null);
+      }
+      this.markers = [];
+    },
+    // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+    displayPagination(pagination) {
+      var paginationEl = document.getElementById('pagination'),
+        fragment = document.createDocumentFragment(),
+        i;
 
 
 
+      // 기존에 추가된 페이지번호를 삭제합니다
+      while (paginationEl.hasChildNodes()) {
+        paginationEl.removeChild(paginationEl.lastChild);
+      }
 
-            fragment.appendChild(itemEl);
+      for (i = 1; i <= pagination.last; i++) {
+        var el = document.createElement('a');
+        el.href = "#";
+        el.innerHTML = i;
 
-          }
-
-
-
-
-        }
-
-
-        // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
-        listEl.appendChild(fragment);
-        menuEl.scrollTop = 0;
-
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-        this.map.setBounds(bounds);
-      },
-
-      // 검색결과 항목을 Element로 반환하는 함수입니다
-      getListItem(index, places) {
-
-        var el = document.createElement('li'),
-          itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
-          '<div class="info">' +
-          '   <h5>' + places.place_name + '</h5>';
-
-        if (places.road_address_name) {
-          itemStr += '    <span>' + places.road_address_name + '</span>' +
-            '   <span class="jibun gray">' + places.address_name + '</span>';
+        if (i === pagination.current) {
+          el.className = 'on';
         } else {
-          itemStr += '    <span>' + places.address_name + '</span>';
-        }
-
-        itemStr += '  <span class="tel">' + places.phone + '</span>' +
-          '</div>';
-
-        el.innerHTML = itemStr;
-        el.className = 'item';
-
-        return el;
-      },
-      // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-      addMarker(position, idx) {
-        var imageSrc =
-          'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-          imageSize = new kakao.maps.Size(36, 37), // 마커 이미지의 크기
-          imgOptions = {
-            spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
-            spriteOrigin: new kakao.maps.Point(0, (idx * 46) + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
-          },
-          markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-          marker = new kakao.maps.Marker({
-            position: position, // 마커의 위치
-            image: markerImage
-          });
-
-        marker.setMap(this.map); // 지도 위에 마커를 표출합니다
-        this.markers.push(marker); // 배열에 생성된 마커를 추가합니다
-
-        return marker;
-      },
-      // 지도 위에 표시되고 있는 마커를 모두 제거합니다
-      removeMarker() {
-        for (var i = 0; i < this.markers.length; i++) {
-          this.markers[i].setMap(null);
-        }
-        this.markers = [];
-      },
-      // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
-      displayPagination(pagination) {
-        var paginationEl = document.getElementById('pagination'),
-          fragment = document.createDocumentFragment(),
-          i;
-
-
-
-        // 기존에 추가된 페이지번호를 삭제합니다
-        while (paginationEl.hasChildNodes()) {
-          paginationEl.removeChild(paginationEl.lastChild);
-        }
-
-        for (i = 1; i <= pagination.last; i++) {
-          var el = document.createElement('a');
-          el.href = "#";
-          el.innerHTML = i;
-
-          if (i === pagination.current) {
-            el.className = 'on';
-          } else {
-            el.onclick = (function (i) {
-              return function () {
-                pagination.gotoPage(i);
-              }
-            })(i);
-          }
-
-          fragment.appendChild(el);
-        }
-        paginationEl.appendChild(fragment);
-      },
-
-      // 검색결과 목록의 자식 Element를 제거하는 함수입니다
-      removeAllChildNods(el) {
-        while (el.hasChildNodes()) {
-          el.removeChild(el.lastChild);
-        }
-      },
-      createArticle() {
-        this.createAction()
-        if (!this.articleData.title) {
-          alert('제목은 필수 항목입니다.')
-        } else if (!this.articleData.content) {
-          alert('내용을 입력해주세요')
-        } else if (!this.articleData.lat || !this.articleData.lon) {
-          alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
-        } else if (!this.articleData.taste) {
-          alert('맛 별점을 체크해주세요.')
-        } else if (!this.articleData.atmosphere) {
-          alert('분위기 별점을 체크해주세요.')
-        } else if (!this.articleData.price) {
-          alert('가격 별점을 체크해주세요.')
-        } else {
-          const check = confirm('글을 제출하시겠습니까?')
-          if (check) {
-            this.isCreateLoading = true
-            const config = {
-              headers: {
-                Authorization: `Token ${this.$cookies.get('auth-token')}`
-              }
+          el.onclick = (function (i) {
+            return function () {
+              pagination.gotoPage(i);
             }
-            this.articleData.hashtag = this.hashtags.join(',')
-            axios.post(this.SERVER_URL + '/articles/register/', this.articleData, config)
-              .then(() => {
-                if (this.isTemporary) {
-                  axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
-                }
-                alert('작성이 완료되었습니다.')
-                this.isCreateLoading = false
-                // this.$router.push('/')
-                window.document.location.href = '/'
-              })
-              .catch(err => console.log(err.response))
-          }
-        }
-      },
-      updateArticle() {
-        this.createAction()
-        if (!this.articleData.title) {
-          alert('제목은 필수 항목입니다.')
-        } else if (!this.articleData.content) {
-          alert('내용을 입력해주세요.')
-        } else if (!this.articleData.lat || !this.articleData.lon) {
-          alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
-        } else if (!this.articleData.taste) {
-          alert('맛 별점을 체크해주세요.')
-        } else if (!this.articleData.atmosphere) {
-          alert('분위기 별점을 체크해주세요.')
-        } else if (!this.articleData.price) {
-          alert('가격 별점을 체크해주세요.')
-        } else {
-          const check = confirm('글을 제출하시겠습니까?')
-          if (check) {
-            const config = {
-              headers: {
-                Authorization: `Token ${this.$cookies.get('auth-token')}`
-              }
-            }
-            this.articleData.hashtag = this.hashtags.join(',')
-            axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
-              .then(() => {
-                this.$router.push({
-                  name: constants.URL_TYPE.POST.DETAIL,
-                  params: {
-                    id: this.articleData.postId
-                  }
-                })
-              })
-          }
+          })(i);
         }
 
-
-
-
-        // if(this.articleData.lat && this.articleData.lon){
-        //   const config = {
-        //   headers: {
-        //     Authorization: `Token ${this.$cookies.get('auth-token')}`
-        //   }
-        // }
-        // console.log(this.articleData)
-        // this.articleData.hashtag = this.hashtags.join(",")
-        // this.createAction()
-        // axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData, config)
-        //   .then(() => {
-        //     console.log(this.articleData.postId)
-        //     this.$router.push({
-        //       name: constants.URL_TYPE.POST.DETAIL,
-        //       params: {
-        //         id: this.articleData.postId
-        //       }
-        //     })
-        //   })
-        //   .catch(err => console.log(err))
-
-        // }
-        // else{
-        //   alert('음식점 위치 안찍으면 죽는다')
-        // }
-
-
-
-
-      },
-      goTemporary() {
-        const config = {
-          headers: {
-            Authorization: `Token ${this.$cookies.get('auth-token')}`
-          }
-        }
-        this.articleData.hashtag = this.hashtags.join(",")
-        this.createAction();
-        axios.post(this.SERVER_URL + '/subarticles/register/', this.articleData, config)
-          .then((res) => {
-            console.log(res)
-            this.$router.push('/')
-          })
-          .catch(err => console.log(err.response))
-
+        fragment.appendChild(el);
       }
-
-    },
-    computed: {
-      isUpdate() {
-        if (this.$route.params.articleData && !this.$route.params.isTemporary) {
-          return true
-        } else {
-          return false
-        }
-      },
-      isTemporary() {
-        if (this.$route.params.isTemporary) {
-          return true
-        } else {
-          return false
-        }
-      },
-      
-       
-    },
-    created() {
-      // 수정하러 왔으면 이전 데이터로 덮어 씌움
-      if (this.isUpdate) {
-        this.articleData = this.preArticleData
-        if (this.articleData.hashtag) {
-          this.hashtags = this.articleData.hashtag.split(",")
-        }
-      }
-      if (this.isTemporary) {
-        this.articleData.title = this.preArticleData.title
-        this.articleData.address = this.preArticleData.address
-        this.articleData.content = this.preArticleData.content
-        this.articleData.hashtag = this.preArticleData.hashtag
-        this.articleData.lat = this.preArticleData.lat
-        this.articleData.lon = this.preArticleData.lon
-        this.articleData.likes = this.preArticleData.likes
-        this.articleData.userid = this.preArticleData.userid
-        this.articleData.url = this.preArticleData.url
-        this.articleData.placename = this.preArticleData.placename
-        this.articleData.price = this.preArticleData.price
-        this.articleData.atmosphere = this.preArticleData.atmosphere
-        this.articleData.taste = this.preArticleData.taste
-      }
+      paginationEl.appendChild(fragment);
     },
 
-
-    mounted() {
-
-      if (window.kakao && window.kakao.maps) {
-        setTimeout(() => {
-          this.initMap()
-        }, 100)
+    // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+    removeAllChildNods(el) {
+      while (el.hasChildNodes()) {
+        el.removeChild(el.lastChild);
+      }
+    },
+    createArticle() {
+      this.createAction()
+      if (!this.articleData.title) {
+        alert('제목은 필수 항목입니다.')
+      } else if (!this.articleData.content) {
+        alert('내용을 입력해주세요')
+      } else if (!this.articleData.lat || !this.articleData.lon) {
+        alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
+      } else if (!this.articleData.taste) {
+        alert('맛 별점을 체크해주세요.')
+      } else if (!this.articleData.atmosphere) {
+        alert('분위기 별점을 체크해주세요.')
+      } else if (!this.articleData.price) {
+        alert('가격 별점을 체크해주세요.')
       } else {
-        const script = document.createElement('script');
-        /* global kakao */
-        script.onload = () => kakao.maps.load(this.initMap);
-        script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=caabdd0825a33e45f0ba6cdb6c0570af';
-        document.head.appendChild(script);
+        const check = confirm('글을 제출하시겠습니까?')
+        if (check) {
+          this.isCreateLoading = true
+          this.articleData.hashtag = this.hashtags.join(',')
+          axios.post(this.SERVER_URL + '/articles/register/', this.articleData)
+            .then(() => {
+              if (this.isTemporary) {
+                axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${this.preArticleData.postId}`)
+              }
+              alert('작성이 완료되었습니다.')
+              this.isCreateLoading = false
+              // this.$router.push('/')
+              window.document.location.href = '/'
+            })
+            .catch(err => console.log(err.response))
+        }
       }
-
-      window.addEventListener("click", e => {
-        const modal = document.getElementById("modal");
-        e.target === modal ? (this.isModal = false) : false;
-      });
-      window.addEventListener("click", e => {
-        const modal = document.getElementById("temporaryModal");
-        e.target === modal ? (this.isTemporaryModal = false) : false;
-      });
-      
-      },
-  
-    
-    updated() {
-      if (this.isModal) {
-        console.log("쒸")
-        // this.map.relayout() ;
-        this.initMap();
-        (function (abc) {
-          kakao.maps.event.addListener(abc.map, 'center_changed', function () {
-
-
-
-            // 지도의 중심좌표를 얻어옵니다 
-            var latlng = abc.map.getCenter();
-            console.log(latlng)
-            if (latlng.getLat() >= 37.51 || latlng.getLat() <= 37.4 || latlng.getLng() <= 127.01 || latlng
-              .getLng() >= 127.06) {
-              alert("역삼동을 벗어났습니다.")
-              abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
-
-            }
-
-
-          });
-
-        })(this)
-
-      }
-     
-      
-     
     },
-  }
+    updateArticle() {
+      this.createAction()
+      if (!this.articleData.title) {
+        alert('제목은 필수 항목입니다.')
+      } else if (!this.articleData.content) {
+        alert('내용을 입력해주세요.')
+      } else if (!this.articleData.lat || !this.articleData.lon) {
+        alert('음식점 좌표는 필수 항목입니다. 지도에서 검색해주세요.')
+      } else if (!this.articleData.taste) {
+        alert('맛 별점을 체크해주세요.')
+      } else if (!this.articleData.atmosphere) {
+        alert('분위기 별점을 체크해주세요.')
+      } else if (!this.articleData.price) {
+        alert('가격 별점을 체크해주세요.')
+      } else {
+        const check = confirm('글을 제출하시겠습니까?')
+        if (check) {
+          this.articleData.hashtag = this.hashtags.join(',')
+          axios.put(`${this.SERVER_URL}${SERVER.ROUTES.update}`, this.articleData)
+            .then(() => {
+              this.$router.push({
+                name: constants.URL_TYPE.POST.DETAIL,
+                params: {
+                  id: this.articleData.postId
+                }
+              })
+            })
+        }
+      }
+    },
+    goTemporary() {
+      this.articleData.hashtag = this.hashtags.join(",")
+      this.createAction();
+      axios.post(this.SERVER_URL + '/subarticles/register/', this.articleData)
+        .then(() => {
+          this.$router.push('/')
+        })
+        .catch(err => console.log(err.response))
+    }
+  },
+  computed: {
+    isUpdate() {
+      if (this.$route.params.articleData && !this.$route.params.isTemporary) {
+        return true
+      } else {
+        return false
+      }
+    },
+    isTemporary() {
+      if (this.$route.params.isTemporary) {
+        return true
+      } else {
+        return false
+      }
+    },
+    
+      
+  },
+  created() {
+    if (this.isUpdate) {
+      this.articleData = this.preArticleData
+      if (this.articleData.hashtag) {
+        this.hashtags = this.articleData.hashtag.split(",")
+      }
+    }
+    if (this.isTemporary) {
+      this.articleData.title = this.preArticleData.title
+      this.articleData.address = this.preArticleData.address
+      this.articleData.content = this.preArticleData.content
+      this.articleData.hashtag = this.preArticleData.hashtag
+      this.articleData.lat = this.preArticleData.lat
+      this.articleData.lon = this.preArticleData.lon
+      this.articleData.likes = this.preArticleData.likes
+      this.articleData.userid = this.preArticleData.userid
+      this.articleData.url = this.preArticleData.url
+      this.articleData.placename = this.preArticleData.placename
+      this.articleData.price = this.preArticleData.price
+      this.articleData.atmosphere = this.preArticleData.atmosphere
+      this.articleData.taste = this.preArticleData.taste
+    }
+  },
+  mounted() {
+
+    if (window.kakao && window.kakao.maps) {
+      setTimeout(() => {
+        this.initMap()
+      }, 100)
+    } else {
+      const script = document.createElement('script');
+      /* global kakao */
+      script.onload = () => kakao.maps.load(this.initMap);
+      script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=caabdd0825a33e45f0ba6cdb6c0570af';
+      document.head.appendChild(script);
+    }
+
+    window.addEventListener("click", e => {
+      const modal = document.getElementById("modal");
+      e.target === modal ? (this.isModal = false) : false;
+    });
+    window.addEventListener("click", e => {
+      const modal = document.getElementById("temporaryModal");
+      e.target === modal ? (this.isTemporaryModal = false) : false;
+    });
+    
+    },
+
+  
+  updated() {
+    if (this.isModal) {
+      this.initMap();
+      (function (abc) {
+        kakao.maps.event.addListener(abc.map, 'center_changed', function () {
+
+
+
+          // 지도의 중심좌표를 얻어옵니다 
+          var latlng = abc.map.getCenter();
+          console.log(latlng)
+          if (latlng.getLat() >= 37.51 || latlng.getLat() <= 37.4 || latlng.getLng() <= 127.01 || latlng
+            .getLng() >= 127.06) {
+            alert("역삼동을 벗어났습니다.")
+            abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
+
+          }
+
+
+        });
+
+      })(this)
+
+    }
+    
+    
+    
+  },
+}
 </script>
 
 <style>
@@ -930,9 +803,6 @@ li {
   text-align: center;
 
 }
-
-
-
 
 .map_wrap,
 .map_wrap * {

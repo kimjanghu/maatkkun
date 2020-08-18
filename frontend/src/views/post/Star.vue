@@ -26,7 +26,6 @@
                 <div class="tag" v-for="(tag, index) in article.hashtag.split(',')" :key="`hash_${index}`">
                   <span class="tag-btn"># {{ tag }}</span>
                 </div>
-                <!-- <span>{{article.hashtag}} </span> -->
               </div>
             </a>
 
@@ -65,8 +64,7 @@
 <script>
 import '@/assets/css/post.css'
 import axios from 'axios'
-import { mapActions, mapState, mapGetters } from 'vuex';
-// import SERVER from '@/api/drf'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import constants from '@/lib/constants'
 import PostNavbar from '@/components/common/PostNavbar.vue'
 
@@ -94,7 +92,7 @@ export default {
   },
   watch: {},
   methods: {
-    ...mapActions(['getStarArticles', 'sendPostId']),
+    ...mapActions(['getStarArticles']),
     includes(one) {
       if(this.likedposts.includes(one.postId)){
         return true

@@ -66,7 +66,6 @@
 <script>
 import '@/assets/css/post.css'
 import { mapState, mapActions, mapGetters} from 'vuex'
-// import { mapActions, mapGetters} from 'vuex'
 import axios from 'axios'
 import constants from '@/lib/constants.js'
 import PostNavbar from '@/components/common/PostNavbar.vue'
@@ -96,9 +95,7 @@ export default {
   methods: {
     ...mapActions(['getLikeArticles']),
     includes(post){
-      // console.log(post)
       if(this.likedposts.includes(post.postId )){
-        // console.log(post.postId)
         return true
       }
       else{
@@ -107,10 +104,8 @@ export default {
     },
     checkLike(post){
       post.userid=this.$cookies.get('auth-token')
-      // console.log(post.userid)
       axios.post(`${this.SERVER_URL}/articles/like`, post)
       .then(()=>{
-        // console.log(res)
         axios.post(`${this.SERVER_URL}/accounts/userDetail`,{ 'uid': this.$cookies.get('auth-token') })
         .then(res=>{
           this.getLikeArticles()
@@ -131,8 +126,6 @@ export default {
   },
   created() {
     this.getLikeArticles()
-    // this.likeArticles = JSON.parse(window.localStorage.getItem('like-articles'))
-    // console.log(this.likeArticles)
   },
   mounted() {
     if(this.$cookies.get('auth-token')){

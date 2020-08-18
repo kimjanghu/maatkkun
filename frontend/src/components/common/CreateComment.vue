@@ -27,8 +27,6 @@ export default {
   },
   methods: {
     onInput() {
-      // console.log(e.target.value)
-      // console.log(this.newValue)
       this.$emit('submit-comment', this.commentValue)
       this.commentValue = null
     },
@@ -45,7 +43,6 @@ export default {
 }
 
 .create-button {
-  /* float: right; */
   border: none;
   font-size: 1em;
   font-weight: 400;
@@ -56,5 +53,4 @@ export default {
   margin-left:5px;
   width:10%;
 }
-
 </style>

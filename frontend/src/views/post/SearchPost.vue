@@ -5,7 +5,6 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
 import Card from '@/components/common/Card.vue'
 
 export default {
@@ -19,16 +18,13 @@ export default {
     }
   },
   computed: {
-    // ...mapState(['searchArticles'])
   },
   methods: {
-    // ...mapActions(['searchPost'])
   },
   created() {
     this.searchKeyword = this.$route.query.search
   },
   mounted() {
-    // this.searchPost(this.$route.query.search)
   }
 }
 </script>

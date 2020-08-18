@@ -104,10 +104,8 @@ export default {
     },
     checkLike(post){
       post.userid=this.$cookies.get('auth-token')
-      // console.log(post.userid)
       axios.post(`${this.SERVER_URL}/articles/like`, post)
       .then(()=>{
-        // console.log(res)
         axios.post(`${this.SERVER_URL}/accounts/userDetail`,{ 'uid': this.$cookies.get('auth-token') })
         .then(res=>{
           this.getHitArticles()

@@ -44,7 +44,6 @@
     } from "@toast-ui/vue-editor";
     import constants from '@/lib/constants'
     import axios from 'axios'
-    // import SERVER from '@/api/drf'
     import Comment from '@/components/common/Comment.vue'
 
 

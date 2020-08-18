@@ -58,21 +58,21 @@ export default {
   methods: {
     ...mapActions(['login']),
     showError(value, message) {
-      const control = document.getElementById(value);
-      control.className = "form-control error";
-      const small = control.querySelector("small");
-      small.innerText = message;
+      const control = document.getElementById(value)
+      control.className = "form-control error"
+      const small = control.querySelector("small")
+      small.innerText = message
     },
     showSuccess(value) {
-      const control = document.getElementById(value);
-      control.className = "form-control success";
+      const control = document.getElementById(value)
+      control.className = "form-control success"
     },
     checkEmail() {
       const re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       if (re.test(this.loginData.email.trim())) {
-        this.showSuccess("email-control");
+        this.showSuccess("email-control")
       } else {
-        this.showError("email-control", "Email is not valid");
+        this.showError("email-control", "Email is not valid")
       }
     },
   },

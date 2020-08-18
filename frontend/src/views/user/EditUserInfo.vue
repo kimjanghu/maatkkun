@@ -14,7 +14,7 @@
 import axios from 'axios'
 import SERVER from '@/api/drf'
 import EditUserForm from '@/components/form/EditUserForm.vue'
-// import constants from '@/lib/constants'
+
 
 export default {
   name: 'EditUserInfo',

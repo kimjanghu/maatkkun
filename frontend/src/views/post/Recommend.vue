@@ -383,7 +383,6 @@ export default {
             wantRecommend: this.wantRecommend,
           })
           .then((res) => {
-            console.log(res);
             this.recommendList = res.data;
           })
           .catch((err) => console.log(err));
@@ -393,7 +392,6 @@ export default {
             wantRecommend: this.$route.params.wantRecommend,
           })
           .then((res) => {
-            console.log(res);
             this.recommendList = res.data;
           })
           .catch((err) => console.log(err));
@@ -433,7 +431,6 @@ export default {
       });
       if (this.mapdata.passList) {
         var pass = this.mapdata.passList.split(",");
-        console.log(pass);
         this.marker_p1 = new Tmapv2.Marker({
           position: new Tmapv2.LatLng(pass[1], pass[0]),
           icon:
@@ -452,7 +449,6 @@ export default {
         )
         .then((res) => {
           var resultData = res.data.features;
-          console.log(resultData);
 
           //결과 출력
           var tDistance =
@@ -561,8 +557,6 @@ export default {
           this.tmap.setCenter();
         })
         .catch((err) => console.log(err));
-
-      console.log(this.mapdata);
     },
     select() {
       if (
@@ -634,7 +628,6 @@ export default {
       this.isSeveral = true;
       if (window.Tmapv2 && window.Tmapv2.Map) {
         this.initTmap();
-        // this.search();
       } else {
         const script = document.createElement("script");
         /* global Tmapv2 */
@@ -698,7 +691,6 @@ export default {
   grid-gap: 30px;
 }
 .post .recommend-list > div .post-card {
-  /* border: 2px solid var(--secondary-color); */
   margin: 0 auto;
   margin-bottom: 15px;
   border-radius: 10px;
@@ -719,7 +711,6 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* border: 1px solid #000; */
   height: 200px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -793,7 +784,6 @@ export default {
   }
 }
 .post .second-list > div .post-card {
-  /* border: 2px solid var(--secondary-color); */
   margin: 0 auto;
   margin-bottom: 15px;
   border-radius: 10px;
@@ -814,7 +804,6 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* border: 1px solid #000; */
   height: 200px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

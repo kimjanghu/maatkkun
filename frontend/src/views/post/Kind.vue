@@ -22,60 +22,6 @@
       </div>
       <button class="recommend-btn" style="margin-top:2px;" @click.prevent="recommendToMe">GO!</button>
     </div>
-
-    <!-- <div id="hiddenContent03" class="example02" style="display: none; margin-top:20px;">
-      <div class="checkbox-container" id="cook">
-        <input type="button" id="Korean" value="한식" v-model="hashtags">
-        <label for="Korean">한식</label>
-
-        <input type="checkbox" id="Chinese" value="중식" v-model="hashtags">
-        <label for="Chinese">중식</label>
-
-        <input type="checkbox" id="Western" value="양식" v-model="hashtags">
-        <label for="Western">양식</label>
-
-        <input type="checkbox" id="Japanese" value="일식" v-model="hashtags">
-        <label for="Japanese">일식</label>
-
-        <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
-        <label for="Bunsik">분식</label>
-      </div>
-    </div> -->
-    
-
-
-
-    <!-- <button v-if="!isRestaurant" class="create-button" @click.prevent="fn_spread('hiddenContent03'); handClick();"
-        style="margin-right:2px;">식사</button>
-    <button v-if="isRestaurant" class="select-button" @click.prevent="fn_spread('hiddenContent03'); handClick();"
-        style="margin-right:2px;">식사</button>
-    <div id="hiddenContent03" class="example02" style="display: none; margin-top:20px;">
-        <div class="checkbox-container" id="cook">
-
-            <input type="checkbox" id="Korean" value="한식" v-model="hashtags">
-            <label for="Korean">한식</label>
-
-            <input type="checkbox" id="Chinese" value="중식" v-model="hashtags">
-            <label for="Chinese">중식</label>
-
-            <input type="checkbox" id="Western" value="양식" v-model="hashtags">
-            <label for="Western">양식</label>
-
-            <input type="checkbox" id="Japanese" value="일식" v-model="hashtags">
-            <label for="Japanese">일식</label>
-
-            <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
-            <label for="Bunsik">분식</label>
-
-
-        </div>
-    </div>
-    <button v-if="!isCafe" class="create-button" @click.prevent="handCafe" style="margin-right:2px;">카페</button>
-    <button v-if="isCafe" class="select-button" @click.prevent="handCafe" style="margin-right:2px;">카페</button>
-    <button v-if="!isDrink" class="create-button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
-    <button v-if="isDrink" class="select-button" @click.prevent="handDrink" style="margin-right:2px;">술집</button>
-    <br>
-    <br> -->
   </div>
 </template>
 
@@ -128,34 +74,28 @@ export default {
       }
     },
     recommendToMe() {
-        if (this.isRestaurant) {
-            this.wantRecommend.food = this.hashtags.join(",")
+      if (this.isRestaurant) {
+        this.wantRecommend.food = this.hashtags.join(",")
+      } else {
+        this.wantRecommend.food = null;
+      }
 
-        } else {
-            this.wantRecommend.food = null;
-        }
-        if (this.isCafe) {
+      if (this.isCafe) {
+        this.wantRecommend.isCafe = 1
+      } else {
+        this.wantRecommend.isCafe = null;
+      }
 
-            this.wantRecommend.isCafe = 1
-
-        } else {
-            this.wantRecommend.isCafe = null;
-        }
-
-        if (this.isDrink) {
-            this.wantRecommend.isDrink = 1
-
-        } else {
-            this.wantRecommend.isDrink = null
-        }
-        axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, {
-                "wantRecommend": this.wantRecommend
-            })
-            .then((res) => {
-                console.log(res)
-                this.$router.push({ name: constants.URL_TYPE.POST.RECOMMEND, params: {recommendList : res.data,wantRecommend:this.wantRecommend}})
-            })
-            .catch(err => console.log(err))
+      if (this.isDrink) {
+        this.wantRecommend.isDrink = 1
+      } else {
+        this.wantRecommend.isDrink = null
+      }
+      axios.post(`${this.SERVER_URL}/articles/getRecommentList/`, { "wantRecommend": this.wantRecommend })
+        .then((res) => {
+          this.$router.push({ name: constants.URL_TYPE.POST.RECOMMEND, params: {recommendList : res.data,wantRecommend:this.wantRecommend}})
+        })
+        .catch(err => console.log(err))
     },
     handClick() {
       if (this.hashtags.length) {
@@ -170,10 +110,6 @@ export default {
     handDrink() {
       this.isDrink = !this.isDrink
     },
-    // fn_spread(id) {
-    //     var getID = document.getElementById(id);
-    //     getID.style.display = (getID.style.display == 'block') ? 'none' : 'block';
-    // },
     overSelectFood() {
       this.selectFood = true
     },

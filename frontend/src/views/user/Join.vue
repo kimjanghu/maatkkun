@@ -101,76 +101,74 @@ export default {
           checkedNickname: false,
           match: false,
         },
-      
       },
-      
       certificationNumber: '',
       checkNumber: '',
       passwordType: 'password',
       passwordConfirmType: 'password'
-    };
+    }
   },
   methods: {
     // bring signup method in store
     ...mapActions(['signup']),
     // Show error message
     showError(value, message) {
-      const control = document.getElementById(value);
-      control.className = "form-control error";
-      const small = control.querySelector("small");
-      small.innerText = message;
+      const control = document.getElementById(value)
+      control.className = "form-control error"
+      const small = control.querySelector("small")
+      small.innerText = message
     },
     // Show success
     showSuccess(value) {
-      const control = document.getElementById(value);
-      control.className = "form-control success";
+      const control = document.getElementById(value)
+      control.className = "form-control success"
     },
     // Check password
     checkPasswordsMatch() {
       if (this.signupInfo.signupData.password !== this.signupInfo.signupData.passwordConfirm) {
-        this.showError("password-confirm-control", "Passwords do not match");
+        this.showError("password-confirm-control", "Passwords do not match")
       } else {
-        this.showSuccess("password-confirm-control");
+        this.showSuccess("password-confirm-control")
       }
     },
     // Check certification number
     checkCertificationNumber() {
       if (+this.checkNumber === this.certificationNumber) {
-        this.signupInfo.checkValidation.match = true;
-        alert("인증이 완료되었습니다.");
+        this.signupInfo.checkValidation.match = true
+        alert("인증이 완료되었습니다.")
       } else {
-        alert("인증번호를 잘못 입력하셨습니다.");
+        alert("인증번호를 잘못 입력하셨습니다.")
       }
     },
     // Check password length
     checkLength() {
-      const min = 8;
+      const min = 8
       if (this.signupInfo.signupData.password.length < min) {
         this.showError(
           "password-control",
           `Password length must be at least ${min} characters`
-        );
+        )
       } else {
-        this.showSuccess("password-control");
+        this.showSuccess("password-control")
       }
     },
     // Check nickname
     checkNickname() {
       if (this.signupInfo.signupData.nickname.trim() === "") {
-        this.showError("nickname-control", "Nickname necessary");
+        this.showError("nickname-control", "Nickname necessary")
       } else {
-        this.showSuccess("nickname-control");
+        this.showSuccess("nickname-control")
       }
     },
     // Check email validation
     checkEmail() {
       const re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (re.test(this.signupInfo.signupData.email.trim())) {
-        this.showSuccess("email-control");
+        this.showSuccess("email-control")
       } else if (!this.signupInfo.signupData.email.trim()) {
-        this.showError("email-control", "Email necessary");
+        this.showError("email-control", "Email necessary")
       } else {
-        this.showError("email-control", "Email is not valid");
+        this.showError("email-control", "Email is not valid")
       }
     },
     // Check nickname duplicate
@@ -178,11 +176,10 @@ export default {
       axios.get(this.SERVER_URL + `/accounts/nicknameCheck?nickname=${this.signupInfo.signupData.nickname}`)
         .then(res => {
           if (res.data === "닉네임사용가능") {
-            console.log(this.SERVER_URL)
-            this.signupInfo.checkValidation.checkedNickname = true;
-            alert("사용 가능한 닉네임입니다.");
+            this.signupInfo.checkValidation.checkedNickname = true
+            alert("사용 가능한 닉네임입니다.")
           } else {
-            alert("이미 존재하는 닉네임입니다.");
+            alert("이미 존재하는 닉네임입니다.")
           }
         })
         .catch(err => console.log(err));
@@ -191,20 +188,18 @@ export default {
     emailDuplicateCheck() {
       axios.get(this.SERVER_URL + `/accounts/emailCheck?email=${this.signupInfo.signupData.email}`)
         .then(res => {
-          console.log(res)
           if (res.data === "아이디사용가능") {
             alert("사용 가능한 이메일입니다. 인증번호를 보냈습니다. 확인해주세요.")
             this.signupInfo.checkValidation.checkedEmail = true
             axios.get(this.SERVER_URL + `/accounts/emailAuth?email=${this.signupInfo.signupData.email}`)
               .then(res => {
-                console.log(res);
-                this.certificationNumber = res.data;
+                this.certificationNumber = res.data
               });
           } else {
-            alert("이미 존재하는 이메일입니다.");
+            alert("이미 존재하는 이메일입니다.")
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
     }
   },
   created() {
@@ -227,10 +222,6 @@ export default {
 .join-btn {
   cursor: pointer;
 }
-
-/* .modal {
-  width: 500px !important;
-} */
 
 button,
 input[type='submit'] {
