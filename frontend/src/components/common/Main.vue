@@ -73,13 +73,13 @@ export default {
       isLoading: true,
       isArrow: false,
       isBestPost: false,
+      mainArticle: null,
       foodImg: '',
-      articles: null,
       displayRecvList: []
     }
   },
   computed: {
-    ...mapState(['isMain', 'recvList'])
+    ...mapState(['isMain', 'recvList', 'articles'])
   },
   methods: {
     ...mapActions(['changeMain', 'sendPostId']),
@@ -100,9 +100,10 @@ export default {
       this.searchKeyword = ''
     },
     filterRecvList(tmpSortRecvList) {
+      // console.log(this.aaa.list)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       tmpFilterRecvList.forEach(recv => {
-        let tmp = this.articles.filter(item => {
+        let tmp = this.mainArticle.list.filter(item => {
           return item.postId === +recv[0]
         })
         this.displayRecvList.push(tmp)
@@ -137,9 +138,9 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      this.mainArticle = this.articles
       this.sendPostId({ articleId: null, status: 'list' })
         .then(() => {
-          this.articles = JSON.parse(window.sessionStorage.getItem('articles'))
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
