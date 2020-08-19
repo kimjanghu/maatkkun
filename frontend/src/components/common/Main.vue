@@ -87,7 +87,7 @@ export default {
     ...mapState(['recvList', 'articles'])
   },
   methods: {
-    ...mapActions(['sendPostId', 'sortArticles']),
+    ...mapActions(['sendPostId', 'sortArticles', 'getArticles']),
     changeDisplay() {
       if (!this.isArrow) {
         this.isArrow = true,
@@ -104,13 +104,14 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.POST.SEARCH, query: { search: content }})
       this.searchKeyword = ''
     },
-    filterRecvList(tmpSortRecvList) {
+    async filterRecvList(tmpSortRecvList) {
       console.log(4)
       console.log(tmpSortRecvList)
+      await this.getArticles()
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       console.log(tmpFilterRecvList)
       console.log(this.articles.list)
-      tmpFilterRecvList.forEach(recv => {
+      await tmpFilterRecvList.forEach(recv => {
         let tmp = this.articles.list.filter(item => {
           return item.postId === +recv[0]
         })
