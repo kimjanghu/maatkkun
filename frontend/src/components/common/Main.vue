@@ -107,12 +107,11 @@ export default {
     async filterRecvList(tmpSortRecvList) {
       console.log(tmpSortRecvList)
       console.log(4)
-      await this.getArticles()
-      console.log(5)
+      // await this.getArticles()
       console.log(this.articles)
+      console.log(5)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       console.log(tmpFilterRecvList)
-      console.log(this.articles.list)
       await tmpFilterRecvList.forEach(recv => {
         let tmp = this.articles.list.filter(item => {
           return item.postId === +recv[0]
@@ -149,15 +148,14 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.sortArticles()
+      this.sendPostId({ articleId: null, status: 'list' })
         .then(() => {
-          this.mainArticle = this.articles
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
-          }, 1000)
+          }, 2000)
         })
-    }, 1000)
+    }, 300)
     
   },
   updated() {

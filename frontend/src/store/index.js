@@ -133,7 +133,6 @@ export default new Vuex.Store({
         .catch(err=>console.log(err))
     },
     getArticles({ commit }) {
-      console.log(1)
       axios.get(process.env.VUE_APP_API_URL + SERVER.ROUTES.list)
         .then(res => {
           commit('SET_ARTICLES', res.data)
