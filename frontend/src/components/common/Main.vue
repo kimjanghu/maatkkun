@@ -105,9 +105,11 @@ export default {
       this.searchKeyword = ''
     },
     async filterRecvList(tmpSortRecvList) {
-      console.log(4)
       console.log(tmpSortRecvList)
+      console.log(4)
       await this.getArticles()
+      console.log(5)
+      console.log(this.articles)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
       console.log(tmpFilterRecvList)
       console.log(this.articles.list)
@@ -155,7 +157,7 @@ export default {
             this.sortRecvList()
           }, 1000)
         })
-    }, 500)
+    }, 1000)
     
   },
   updated() {
