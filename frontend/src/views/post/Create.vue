@@ -23,7 +23,7 @@
         <div v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
           <div class="tmp-list-info">
             <p class="tmp-list-info-title" @click="detailPage(subarticle)">{{ subarticle.title }}</p>
-            <p>{{ subarticle.createDate }}</p>
+            <p>{{ subarticle.createDate }} <i @click="deleteTmpArticle(subarticle.postId)" style="margin-left: 10px;" class="far fa-trash-alt"></i></p>
           </div>
           <hr>
         </div>
@@ -75,28 +75,20 @@
     <br>
 
     <div class="checkbox-container" id="cook">
-
       <input type="checkbox" id="Korean" value="한식" v-model="hashtags">
       <label for="Korean">한식</label>
-
       <input type="checkbox" id="Chinese" value="중식" v-model="hashtags">
       <label for="Chinese">중식</label>
-
       <input type="checkbox" id="Western" value="양식" v-model="hashtags">
       <label for="Western">양식</label>
-
       <input type="checkbox" id="Japanese" value="일식" v-model="hashtags">
       <label for="Japanese">일식</label>
-
       <input type="checkbox" id="Bunsik" value="분식" v-model="hashtags">
       <label for="Bunsik">분식</label>
-
       <input type="checkbox" id="Cafe" value="카페" v-model="hashtags">
       <label for="Cafe">카페</label>
-
       <input type="checkbox" id="Soju" value="술집" v-model="hashtags">
       <label for="Soju">술집</label>
-
     </div>
 
     <br>
@@ -126,7 +118,6 @@
       <button class="create-btn" v-if="!isUpdate && !isTemporary" @click="goTemporary">임시저장</button>
       <button class="create-btn" v-if="isUpdate" @click="updateArticle">수정하기</button>
     </div>
-
 
     <div v-show="isCreateLoading" class="create-loading">
       <Loading />
@@ -175,7 +166,7 @@ export default {
       hashtags: [],
       preArticleData: this.$route.params.articleData,
       newImgSrc: '',
-      searchKeyword: "",
+      searchKeyword: '',
       markers: [],
       container: '',
       options: '',
@@ -191,6 +182,18 @@ export default {
     }
   },
   methods: {
+    deleteTmpArticle(postId) {
+      const check = confirm('임시저장 글을 삭제하시겠습니까?')
+      if (check) {
+        axios.delete(`${this.SERVER_URL}/subarticles/dropSubarticle?postId=${postId}`)
+        .then(() => {
+          this.$router.go(-1)
+          alert('임시저장 글이 삭제되었습니다.')
+        })
+      } else {
+        this.$router.go(0)
+      }
+    },
     detailPage(one) {
       axios.get(`${this.SERVER_URL}/subarticles/detail/${one.postId}`)
         .then((res) => {
@@ -224,14 +227,12 @@ export default {
     createActionTwo() {
       const contentTwo = this.$refs.toastuiEditor.invoke('getHtml'); 
       this.articleData.content = contentTwo;
-      // console.log(document.getElementsByClassName('te-ok-button')[1])
-      // console.log(document.getElementsByClassName('te-image-file-input')[0]["value"])
       document.getElementsByClassName('te-ok-button')[1].addEventListener('click',
         alert('png형식의 파일은 지원하지 않습니다.'))
       },
     initMap() {
-      var container = document.getElementById('map')
-      var mapOption = {
+      const container = document.getElementById('map')
+      const mapOption = {
         center: new kakao.maps.LatLng(37.500649, 127.036530),
         level: 5
       }
@@ -241,14 +242,14 @@ export default {
       })
       this.marker.setMap(this.map);
       // 다각형을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 다각형을 표시합니다
-      var polygonPath = [
+      const polygonPath = [
         new kakao.maps.LatLng(37.504432, 127.0222243),
         new kakao.maps.LatLng(37.510435, 127.043856),
         new kakao.maps.LatLng(37.496263, 127.052837),
         new kakao.maps.LatLng(37.489680, 127.031581),
-      ];
+      ]
       // 지도에 표시할 다각형을 생성합니다
-      var polygon = new kakao.maps.Polygon({
+      const polygon = new kakao.maps.Polygon({
         path: polygonPath, // 그려질 다각형의 좌표 배열입니다
         strokeWeight: 3, // 선의 두께입니다
         strokeColor: "#D96523", // 선의 색깔입니다
@@ -259,12 +260,11 @@ export default {
       });
       // 지도에 다각형을 표시합니다
       polygon.setMap(this.map);
-      this.ps = new kakao.maps.services.Places();
-      // console.log(this.map.getCenter());
+      this.ps = new kakao.maps.services.Places()
     },
     // 키워드 검색을 요청하는 함수입니다
     searchPlaces() {
-      var keyword = "역삼동" + document.getElementById('keyword').value;
+      let keyword = "역삼동" + document.getElementById('keyword').value;
       if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
@@ -275,46 +275,29 @@ export default {
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     placesSearchCB(data, status, pagination) {
       if (status === kakao.maps.services.Status.OK) {
-        // console.log(data)
-
-
-        // 정상적으로 검색이 완료됐으면
-        // 검색 목록과 마커를 표출합니다
+        // 정상적으로 검색이 완료됐으면 검색 목록과 마커를 표출합니다
         this.displayPlaces(data);
-
         // 페이지 번호를 표출합니다
         this.displayPagination(pagination);
-
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
         alert('검색 결과가 존재하지 않습니다.');
         return;
-
       } else if (status === kakao.maps.services.Status.ERROR) {
-
         alert('검색 결과 중 오류가 발생했습니다.');
         return;
-
       }
     },
-
     // 검색 결과 목록과 마커를 표출하는 함수입니다
     displayPlaces(places) {
       var listEl = document.getElementById('placesList'),
         menuEl = document.getElementById('menu_wrap'),
         fragment = document.createDocumentFragment(),
         bounds = new kakao.maps.LatLngBounds();
-
-
       // 검색 결과 목록에 추가된 항목들을 제거합니다
       this.removeAllChildNods(listEl);
-
-
       // 지도에 표시되고 있는 마커를 제거합니다
       this.removeMarker();
-
       for (var i = 0; i < places.length; i++) {
-
         // 마커를 생성하고 지도에 표시합니다
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
           marker = this.addMarker(placePosition, i),
@@ -322,18 +305,12 @@ export default {
         var title = places[i].place_name;
         var address = places[i].address_name;
         var placeurl = places[i].place_url;
-
         var lat = places[i].y;
         var lon = places[i].x;
-        // console.log(address.includes("역삼동"))
-
         if (address.includes("역삼동")) {
-          // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-          // LatLngBounds 객체에 좌표를 추가합니다
+          // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해 LatLngBounds 객체에 좌표를 추가합니다
           bounds.extend(placePosition);
           var map = this.map;
-          // console.log(places[i]);
-
           (function (marker, title, abc, address, placeurl, lat, lon) {
             var infowindow = new kakao.maps.InfoWindow({
               content: '<div style="width:150px;text-align:center;padding:6px 0;">' + title + '</div>',
@@ -354,15 +331,11 @@ export default {
                 abc.articleData.url = placeurl;
                 abc.articleData.placename = title;
                 abc.isModal = !abc.isModal;
-                // console.log(abc.articleData.lat)
-
               }
             });
-
             itemEl.onmouseover = function () {
               infowindow.open(map, marker);
             }
-
             itemEl.onmouseout = function () {
               infowindow.close();
             };
@@ -377,51 +350,32 @@ export default {
                 abc.isModal = !abc.isModal;
               }
             }
-
           })(marker, title, this, address, placeurl, lat, lon);
-
-
-
-
           fragment.appendChild(itemEl);
-
         }
-
-
-
-
       }
-
-
       // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
       listEl.appendChild(fragment);
       menuEl.scrollTop = 0;
-
       // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
       this.map.setBounds(bounds);
     },
-
     // 검색결과 항목을 Element로 반환하는 함수입니다
     getListItem(index, places) {
-
       var el = document.createElement('li'),
         itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
         '<div class="info">' +
         '   <h5>' + places.place_name + '</h5>';
-
       if (places.road_address_name) {
         itemStr += '    <span>' + places.road_address_name + '</span>' +
           '   <span class="jibun gray">' + places.address_name + '</span>';
       } else {
         itemStr += '    <span>' + places.address_name + '</span>';
       }
-
       itemStr += '  <span class="tel">' + places.phone + '</span>' +
         '</div>';
-
       el.innerHTML = itemStr;
       el.className = 'item';
-
       return el;
     },
     // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
@@ -438,11 +392,9 @@ export default {
         marker = new kakao.maps.Marker({
           position: position, // 마커의 위치
           image: markerImage
-        });
-
+        })
       marker.setMap(this.map); // 지도 위에 마커를 표출합니다
       this.markers.push(marker); // 배열에 생성된 마커를 추가합니다
-
       return marker;
     },
     // 지도 위에 표시되고 있는 마커를 모두 제거합니다
@@ -457,19 +409,14 @@ export default {
       var paginationEl = document.getElementById('pagination'),
         fragment = document.createDocumentFragment(),
         i;
-
-
-
       // 기존에 추가된 페이지번호를 삭제합니다
       while (paginationEl.hasChildNodes()) {
         paginationEl.removeChild(paginationEl.lastChild);
       }
-
       for (i = 1; i <= pagination.last; i++) {
         var el = document.createElement('a');
         el.href = "#";
         el.innerHTML = i;
-
         if (i === pagination.current) {
           el.className = 'on';
         } else {
@@ -479,12 +426,10 @@ export default {
             }
           })(i);
         }
-
         fragment.appendChild(el);
       }
       paginationEl.appendChild(fragment);
     },
-
     // 검색결과 목록의 자식 Element를 제거하는 함수입니다
     removeAllChildNods(el) {
       while (el.hasChildNodes()) {
@@ -517,7 +462,6 @@ export default {
               }
               alert('작성이 완료되었습니다.')
               this.isCreateLoading = false
-              // this.$router.push('/')
               window.document.location.href = '/'
             })
             .catch(err => console.log(err.response))
@@ -579,8 +523,6 @@ export default {
         return false
       }
     },
-    
-      
   },
   created() {
     if (this.isUpdate) {
@@ -606,7 +548,6 @@ export default {
     }
   },
   mounted() {
-
     if (window.kakao && window.kakao.maps) {
       setTimeout(() => {
         this.initMap()
@@ -620,44 +561,25 @@ export default {
     }
 
     window.addEventListener("click", e => {
-      const modal = document.getElementById("modal");
-      e.target === modal ? (this.isModal = false) : false;
-    });
-    window.addEventListener("click", e => {
-      const modal = document.getElementById("temporaryModal");
-      e.target === modal ? (this.isTemporaryModal = false) : false;
-    });
-    
-    },
-
-  
+      const modal = document.getElementById("modal")
+      e.target === modal ? (this.isModal = false) : false
+    })
+  },
   updated() {
     if (this.isModal) {
       this.initMap();
       (function (abc) {
         kakao.maps.event.addListener(abc.map, 'center_changed', function () {
-
-
-
           // 지도의 중심좌표를 얻어옵니다 
           var latlng = abc.map.getCenter();
-          console.log(latlng)
           if (latlng.getLat() >= 37.51 || latlng.getLat() <= 37.4 || latlng.getLng() <= 127.01 || latlng
             .getLng() >= 127.06) {
             alert("역삼동을 벗어났습니다.")
             abc.map.setCenter(new kakao.maps.LatLng(37.500649, 127.036530))
-
           }
-
-
         });
-
       })(this)
-
     }
-    
-    
-    
   },
 }
 </script>
@@ -780,8 +702,6 @@ li {
 #demo-table thead {
   background-color: #FFD732;
 }
-
-
 /* basic shared rules */
 #demo-table th,
 #demo-table td {
