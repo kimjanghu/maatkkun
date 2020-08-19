@@ -12,9 +12,9 @@ import EditUserInfo from '@/views/user/EditUserInfo.vue'
 
 // 포스트
 import List from '@/views/post/List.vue'
-import Like from '@/views/post/Like.vue'
-import Views from '@/views/post/Views.vue'
-import Star from '@/views/post/Star.vue'
+// import Like from '@/views/post/Like.vue'
+// import Views from '@/views/post/Views.vue'
+// import Star from '@/views/post/Star.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
@@ -68,19 +68,19 @@ const routes = [
   {
     path: '/likes',
     name: constants.URL_TYPE.POST.LIKE,
-    component: Like
+    component: () => import('@/views/post/Like.vue')
   },
   // View sorted post
   {
     path: '/views',
     name: constants.URL_TYPE.POST.VIEWS,
-    component: Views
+    component: () => import('@/views/post/Views.vue')
   },
   // Star sorted post
   {
     path: '/stars',
     name: constants.URL_TYPE.POST.STAR,
-    component: Star
+    component: () => import('@/views/post/Star.vue')
   },
   // Create post
   {
@@ -135,5 +135,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 
 export default router

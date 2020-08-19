@@ -165,15 +165,13 @@ export default new Vuex.Store({
         .catch(err => console.log(err))
     },
     sendPostId({ commit }, articleData) {
-      console.log(2)
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
           postId: articleData.articleId,
           status: articleData.status
         };
         commit('SET_SOCKET_IN', true)
-        this.stompClient.send("/receive", JSON.stringify(msg), {});
-        console.log(5)
+        this.stompClient.send("/receive", JSON.stringify(msg), {})
       }
     },
     connectWebsocket({ commit }) {
@@ -187,9 +185,9 @@ export default new Vuex.Store({
           commit('SET_RECV_DATA', JSON.parse(res.body))
         });
       },
-      error => {
-        console.log('소켓 연결 실패', error);
-        this.connected = false;
+      err => {
+        console.log('소켓 연결 실패', err)
+        this.connected = false
       });
     }
   },
