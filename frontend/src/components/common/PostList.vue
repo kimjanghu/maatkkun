@@ -4,7 +4,7 @@
       <section class="post-list">
         <div v-for="(article, index) in articles.list" :key="article.id">
           <div class="post-card">
-            <a @click="detailPage(article.postId)" >
+            <router-link :to="{ name: constants.URL_TYPE.POST.DETAIL, params: { id: article.postId } }">
               <img
                 :src="article.content"
                 :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
@@ -26,32 +26,13 @@
                   <span class="tag-btn"># {{ tag }}</span>
                 </div>
               </div>
-            </a>
+            </router-link>
 
             <div class="writer-wrap">
               <div class="comment-like-wrap">
                 <i class="far fa-comment-alt fa-lg"></i><p style="margin: 0 5px;">{{ articles.comment[index] }}</p>
               </div>
-              <div v-if="isLoggedIn" class="comment-like-wrap">
-                <i 
-                  :id="`recent_${article.postId}`" 
-                  :ref="article.postId" 
-                  @click.prevent="change(article); checkLike(article);" 
-                  v-if="includes(article)" 
-                  class="fas fa-heart fa-lg animated delay-1s redheart" 
-                  style="color: red;"></i>
-                <i 
-                  :id="`recent_${article.postId}`" 
-                  :ref="article.postId" 
-                  @click.prevent="change(article); checkLike(article);" 
-                  v-if="!includes(article)" 
-                  class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" 
-                  style="color: gray;"></i>
-                <p style="margin-left: 5px;">{{ article.likes }}</p>
-              </div>
-              <div v-else class="comment-like-wrap">
-                <i class="fas fa-heart fa-lg redheart" style="color: red;"></i><p style="margin-left: 5px;">{{ article.likes }}</p>
-              </div>
+              <Like :article="article" :likedposts="likedposts" />
             </div>
           </div>
         </div>
@@ -64,9 +45,13 @@
 import '@/assets/css/post.css'
 import { mapGetters } from 'vuex'
 import constants from '@/lib/constants'
+import Like from '@/components/common/Like.vue'
 
 export default {
   name: 'PostList',
+  components: {
+    Like
+  },
   props: {
     articles: [Array, Object],
     likedposts: {
@@ -77,44 +62,17 @@ export default {
     return {
       constants,
       SERVER_URL: process.env.VUE_APP_API_URL
-    };
+    }
   },
   computed:{
     ...mapGetters('userStore', ['isLoggedIn'])
   },
   watch: {},
   methods: {
-    includes(post){
-      if(this.likedposts.includes(post.postId)){
-        return true
-      }
-      else{
-        return false
-      }
-    },
-    checkLike(post){
-      this.$emit('check-like', post)
-    },
-    change(post){
-      const recentColor = document.getElementById(`recent_${post.postId}`)
-      if (recentColor['className'] === 'fas fa-heart fa-lg animated delay-1s' || recentColor['className'] === 'fas fa-heart fa-lg animated delay-1s redheart') {
-        recentColor['className'] = 'far fa-heart fa-lg animated infinite bounce delay-1s'
-        recentColor['style']['color'] = 'gray'
-        post.likes -= 1
-      } else {
-        recentColor['className'] = 'fas fa-heart fa-lg animated delay-1s'
-        recentColor['style']['color'] = 'red'
-        post.likes += 1
-      }
-    },
-    detailPage(articleId){
-      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: articleId }})
-    },
   },
   created() {
   },
   mounted(){
-    
   },
   updated() {
   },
