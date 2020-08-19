@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     // bring signup method in store
-    ...mapActions(['signup']),
+    ...mapActions('userStore', ['signup']),
     // Show error message
     showError(value, message) {
       const control = document.getElementById(value)
@@ -194,6 +194,7 @@ export default {
             axios.get(this.SERVER_URL + `/accounts/emailAuth?email=${this.signupInfo.signupData.email}`)
               .then(res => {
                 this.certificationNumber = res.data
+                console.log(res.data)
               });
           } else {
             alert("이미 존재하는 이메일입니다.")

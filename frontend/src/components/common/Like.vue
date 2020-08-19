@@ -33,7 +33,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters('userStore', ['isLoggedIn'])
   },
   methods: {
     includes() {

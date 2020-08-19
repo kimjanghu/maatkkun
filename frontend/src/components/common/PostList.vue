@@ -80,12 +80,12 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters('userStore', ['isLoggedIn'])
   },
   watch: {},
   methods: {
-    includes(one){
-      if(this.likedposts.includes(one.postId)){
+    includes(post){
+      if(this.likedposts.includes(post.postId)){
         return true
       }
       else{

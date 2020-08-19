@@ -90,7 +90,7 @@ export default {
       'likeArticles', 
       'hitArticles'
     ]),
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters('userStore', ['isLoggedIn'])
   },
   methods: {
     ...mapActions([

@@ -21,7 +21,7 @@
       </div><br>
     </div>
     <hr><br>
-    <CreateComment @submit-comment="createComment" />
+    <CreateComment v-if="isLoggedIn" @submit-comment="createComment" />
     
   </div>
 </template>
@@ -30,6 +30,7 @@
 import constants from '@/lib/constants.js'
 import CreateComment from './CreateComment.vue'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Comment',
@@ -65,6 +66,9 @@ export default {
         nickname: ''
       }
     }
+  },
+  computed: {
+    ...mapGetters('userStore', ['isLoggedIn'])
   },
   methods: {
     changeIsComment(comment) {
