@@ -1,7 +1,7 @@
 <template>
   <div v-if="article">
     <div class="main-wrapper">
-      <p class="main-detail-page">MAAT GGUN Page</p>
+      <p class="main-detail-page">MAATKKUN Page</p>
       <div class="post-title">
         <p class="post-title-text">{{ article.title }}</p>
         <p class="post-nickname">by <router-link class="nickname" :to="{ name: constants.URL_TYPE.USER.MYPAGE, params:{ id: article.userid }}">{{ article.nickname }}</router-link></p>
@@ -27,8 +27,9 @@
             :rounded-corners="true"  :read-only="true" v-bind:star-size="20">
           </star-rating>
         </div>
-        <p class="copy-url" @click="CopyUrlToClipboard">URL 복사</p>  
         <p class="post-date">{{ article.createDate }}</p>
+        <button class="copy-url" @click="CopyUrlToClipboard">URL 복사</button>  
+        
       </div>
       <hr>
       <div class="main-text-area">
@@ -296,6 +297,7 @@ export default {
 }
 
 .post-date {
+  margin-top: 1rem;
   font-size: 13px;
   opacity: 0.5;
 }
@@ -309,6 +311,12 @@ export default {
   font-size: 13px;
   font-weight: bold;
   margin-top: 5px;
+  color: #000;
+  border: none;
+}
+
+.copy-url:hover {
+  opacity: 0.6;
 }
 
 .location-title {
