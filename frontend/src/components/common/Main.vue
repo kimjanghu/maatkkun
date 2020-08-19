@@ -153,7 +153,7 @@ export default {
           setTimeout(() => {
             this.isLoading = false
             this.sortRecvList()
-          }, 2000)
+          }, 3000)
         })
     }, 300)
     
