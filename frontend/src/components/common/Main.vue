@@ -41,7 +41,7 @@
             placeholder="#태그 #제목 #내용" 
             title="Type in a name" 
           />
-          <i class="fas fa-search fa-2x search-icon"></i>
+          <i @click.prevent="moveSearchPage(searchKeyword)" class="fas fa-search search-icon"></i>
         </div>
   
         <button class="recommend-button" @click="goRecommend">
@@ -101,8 +101,12 @@ export default {
       this.$router.push('/post/kind')
     },
     moveSearchPage(content) {
-      this.$router.push({ name: constants.URL_TYPE.POST.SEARCH, query: { search: content }})
-      this.searchKeyword = ''
+      if (content.trim()) {
+        this.$router.push({ name: constants.URL_TYPE.POST.SEARCH, query: { search: content }})
+        this.searchKeyword = ''
+      } else {
+        alert('검색어를 입력해주세요')
+      }
     },
     async filterRecvList(tmpSortRecvList) {
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
@@ -221,8 +225,9 @@ export default {
 
 .search-icon {
   position: absolute;
+  font-size: 25px;
   z-index: 3;
-  top: 61.5%;
+  top: 62.5%;
   right: 23%;
   color: var(--secondary-color);
 }
