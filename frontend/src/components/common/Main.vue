@@ -105,13 +105,7 @@ export default {
       this.searchKeyword = ''
     },
     async filterRecvList(tmpSortRecvList) {
-      console.log(tmpSortRecvList)
-      console.log(4)
-      // await this.getArticles()
-      console.log(this.articles)
-      console.log(5)
       const tmpFilterRecvList = tmpSortRecvList.slice(0, 10)
-      console.log(tmpFilterRecvList)
       await tmpFilterRecvList.forEach(recv => {
         let tmp = this.articles.list.filter(item => {
           return item.postId === +recv[0]

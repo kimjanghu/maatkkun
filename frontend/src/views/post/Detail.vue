@@ -129,8 +129,6 @@ export default {
       this.geocoder.addressSearch(address_name, (result, status) => {
         // 정상적으로 검색이 완료됐으면 
         if (status === kakao.maps.services.Status.OK) {
-          console.log(address_name)
-
           var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
 
