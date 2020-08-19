@@ -51,6 +51,8 @@ const userStore = {
       axios.post(process.env.VUE_APP_API_URL + SERVER.ROUTES.login, loginData)
         .then(res => {
           commit('SET_TOKEN', res.data.uid)
+          const userInfo = { uid: res.data.uid, nickname: res.data.nickname }
+          window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
           window.document.location.href = '/'
         })
         .catch(() => alert('Check login information again'))
