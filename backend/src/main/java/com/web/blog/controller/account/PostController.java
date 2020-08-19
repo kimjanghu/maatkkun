@@ -132,15 +132,37 @@ public class PostController {
         
         final List<Post> postList = service.getList();
         final List<Integer> commentList = new ArrayList<>();
+
+
+        ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
+        
+
         
         
-        
+        boolean change = false;
+        boolean commit = true;
         for(final Post post : postList){
+
+            String pp = post.getPostId()+"";
+            if(vop.get(pp) == null){
+                change = true;
+            }
+
+            if(change && commit){
+                redisTemplate.delete("backup1");
+                redisTemplate.delete("backup2");
+                redisTemplate.delete("backup3");
+                redisTemplate.delete("backup4");
+                commit = false;
+            }
+
+            if(vop.get(pp) == null){
+                vop.set(pp, 0);
+            }
+
             commentList.add(commentservice.countComment(post.getPostId()));
             
-            // ValueOperations<String, Integer> vop = redisTemplate.opsForValue();
-            // String pp = post.getPostId()+"";
-            // vop.set(pp, 0);
+      
 
             if(post.getContent() != null){
                 System.out.println("11111111111");
