@@ -1,5 +1,5 @@
 <template>
-  <div class="main-wrapper">
+  <div class="main-wrapper" :class="{ active: isTemporaryModal }" >
     <button class="create-btn" @click.prevent="changeTemoporaryModal(); getSubArticles();">임시저장 목록 가져오기</button>
     <br><br><br>
     <table class="table table-bordered">
@@ -21,11 +21,13 @@
       <hr>
       <div class="tmp-list-content">
         <div v-for="subarticle in subarticles" :key="subarticle.id" @click="detailPage(subarticle)">
-          <div class="tmp-list-info">
-            <p class="tmp-list-info-title" @click="detailPage(subarticle)">{{ subarticle.title }}</p>
-            <p>{{ subarticle.createDate }} <i @click="deleteTmpArticle(subarticle.postId)" style="margin-left: 10px;" class="far fa-trash-alt"></i></p>
+          <div v-if="+subarticle.userid === +articleData.userid" >
+            <div class="tmp-list-info">
+              <p class="tmp-list-info-title" @click="detailPage(subarticle)">{{ subarticle.title }}</p>
+              <p>{{ subarticle.createDate }} <i @click="deleteTmpArticle(subarticle.postId)" style="margin-left: 10px;" class="far fa-trash-alt"></i></p>
+            </div>
+            <hr>
           </div>
-          <hr>
         </div>
       </div>
     </div>
@@ -156,7 +158,7 @@ export default {
         hashtag: '',
         lat: '',
         lon: '',
-        userid: this.$cookies.get('auth-token'),
+        userid: null,
         url: '',
         placename: '',
         price: 0,
@@ -525,6 +527,7 @@ export default {
     },
   },
   created() {
+    this.articleData.userid = this.$cookies.get('auth-token')
     if (this.isUpdate) {
       this.articleData = this.preArticleData
       if (this.articleData.hashtag) {
@@ -592,14 +595,12 @@ export default {
   margin: 0 auto;
 }
 
-.main-wrapper:after {
-  content: "";
-  display: block;
-  padding-bottom: 100%;
+.main-wrapper.active {
+  overflow: hidden;
+  max-height: 90vh;
 }
 
 .create-btn {
-
   border: none;
   font-size: 1em;
   font-weight: 400;
