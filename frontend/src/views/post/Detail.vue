@@ -55,7 +55,7 @@
         <div id="map" style="width:100%;height:350px;"></div>
         <br>
       </div>
-      <div class="post-button-area">
+      <div v-if="article.userid == userId" class="post-button-area">
         <button class="update-post-button" @click.prevent="goupdateArticle()">수정</button>
         <button class="update-post-button delete-button" @click.prevent="deleteArticle()">삭제</button>
       </div>
@@ -101,6 +101,7 @@ export default {
       loginUser: '',
       articleId: this.$route.params.id,
       article: null,
+      userId: null,
       map: '',
       marker: '',
       geocoder: '',
@@ -111,7 +112,7 @@ export default {
   },
   computed: {
     ...mapState(['recvList']),
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters('userStore', ['isLoggedIn'])
   },
   methods: {
     ...mapActions(['sendPostId']),
@@ -162,12 +163,7 @@ export default {
       one.userid = this.$cookies.get('auth-token')
       axios.post(`${this.SERVER_URL}/articles/like`, one)
         .then(() => {
-          axios.post(`${this.SERVER_URL}/accounts/userDetail`, {
-              "uid": this.$cookies.get('auth-token')
-            })
-            .then((res) => {
-              console.log(res)
-            })
+          axios.post(`${this.SERVER_URL}/accounts/userDetail`, { "uid": this.$cookies.get('auth-token') })
         })
     },
     CopyUrlToClipboard() {
@@ -223,10 +219,11 @@ export default {
   },
   
   created() {
+    this.userId = this.$cookies.get('auth-token')
+    this.detailPage()
     setTimeout(() => {
       this.sendPostId({ articleId: this.articleId, status: 'in' })
     }, 250)
-    this.detailPage()
     window.addEventListener('beforeunload', () => {
       this.sendPostId({ articleId: this.articleId, status: 'out' })
     })

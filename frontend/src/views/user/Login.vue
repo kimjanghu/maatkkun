@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions('userStore', ['login']),
     showError(value, message) {
       const control = document.getElementById(value)
       control.className = "form-control error"
