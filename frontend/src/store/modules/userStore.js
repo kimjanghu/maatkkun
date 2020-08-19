@@ -8,7 +8,7 @@ const userStore = {
   namespaced: true,
   state: {
     constants,
-    authToken: cookies.get('auth-token'),
+    authToken: cookies.get('auth-token')
   },
   getters: {
     isLoggedIn: state => !!state.authToken,
@@ -17,14 +17,7 @@ const userStore = {
     SET_TOKEN(state, token) {
       state.authToken = token
       cookies.set('auth-token', token)
-    },
-    SET_USERINFO(state, userInfo) {
-      state.userInfo = userInfo
-      window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
-    },
-    SET_SIGNUP(state, check) {
-      state.isSignup = check
-    },
+    }
   },
   actions: {
     // User
@@ -57,7 +50,6 @@ const userStore = {
     login({ commit }, loginData) {
       axios.post(process.env.VUE_APP_API_URL + SERVER.ROUTES.login, loginData)
         .then(res => {
-          commit('SET_USERINFO', { uid: res.data.uid, nickname: res.data.nickname })
           commit('SET_TOKEN', res.data.uid)
           window.document.location.href = '/'
         })
@@ -71,6 +63,8 @@ const userStore = {
         window.localStorage.removeItem('userInfo')
         router.push('/')
         alert('로그아웃 되었습니다.')
+      } else {
+        router.go(-1)
       }
     },
   }
