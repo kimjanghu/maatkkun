@@ -1,7 +1,7 @@
 <template>
   <div>
     <PostNavbar class="post-navbar" :listStatus="listStatus" />
-    <PostList :likedposts="likedposts" :articles="articles" @check-like="checkLike" />
+    <PostList :likedposts="likedposts" :articles="articles" />
   </div>
 </template>
 
@@ -39,17 +39,6 @@ export default {
   watch: {},
   methods: {
     ...mapActions(['getArticles']),
-    checkLike(post){
-      post.userid = this.$cookies.get('auth-token')
-      axios.post(`${this.SERVER_URL}/articles/like`, post)
-      .then(()=>{
-        axios.post(`${this.SERVER_URL}/accounts/userDetail`,{"uid":this.$cookies.get('auth-token')})
-        // .then(res=>{
-        //   this.getArticles()
-        //   this.checkLikeList(res)
-        // })
-      })
-    },
     checkLikeList(res) {
       if (res.data.likedpost) {
         const liked_list = res.data.likedpost.split(',').map(i=>parseInt(i))

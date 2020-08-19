@@ -8,7 +8,7 @@
       </div>
       <div class="box-container">
         <p class="realtime-post">{{ recvList[articleId] }} 명이 보고있습니다</p>
-        <Like :article="article" />
+        <Like :article="article" :likedposts="likedposts" />
         <div class="star-point">
           <p class="star-title">맛</p>
           <star-rating v-model="article.taste" :increment="0.5" :max-rating="5" active-color="#F2E205"
@@ -107,7 +107,7 @@ export default {
       marker: '',
       geocoder: '',
       isModal: false,
-      likedposts: '',
+      likedposts: [],
       included: true,
     }
   },
@@ -214,6 +214,13 @@ export default {
         })
         .catch(err => console.log(err))
     },
+    checkLikeList(res) {
+      if (res.data.likedpost) {
+        const liked_list = res.data.likedpost.split(',').map(i=>parseInt(i))
+        const result = liked_list.slice(0,-1)
+        this.likedposts = result
+      }
+    },
     disconnect(){
       this.sendPostId({ articleId: this.articleId, status: 'out' })
     }
@@ -230,6 +237,13 @@ export default {
     })
   },
   mounted() {
+    if(this.$cookies.get('auth-token')){
+      axios.post(`${this.SERVER_URL}/accounts/userDetail`,{"uid":this.$cookies.get('auth-token')})
+        .then((res)=>{
+          this.checkLikeList(res)
+        }
+      )
+    }
     window.addEventListener("click", e => {
       const modal = document.getElementById("modal");
       e.target === modal ? (this.isModal = false) : false;
