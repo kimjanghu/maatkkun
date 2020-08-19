@@ -83,4 +83,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: var(--secondary-color);
 }
+
+#app:after {
+  content: '';
+  display: block;
+  padding-bottom: 100px;
+}
 </style>
