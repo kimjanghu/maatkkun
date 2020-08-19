@@ -36,14 +36,14 @@
                 <i 
                   :id="`recent_${article.postId}`" 
                   :ref="article.postId" 
-                  @click.prevent="checkLike(article)" 
+                  @click.prevent="change(article); checkLike(article);" 
                   v-if="includes(article)" 
                   class="fas fa-heart fa-lg animated delay-1s redheart" 
                   style="color: red;"></i>
                 <i 
                   :id="`recent_${article.postId}`" 
                   :ref="article.postId" 
-                  @click.prevent="checkLike(article)" 
+                  @click.prevent="change(article); checkLike(article);" 
                   v-if="!includes(article)" 
                   class="far fa-heart fa-lg animated infinite bounce delay-1s blankheart" 
                   style="color: gray;"></i>
@@ -94,6 +94,18 @@ export default {
     },
     checkLike(post){
       this.$emit('check-like', post)
+    },
+    change(post){
+      const recentColor = document.getElementById(`recent_${post.postId}`)
+      if (recentColor['className'] === 'fas fa-heart fa-lg animated delay-1s' || recentColor['className'] === 'fas fa-heart fa-lg animated delay-1s redheart') {
+        recentColor['className'] = 'far fa-heart fa-lg animated infinite bounce delay-1s'
+        recentColor['style']['color'] = 'gray'
+        post.likes -= 1
+      } else {
+        recentColor['className'] = 'fas fa-heart fa-lg animated delay-1s'
+        recentColor['style']['color'] = 'red'
+        post.likes += 1
+      }
     },
     detailPage(articleId){
       this.$router.push({ name: constants.URL_TYPE.POST.DETAIL, params: { id: articleId }})

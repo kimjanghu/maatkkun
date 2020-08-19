@@ -42,10 +42,10 @@ export default {
       axios.post(`${this.SERVER_URL}/articles/like`, post)
       .then(()=>{
         axios.post(`${this.SERVER_URL}/accounts/userDetail`,{ 'uid': this.$cookies.get('auth-token') })
-        .then(res=>{
-          this.getHitArticles()
-          this.checkLikeList(res)
-        })
+        // .then(res=>{
+        //   this.getHitArticles()
+        //   this.checkLikeList(res)
+        // })
       })
     },
     detailPage(articleId){
