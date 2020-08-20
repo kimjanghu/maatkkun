@@ -3,7 +3,7 @@
     <Navbar :isNavbar="isNavbar" />
     <Main :isMain="isMain" />
     <router-view />
-    <Footer />
+    <Footer :isFooter="isFooter" />
   </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
     return {
       isNavbar: true,
       isMain: true,
+      isFooter: true,
       constants
     };
   },
@@ -55,10 +56,12 @@ export default {
 
       let isNavbar = true
       let isMain = true
+      let isFooter = true
       userArray.map(path => {
         if (url === path) {
           isNavbar = false
           isMain = false
+          isFooter = false
         }
       })
       mainArray.map(path => {
@@ -68,6 +71,7 @@ export default {
       })
       this.isNavbar = isNavbar
       this.isMain = isMain
+      this.isFooter = isFooter
     }
   },
   created() {

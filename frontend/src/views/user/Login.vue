@@ -33,6 +33,7 @@
           </div>
         </div>
       </div>
+      <p class="copyright">Copyright <i class="far fa-copyright"> 2020</i> MAATKKUN. All Rights Reserved.</p>
     </div>
   </div>
 </template>
@@ -181,5 +182,14 @@ input {
 
 .add-option a {
   margin-top: 4px;
+}
+
+.copyright {
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+  color: #000;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
