@@ -274,7 +274,7 @@ export default {
 }
 
 .best-post-main {
-  margin: 1rem auto -10px;
+  margin: 1rem auto;
   text-align: center;
   font-size: 20px;
   color: var(--primary-color);

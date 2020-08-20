@@ -42,9 +42,7 @@
             <p class="name">LeeOwnho</p>
           </div>
           <p class="member-introduction">
-            안녕하세요.<br>
-            세상이 놀랄만한 UI/UX를 사용자에게 제공하고 싶은 Frontend 개발자 김장후입니다.<br>
-            혼자가 아닌 다양한 개발자와 함께 나아가겠습니다.
+            안녕하세요. 사용자의 시선을 가진 개발자 이원호입니다.
           </p>
         </div>
       </div>
@@ -72,9 +70,8 @@
             <p class="name">YuSejeong</p>
           </div>
           <p class="member-introduction">
-            안녕하세요.<br>
-            세상이 놀랄만한 UI/UX를 사용자에게 제공하고 싶은 Frontend 개발자 김장후입니다.<br>
-            혼자가 아닌 다양한 개발자와 함께 나아가겠습니다.
+            모든것에 불만이 많은 개발자 유세정입니다.<br>
+            이 모든 불편함과 불만을 해결하는 개발자가 되겠습니다.
           </p>
         </div>
       </div>
@@ -104,7 +101,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 hr {
   width: 80%;
   margin: 30px auto;
@@ -229,11 +226,6 @@ hr {
 .introduction-main {
   display: flex;
   align-items: center;
-}
-
-.picture-area {
-  /* width: 250px; */
-  /* margin-left: 110px; */
 }
 
 .team-picture {
