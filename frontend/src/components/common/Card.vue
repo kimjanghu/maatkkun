@@ -3,7 +3,7 @@
     <router-link :to="{ name: constants.URL_TYPE.POST.DETAIL, params: { id: article.postId } }">
       <img
         :src="article.content"
-        :style="{backgroundImage:'url(https://www.ipcc.ch/site/assets/uploads/sites/3/2019/10/img-placeholder.png)'}"
+        :style="{ backgroundImage: 'url( '+ require('../../assets/img/MAATKKUN.png') +' )' }"
         class="post-img"
       />
 
