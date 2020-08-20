@@ -12,7 +12,8 @@
 
 ### Usecase Diagram
 
-![UseCase Diagram (1)](UseCase Diagram (1).png)
+![UseCase Diagram](UseCase Diagram.png)
+
 
 ### ERD
 
