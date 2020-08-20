@@ -72,6 +72,7 @@
         </div>
       </div>
     </div>
+    <p class="join-copyright">Copyright <i class="far fa-copyright"> 2020</i> MAATKKUN. All Rights Reserved.</p>
   </div>
 </template>
 
@@ -208,7 +209,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style>
 .signup-logo {
   text-align: center;
   position: absolute;
@@ -293,5 +294,14 @@ input {
   right: 9px;
   top: 11px;
   opacity: 0.3;
+}
+
+.join-copyright {
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+  color: #000;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>

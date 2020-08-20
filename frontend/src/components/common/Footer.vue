@@ -1,12 +1,17 @@
 <template>
-  <div class="footer">
+  <div class="footer" v-if="isFooter">
     <p class="copyright">Copyright <i class="far fa-copyright"> 2020</i> MAATKKUN. All Rights Reserved.</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Footer'
+  name: 'Footer',
+  props: {
+    isFooter: {
+      type: Boolean
+    }
+  }
 }
 </script>
 
