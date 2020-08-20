@@ -12,9 +12,16 @@
 
 ### Usecase Diagram
 
-![UseCase Diagram (1)](UseCase Diagram (1).png)
+![UseCase Diagram (1)](UseCase Diagram (1)-1597945469943.png)
+
+### ERD
+
+![MAATKKUN_20200821_43_02](MAATKKUN_20200821_43_02.png)
+
+
 
 ## 2. 프로젝트를 위한 환경 설정
+
 * 시스템 개발 환경
 
   * Language : JavaScript, Java, CSS, HTML
