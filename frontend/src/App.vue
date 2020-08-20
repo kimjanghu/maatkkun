@@ -3,6 +3,7 @@
     <Navbar :isNavbar="isNavbar" />
     <Main :isMain="isMain" />
     <router-view />
+    <Footer />
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import './assets/css/style.css'
 import Navbar from './components/common/Navbar.vue'
 import Main from './components/common/Main.vue'
+import Footer from './components/common/Footer.vue'
 import constants from './lib/constants'
 import { mapActions } from 'vuex'
 
@@ -18,7 +20,8 @@ export default {
   name: 'App',
   components: {
     Navbar,
-    Main
+    Main,
+    Footer
   },
   data() {
     return {
@@ -83,11 +86,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--secondary-color);
-}
-
-#app:after {
-  content: '';
-  display: block;
-  padding-bottom: 100px;
 }
 </style>
