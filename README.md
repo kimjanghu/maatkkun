@@ -12,11 +12,11 @@
 
 ### Usecase Diagram
 
-![UseCase Diagram (1)](UseCase Diagram (1)-1597945469943.png)
+![UseCase Diagram (1)](UseCase Diagram (1).png)
 
 ### ERD
 
-![MAATKKUN_20200821_43_02](MAATKKUN_20200821_43_02.png)
+![ERD](ERD.PNG)
 
 
 
