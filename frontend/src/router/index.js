@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import constants from '@/lib/constants'
 
+import Intro from '@/views/Intro.vue'
 // 유저
 import Join from '@/views/user/Join.vue'
 import Login from '@/views/user/Login.vue'
@@ -12,9 +13,6 @@ import EditUserInfo from '@/views/user/EditUserInfo.vue'
 
 // 포스트
 import List from '@/views/post/List.vue'
-// import Like from '@/views/post/Like.vue'
-// import Views from '@/views/post/Views.vue'
-// import Star from '@/views/post/Star.vue'
 import Create from '@/views/post/Create.vue'
 import Detail from '@/views/post/Detail.vue'
 import Temporary from '@/views/post/Temporary.vue'
@@ -28,9 +26,15 @@ import Notfound from '@/components/Notfound.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  // Main
+  // Intro
   {
     path: '/',
+    name: constants.URL_TYPE.INTRO,
+    component: Intro
+  },
+  // Main
+  {
+    path: '/home',
     name: constants.URL_TYPE.POST.MAIN,
     component: List
   },
