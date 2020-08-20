@@ -11,6 +11,7 @@ export default {
     PAGE_NOT_FOUND: 'notfound',
   },
   URL_TYPE: {
+    INTRO: 'intro',
     USER: {
       JOIN: 'join',
       LOGIN: 'login',

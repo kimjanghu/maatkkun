@@ -1,16 +1,16 @@
 <template>
   <div id="navbar" v-if="isNavbar">
     <h1>
-      <a class="main-title" href="/">MAATKKUN</a>
+      <a class="main-title" href="/home">MAATKKUN</a>
     </h1>
     <div class="right">
       <div v-if="!isLoggedIn">
         <router-link class="nav-link" :to="{ name: constants.URL_TYPE.USER.LOGIN }">Login</router-link>
       </div>
       <div v-if="isLoggedIn">
-        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.POST.CREATE }">Create</router-link>
-        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.LOGOUT }">Logout</router-link>
-        <router-link class="nav-link" :to="{ name:constants.URL_TYPE.USER.MYPAGE, params:{ id: loginId }}"><i class="fas fa-user-circle fa-lg"></i> {{ nickname }}</router-link>
+        <router-link class="nav-link" :to="{ name: constants.URL_TYPE.POST.CREATE }">Create</router-link>
+        <router-link class="nav-link" :to="{ name: constants.URL_TYPE.USER.LOGOUT }">Logout</router-link>
+        <router-link class="nav-link" :to="{ name: constants.URL_TYPE.USER.MYPAGE, params:{ id: loginId }}"><i class="fas fa-user-circle fa-lg"></i> {{ nickname }}</router-link>
       </div>
     </div>
   </div>

@@ -464,7 +464,7 @@ export default {
               }
               alert('작성이 완료되었습니다.')
               this.isCreateLoading = false
-              window.document.location.href = '/'
+              window.document.location.href = '/home'
             })
             .catch(err => {
               alert('사진 용량을 줄여주세요.')
@@ -509,7 +509,7 @@ export default {
       this.createAction();
       axios.post(this.SERVER_URL + '/subarticles/register/', this.articleData)
         .then(() => {
-          this.$router.push('/')
+          this.$router.push('/home')
         })
         .catch(err => console.log(err.response))
     }

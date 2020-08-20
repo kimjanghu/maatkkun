@@ -49,7 +49,8 @@ export default {
         constants.URL_TYPE.POST.TEMPORARY,
         constants.URL_TYPE.POST.RECOMMEND,
         constants.URL_TYPE.POST.KIND,
-        constants.URL_TYPE.POST.SEARCH
+        constants.URL_TYPE.POST.SEARCH,
+        constants.URL_TYPE.INTRO
       ]
 
       let isNavbar = true

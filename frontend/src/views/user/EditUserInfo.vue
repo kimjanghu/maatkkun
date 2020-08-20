@@ -71,7 +71,7 @@ export default {
             "nickname": this.userInfo.nickname
           }))
           alert('회원 정보가 수정되었습니다.')
-          this.$router.push('/')
+          this.$router.push('/home')
         })
         .catch(err => console.log(err))
     }

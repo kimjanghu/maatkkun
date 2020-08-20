@@ -53,7 +53,7 @@ const userStore = {
           commit('SET_TOKEN', res.data.uid)
           const userInfo = { uid: res.data.uid, nickname: res.data.nickname }
           window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
-          window.document.location.href = '/'
+          window.document.location.href = '/home'
         })
         .catch(() => alert('Check login information again'))
     },
@@ -63,7 +63,7 @@ const userStore = {
         commit('SET_TOKEN', null)
         cookies.remove('auth-token')
         window.localStorage.removeItem('userInfo')
-        router.push('/')
+        router.push('/home')
         alert('로그아웃 되었습니다.')
       } else {
         router.go(-1)

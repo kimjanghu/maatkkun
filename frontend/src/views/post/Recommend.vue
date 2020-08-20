@@ -672,6 +672,7 @@ export default {
 
 .create-button {
   color: var(--secondary-color);
+  border: none;
 }
 
 .select_button {
