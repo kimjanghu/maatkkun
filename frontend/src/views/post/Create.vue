@@ -466,7 +466,10 @@ export default {
               this.isCreateLoading = false
               window.document.location.href = '/'
             })
-            .catch(err => console.log(err.response))
+            .catch(err => {
+              alert('사진 용량을 줄여주세요.')
+              console.log(err.response)
+            })
         }
       }
     },
