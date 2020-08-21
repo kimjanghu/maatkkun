@@ -26,7 +26,7 @@
 * 시스템 개발 환경
 
   * Language : JavaScript, Java, CSS, HTML
-  * Framework : Spring Boot, VueJS
+  * Framework : Spring Boot, VueJS, MyBatis
   * Code Editor : Visual Studio Code
   * Windows Version : Windows 10
 * 시스템 운영 환경
